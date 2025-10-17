@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookMode V2</title>
+    <link rel="stylesheet" href="./styles/main.css">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="root"></div>
+
+    <script type="module">
+        import { RECIPES } from './recipes.js';
+        import { SUPABASE_CONFIG } from './supabase-config.js';
+        window.RECIPES = RECIPES;
+        window.SUPABASE_CONFIG = SUPABASE_CONFIG;
+    </script>
+
+    <script type="text/babel" src="./js/constants/index.js"></script>
+    <script type="text/babel" src="./js/utils/scaling.js"></script>
+    <script type="text/babel" src="./js/hooks/useSupabase.js"></script>
+    <script type="text/babel" src="./js/hooks/useRealtime.js"></script>
+    <script type="text/babel" src="./js/hooks/useRecipeData.js"></script>
+    <script type="text/babel" src="./js/components/Header.js"></script>
+    <script type="text/babel" src="./js/components/RecipeGrid.js"></script>
+    <script type="text/babel" src="./js/components/RecipeModal.js"></script>
+    <script type="text/babel" src="./js/components/Lightbox.js"></script>
+    <script type="text/babel" src="./js/components/App.js"></script>
+
+    <script type="text/babel">
+        ReactDOM.render(React.createElement(App), document.getElementById('root'));
+    </script>
+</body>
+</html>
