@@ -105,7 +105,13 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
                 console.log('🔔 Chef name update:', payload);
                 if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
                     const item = payload.new;
-                    setRecipeChefNames(prev => ({ ...prev, [item.recipe_slug]: item.chef_name }));
+                    setRecipeChefNames(prev => ({
+                        ...prev,
+                        [item.recipe_slug]: {
+                            name: item.chef_name,
+                            color: item.chef_color || '#9333ea'
+                        }
+                    }));
                 } else if (payload.eventType === 'DELETE') {
                     const item = payload.old;
                     setRecipeChefNames(prev => {

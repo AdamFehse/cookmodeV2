@@ -205,7 +205,9 @@ const RecipeGrid = ({ recipes, recipeStatus, recipeChefNames, orderCounts, setSe
             className: 'grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5'
         }, sortedRecipes.length > 0 ? sortedRecipes.map(([slug, recipe]) => {
             const status = recipeStatus[slug];
-            const chefName = recipeChefNames[slug];
+            const chefData = recipeChefNames[slug];
+            const chefName = chefData?.name || '';
+            const chefColor = chefData?.color || '#9333ea';
             const orderCount = orderCounts[slug] || 1;
             const displayName = recipe.name || slugToDisplayName(slug);
 
@@ -221,10 +223,11 @@ const RecipeGrid = ({ recipes, recipeStatus, recipeChefNames, orderCounts, setSe
                     className: `absolute top-2 right-2 ${STATUS_BADGE_COLORS[status]} text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-lg`
                 }, status.toUpperCase()),
 
-                // Chef name badge (top left)
+                // Chef name badge (top left) - uses chef's chosen color
                 chefName && React.createElement('div', {
                     key: 'chef-badge',
-                    className: 'absolute top-2 left-2 bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-lg'
+                    className: 'absolute top-2 left-2 text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-lg',
+                    style: { backgroundColor: chefColor }
                 }, `👨‍🍳 ${chefName}`),
 
                 // Order count badge (bottom left, on image)

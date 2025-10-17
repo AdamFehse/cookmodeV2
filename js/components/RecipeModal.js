@@ -26,7 +26,9 @@ const RecipeModal = ({
     const slugToDisplayName = window.slugToDisplayName;
 
     const displayName = recipe.name || slugToDisplayName(selectedRecipe);
-    const currentChefName = recipeChefNames[selectedRecipe] || '';
+    const currentChefData = recipeChefNames[selectedRecipe] || { name: '', color: '#9333ea' };
+    const currentChefName = currentChefData.name || '';
+    const currentChefColor = currentChefData.color || '#9333ea';
 
     return React.createElement('div', {
         className: 'fixed inset-0 bg-black/70 flex items-center justify-center z-[1000] p-5',
@@ -75,9 +77,22 @@ const RecipeModal = ({
                                 type: 'text',
                                 placeholder: 'Chef name',
                                 value: currentChefName,
-                                onChange: (e) => updateChefName(selectedRecipe, e.target.value),
+                                onChange: (e) => updateChefName(selectedRecipe, e.target.value, currentChefColor),
                                 className: 'bg-white px-2 py-1 border border-gray-300 rounded text-sm w-32 focus:border-blue-500 focus:outline-none',
                                 onClick: (e) => e.stopPropagation()
+                            }),
+                            React.createElement('input', {
+                                key: 'color',
+                                type: 'color',
+                                value: currentChefColor,
+                                onChange: (e) => {
+                                    if (currentChefName) {
+                                        updateChefName(selectedRecipe, currentChefName, e.target.value);
+                                    }
+                                },
+                                className: 'w-8 h-8 border-2 border-gray-300 rounded cursor-pointer',
+                                onClick: (e) => e.stopPropagation(),
+                                title: 'Choose badge color'
                             }),
                             currentChefName && React.createElement('button', {
                                 key: 'clear',

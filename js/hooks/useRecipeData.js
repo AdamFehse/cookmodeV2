@@ -112,7 +112,10 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                 } else if (chefData) {
                     const chefMap = {};
                     chefData.forEach(item => {
-                        chefMap[item.recipe_slug] = item.chef_name;
+                        chefMap[item.recipe_slug] = {
+                            name: item.chef_name,
+                            color: item.chef_color || '#9333ea'
+                        };
                     });
                     setRecipeChefNames(chefMap);
                 }
@@ -291,12 +294,15 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
         }
     };
 
-    const updateChefName = async (slug, chefName) => {
-        console.log('👨‍🍳 Updating chef name:', slug, chefName);
+    const updateChefName = async (slug, chefName, chefColor = '#9333ea') => {
+        console.log('👨‍🍳 Updating chef name:', slug, chefName, chefColor);
 
         // Optimistically update UI
         if (chefName) {
-            setRecipeChefNames(prev => ({ ...prev, [slug]: chefName }));
+            setRecipeChefNames(prev => ({
+                ...prev,
+                [slug]: { name: chefName, color: chefColor }
+            }));
         } else {
             setRecipeChefNames(prev => {
                 const newState = { ...prev };
@@ -321,12 +327,13 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                         console.log('✅ Chef name cleared');
                     }
                 } else {
-                    // Upsert chef name
+                    // Upsert chef name with color
                     const { data, error } = await supabase
                         .from('recipe_chef_names')
                         .upsert({
                             recipe_slug: slug,
                             chef_name: chefName,
+                            chef_color: chefColor,
                             updated_at: new Date().toISOString()
                         }, {
                             onConflict: 'recipe_slug'

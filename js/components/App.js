@@ -170,6 +170,13 @@ const App = () => {
             lightboxIndex,
             setLightboxImage,
             setLightboxIndex
+        }),
+
+        // Shopping List
+        React.createElement(window.ShoppingList, {
+            key: 'shopping-list',
+            recipes,
+            orderCounts: recipeData.orderCounts
         })
     ]);
 };

@@ -1,5 +1,46 @@
 /* Custom styles for CookMode V2 */
 
+/* Dark mode support for Dark Reader extension */
+@media (prefers-color-scheme: dark) {
+  /* Use warm gray tones for better readability in dark mode */
+  body {
+    color: #be9c7f !important; /* warm gray text */
+  }
+}
+
+/* Dark Reader specific overrides */
+html[data-darkreader-mode="dynamic"],
+html[data-darkreader-scheme="dark"] {
+  /* Ensure text remains readable with warm gray tones */
+  --text-primary: #be9c7f ;
+  --text-secondary: #d4d4d8;
+  --text-tertiary: #a1a1aa;
+}
+
+html[data-darkreader-mode="dynamic"] body,
+html[data-darkreader-scheme="dark"] body {
+  color: var(--text-primary) !important;
+}
+
+html[data-darkreader-mode="dynamic"] .text-gray-900,
+html[data-darkreader-scheme="dark"] .text-gray-900,
+html[data-darkreader-mode="dynamic"] .text-gray-800,
+html[data-darkreader-scheme="dark"] .text-gray-800 {
+  color: var(--text-primary) !important;
+}
+
+html[data-darkreader-mode="dynamic"] .text-gray-700,
+html[data-darkreader-scheme="dark"] .text-gray-700,
+html[data-darkreader-mode="dynamic"] .text-gray-600,
+html[data-darkreader-scheme="dark"] .text-gray-600 {
+  color: var(--text-secondary) !important;
+}
+
+html[data-darkreader-mode="dynamic"] .text-gray-500,
+html[data-darkreader-scheme="dark"] .text-gray-500 {
+  color: var(--text-tertiary) !important;
+}
+
 /* Optional: Custom scrollbar styling for better UX */
 .overflow-y-auto::-webkit-scrollbar {
   width: 6px;
