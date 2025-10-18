@@ -108,7 +108,7 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                     .select('*');
 
                 if (chefError && chefError.code !== 'PGRST116') {
-                    console.warn('⚠️ Error loading chef names (table may not exist yet):', chefError);
+                    console.warn(' Error loading chef names (table may not exist yet):', chefError);
                 } else if (chefData) {
                     const chefMap = {};
                     chefData.forEach(item => {
@@ -121,9 +121,9 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                 }
 
                 setIsLoading(false);
-                console.log('✅ Supabase connected! Real-time sync active.');
+                console.log('Supabase connected! Real-time sync active.');
             } catch (error) {
-                console.error('❌ Error loading data from Supabase:', error);
+                console.error(' Error loading data from Supabase:', error);
                 setLoadError(error.message);
                 setIsLoading(false);
             }
@@ -153,96 +153,74 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                     });
 
                 if (error) {
-                    console.error('❌ Error updating order count:', error);
+                    console.error('Error updating order count:', error);
                 } else {
-                    console.log('✅ Order count saved:', data);
+                    console.log('Order count saved:', data);
                 }
             } catch (error) {
-                console.error('❌ Exception updating order count:', error);
+                console.error('Exception updating order count:', error);
             }
         } else {
-            console.warn('⚠️ Supabase not connected, order count only local');
+            console.warn('Supabase not connected, order count only local');
         }
     };
 
     const toggleIngredient = async (recipeSlug, ingredientKey, componentName, ingredientIndex, ingredientText) => {
         const newCheckedState = !completedIngredients[ingredientKey];
 
-        console.log('🖱️ Clicked ingredient:', {
-            ingredientKey,
-            newCheckedState,
-            recipeSlug,
-            componentName,
-            ingredientIndex
-        });
-
         // Optimistically update UI
         setCompletedIngredients(prev => ({ ...prev, [ingredientKey]: newCheckedState }));
 
-        // Sync to Supabase
+        // Sync to Supabase (simplified - no metadata)
         if (supabase && isSupabaseConnected) {
             try {
-                const { data, error } = await supabase
+                const { error } = await supabase
                     .from('ingredient_checks')
                     .upsert({
                         recipe_slug: recipeSlug,
                         ingredient_index: ingredientIndex,
                         component_name: componentName,
                         ingredient_text: ingredientText,
-                        is_checked: newCheckedState,
-                        checked_by: cookName || 'Unknown',
-                        checked_at: new Date().toISOString()
+                        is_checked: newCheckedState
                     }, {
                         onConflict: 'recipe_slug,ingredient_index,component_name'
                     });
 
                 if (error) {
-                    console.error('❌ Supabase error:', error);
-                } else {
-                    console.log('✅ Saved to Supabase:', data);
+                    console.error('Error saving ingredient:', error);
                 }
             } catch (error) {
-                console.error('❌ Error updating ingredient:', error);
+                console.error('Error updating ingredient:', error);
             }
-        } else {
-            console.warn('⚠️ Supabase not connected, change only local');
         }
     };
 
     const toggleStep = async (recipeSlug, stepKey, stepIndex, stepText) => {
         const newCompletedState = !completedSteps[stepKey];
 
-        console.log('🔄 Toggling step:', stepKey, newCompletedState);
-
         // Optimistically update UI
         setCompletedSteps(prev => ({ ...prev, [stepKey]: newCompletedState }));
 
-        // Sync to Supabase
+        // Sync to Supabase (simplified - no metadata)
         if (supabase && isSupabaseConnected) {
             try {
-                const { data, error } = await supabase
+                const { error } = await supabase
                     .from('step_completions')
                     .upsert({
                         recipe_slug: recipeSlug,
                         step_index: stepIndex,
                         step_text: stepText,
-                        is_completed: newCompletedState,
-                        completed_by: cookName || 'Unknown',
-                        completed_at: new Date().toISOString()
+                        is_completed: newCompletedState
                     }, {
                         onConflict: 'recipe_slug,step_index'
                     });
 
                 if (error) {
-                    console.error('❌ Error updating step:', error);
-                } else {
-                    console.log('✅ Step saved to Supabase:', data);
+                    console.error('Error updating step:', error);
                 }
             } catch (error) {
-                console.error('❌ Exception updating step:', error);
+                console.error('Error updating step:', error);
             }
-        } else {
-            console.warn('⚠️ Supabase not connected, step change only local');
         }
     };
 
@@ -263,9 +241,9 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                         .eq('recipe_slug', slug);
 
                     if (error) {
-                        console.error('❌ Error deleting recipe status:', error);
+                        console.error('Error deleting recipe status:', error);
                     } else {
-                        console.log('✅ Recipe status cleared');
+                        console.log('Recipe status cleared');
                     }
                 } else {
                     // Upsert status
@@ -281,16 +259,16 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                         });
 
                     if (error) {
-                        console.error('❌ Error updating recipe status:', error);
+                        console.error('Error updating recipe status:', error);
                     } else {
-                        console.log('✅ Recipe status saved:', data);
+                        console.log('Recipe status saved:', data);
                     }
                 }
             } catch (error) {
-                console.error('❌ Exception updating recipe status:', error);
+                console.error('Exception updating recipe status:', error);
             }
         } else {
-            console.warn('⚠️ Supabase not connected, status change only local');
+            console.warn(' Supabase not connected, status change only local');
         }
     };
 
@@ -322,9 +300,9 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                         .eq('recipe_slug', slug);
 
                     if (error) {
-                        console.error('❌ Error deleting chef name:', error);
+                        console.error(' Error deleting chef name:', error);
                     } else {
-                        console.log('✅ Chef name cleared');
+                        console.log('Chef name cleared');
                     }
                 } else {
                     // Upsert chef name with color
@@ -340,16 +318,16 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                         });
 
                     if (error) {
-                        console.error('❌ Error updating chef name:', error);
+                        console.error(' Error updating chef name:', error);
                     } else {
-                        console.log('✅ Chef name saved:', data);
+                        console.log('Chef name saved:', data);
                     }
                 }
             } catch (error) {
-                console.error('❌ Exception updating chef name:', error);
+                console.error(' Exception updating chef name:', error);
             }
         } else {
-            console.warn('⚠️ Supabase not connected, chef name change only local');
+            console.warn(' Supabase not connected, chef name change only local');
         }
     };
 

@@ -12,7 +12,7 @@ const useSupabase = () => {
             );
             setSupabase(client);
         } else {
-            console.warn('⚠️ Supabase not configured. Update supabase-config.js with your credentials.');
+            console.warn(' Supabase not configured. Update supabase-config.js with your credentials.');
         }
     }, []);
 

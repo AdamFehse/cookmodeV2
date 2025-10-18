@@ -1,11 +1,11 @@
 const App = () => {
     const { useState, useEffect } = React;
-    
+
     const recipes = window.RECIPES || {};
-    
+
     // Supabase setup
     const { supabase, isSupabaseConnected, setIsSupabaseConnected } = window.useSupabase();
-    
+
     // Cook name state
     const [cookName, setCookName] = useState(() => {
         return localStorage.getItem('cookName') || '';
@@ -32,7 +32,6 @@ const App = () => {
             setIsSupabaseConnected(true);
         }
     }, [supabase]);
-    // Note: setIsSupabaseConnected is a stable setter, doesn't need to be in deps
 
     // Setup real-time subscriptions
     window.useRealtime(
@@ -55,9 +54,7 @@ const App = () => {
 
     // Show loading state
     if (recipeData.isLoading) {
-        return React.createElement('div', {
-            className: 'max-w-[1600px] mx-auto p-5'
-        }, [
+        return React.createElement('main', { className: 'container' }, [
             React.createElement(window.Header, {
                 key: 'header',
                 cookName,
@@ -65,32 +62,15 @@ const App = () => {
                 supabase,
                 isSupabaseConnected
             }),
-            React.createElement('div', {
-                key: 'loading',
-                className: 'flex items-center justify-center min-h-[400px]'
-            }, [
-                React.createElement('div', {
-                    key: 'spinner',
-                    className: 'text-center'
-                }, [
-                    React.createElement('div', {
-                        key: 'spinner-icon',
-                        className: 'inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4'
-                    }),
-                    React.createElement('div', {
-                        key: 'text',
-                        className: 'text-gray-600'
-                    }, 'Loading kitchen data...')
-                ])
+            React.createElement('article', { key: 'loading' }, [
+                React.createElement('p', { key: 'text' }, 'Loading kitchen data...')
             ])
         ]);
     }
 
     // Show error state
     if (recipeData.loadError) {
-        return React.createElement('div', {
-            className: 'max-w-[1600px] mx-auto p-5'
-        }, [
+        return React.createElement('main', { className: 'container' }, [
             React.createElement(window.Header, {
                 key: 'header',
                 cookName,
@@ -98,30 +78,18 @@ const App = () => {
                 supabase,
                 isSupabaseConnected
             }),
-            React.createElement('div', {
-                key: 'error',
-                className: 'bg-red-50 border-2 border-red-200 rounded-lg p-6 max-w-2xl mx-auto mt-8'
-            }, [
-                React.createElement('div', {
-                    key: 'title',
-                    className: 'text-red-800 font-bold text-lg mb-2'
-                }, '❌ Error Loading Data'),
-                React.createElement('div', {
-                    key: 'message',
-                    className: 'text-red-700 mb-4'
-                }, recipeData.loadError),
+            React.createElement('article', { key: 'error' }, [
+                React.createElement('h2', { key: 'title' }, 'Error Loading Data'),
+                React.createElement('p', { key: 'message' }, recipeData.loadError),
                 React.createElement('button', {
                     key: 'retry',
-                    className: 'bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700',
                     onClick: () => window.location.reload()
                 }, 'Reload Page')
             ])
         ]);
     }
 
-    return React.createElement('div', {
-        className: 'max-w-[1600px] mx-auto p-5'
-    }, [
+    return React.createElement('main', { className: 'container-fluid' }, [
         // Header
         React.createElement(window.Header, {
             key: 'header',
@@ -153,7 +121,6 @@ const App = () => {
             updateOrderCount: recipeData.updateOrderCount,
             completedIngredients: recipeData.completedIngredients,
             toggleIngredient: recipeData.toggleIngredient,
-            ingredientMetadata: recipeData.ingredientMetadata,
             completedSteps: recipeData.completedSteps,
             toggleStep: recipeData.toggleStep,
             recipeStatus: recipeData.recipeStatus,
@@ -170,16 +137,8 @@ const App = () => {
             lightboxIndex,
             setLightboxImage,
             setLightboxIndex
-        }),
-
-        // Shopping List
-        React.createElement(window.ShoppingList, {
-            key: 'shopping-list',
-            recipes,
-            orderCounts: recipeData.orderCounts
         })
     ]);
 };
 
-// Export to global scope
 window.App = App;
