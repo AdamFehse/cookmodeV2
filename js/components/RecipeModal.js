@@ -13,7 +13,8 @@ const RecipeModal = ({
     recipeChefNames = {},
     updateChefName,
     openLightbox
-}) => {
+}) => 
+    {
     if (!selectedRecipe) return null;
 
     const recipe = recipes[selectedRecipe];
@@ -115,17 +116,22 @@ const RecipeModal = ({
                 React.createElement('div', { key: 'layout', className: 'grid modal-layout' }, [
                     // Ingredients column
                     React.createElement('section', { key: 'ingredients', className: 'modal-column ingredients-column' }, [
-                        React.createElement('h3', { key: 'title' }, 'Ingredients'),
-                        React.createElement('input', {
-                            key: 'slider',
-                            id: sliderId,
-                            type: 'range',
-                            min: 1,
-                            max: 50,
-                            value: orderCount,
-                            onChange: handleOrderChange,
-                            title: `${orderCount} order${orderCount > 1 ? 's' : ''}`
-                        }),
+                        React.createElement('div', { key: 'header', style: { display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' } }, [
+                            React.createElement('h3', { key: 'title', style: { margin: 0 } }, 'Ingredients'),
+                            React.createElement('label', { key: 'label', htmlFor: sliderId, style: { display: 'flex', alignItems: 'center', gap: '0.5rem', flex: '0 0 auto' } }, [
+                                React.createElement('input', {
+                                    key: 'slider',
+                                    id: sliderId,
+                                    type: 'range',
+                                    min: 1,
+                                    max: 50,
+                                    value: orderCount,
+                                    onChange: handleOrderChange,
+                                    style: { width: '120px' }
+                                }),
+                                React.createElement('span', { key: 'count' }, `${orderCount}x`)
+                            ])
+                        ]),
                         recipe.components && Object.entries(recipe.components).map(([component, ingredients]) =>
                             React.createElement('details', {
                                 key: component,
