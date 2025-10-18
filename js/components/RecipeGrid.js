@@ -96,8 +96,8 @@ const RecipeGrid = ({ recipes, recipeStatus, recipeChefNames, orderCounts, setSe
     return React.createElement('div', null, [
         // Filter Bar - using Pico grid
         React.createElement('section', { key: 'filters' }, [
-            React.createElement('h2', { key: 'filter-title' }, 'Filter Recipes'),
-            React.createElement('div', { key: 'filter-grid', className: 'grid', style: { gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--pico-spacing)' } }, [
+            React.createElement('h3', { key: 'filter-title' }, 'Filters'),
+            React.createElement('div', { key: 'filter-grid', className: 'grid', style: { gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' } }, [
             React.createElement('select', {
                 key: 'category',
                 value: selectedCategory,

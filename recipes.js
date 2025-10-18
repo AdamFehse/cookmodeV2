@@ -395,12 +395,11 @@ export const RECIPES = {
       "Step 5: Bake 40–50 minutes until the filling is bubbling and the crumble is golden. Cool 15 minutes before serving.",
       "Step 6: Serve with vanilla ice cream, warm custard, or cold cream.",
     ],
-    notes: {
-      storage:
-        "Refrigerate up to 5 days, or freeze baked/unbaked for up to 3 months. Thaw overnight before reheating.",
-      reheat:
-        "Warm in a 180°C (350°F) oven for 15 minutes or microwave individual portions until heated through.",
-    },
+    notes:
+    [
+       "Refrigerate up to 5 days, or freeze baked/unbaked for up to 3 months. Thaw overnight before reheating.",
+        "Warm in a 180°C (350°F) oven for 15 minutes or microwave individual portions until heated through."
+    ],   
     images: [
       "https://tastefulkitchen.com/wp-content/uploads/2025/07/Mango-Filling-with-Coconut-Crumble.jpg",
       "https://emmaduckworthbakes.com/wp-content/uploads/2023/07/Mango-filling.jpg",
@@ -435,10 +434,10 @@ export const RECIPES = {
       "Step 6: Taste and season with additional salt and pepper.",
       "Step 7: Garnish with chopped chives and serve with vegan gravy if desired.",
     ],
-    notes: {
-      textureTip: "Use a hand mixer for a whipped, ultra-smooth texture.",
-      serveWith: "Pairs perfectly with mushroom bourguignon or lentil loaf.",
-    },
+    notes: [
+      "Use a hand mixer for a whipped, ultra-smooth texture.",
+      "Pairs perfectly with mushroom bourguignon or lentil loaf."
+    ],
     images: [
       "https://www.connoisseurusveg.com/wp-content/uploads/2018/11/truffled-mashed-potatoes-collage.jpg",
       "https://tastefulkitchen.com/wp-content/uploads/2025/09/truffled-mashed-potatoes-1-of-1.jpg",

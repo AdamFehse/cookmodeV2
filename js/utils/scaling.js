@@ -1,11 +1,11 @@
 // Utility functions for ingredient scaling and text manipulation
 
 const scaleAmount = (ingredient, multiplier) => {
-    const match = ingredient.match(/^([\d.\/]+)\s+([a-zA-Z]+)/);
-    if (!match) return `${multiplier}x`;
+    const match = ingredient.match(/^([\d.\/]+)\s+(.+)$/);
+    if (!match) return ingredient;
 
     let amount = match[1];
-    const unit = match[2]; // Just the unit (lb, cup, tbsp, etc)
+    const restOfIngredient = match[2]; // Everything after the number
 
     if (amount.includes('/')) {
         const [num, den] = amount.split('/').map(Number);
@@ -16,7 +16,7 @@ const scaleAmount = (ingredient, multiplier) => {
 
     const scaled = amount * multiplier;
 
-    return `${scaled.toFixed(2)} ${unit}`;
+    return `${scaled.toFixed(2)} ${restOfIngredient}`;
 };
 
 const removeAmount = (ingredient) => {

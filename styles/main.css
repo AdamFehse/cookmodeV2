@@ -226,14 +226,6 @@ li.checked {
   color: var(--pico-muted-color);
 }
 
-li label {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--pico-spacing);
-  padding-block: calc(var(--pico-spacing) * 0.25);
-  cursor: pointer;
-}
-
 /* Lightbox */
 .lightbox-overlay {
   position: fixed;
@@ -294,10 +286,10 @@ li label {
   transition: var(--pico-transition);
 }
 
-.status-button-gathered-active { background: var(--pico-ins-color); color: var(--pico-contrast); border-color: var(--pico-ins-color); }
-.status-button-gathered-inactive { background: transparent; color: var(--pico-ins-color); border-color: var(--pico-ins-color); }
-.status-button-complete-active { background: var(--pico-valid-color); color: var(--pico-contrast); border-color: var(--pico-valid-color); }
-.status-button-complete-inactive { background: transparent; color: var(--pico-valid-color); border-color: var(--pico-valid-color); }
+.status-button-gathered-active { background: #fbbf24; color: #000; border-color: #fbbf24; }
+.status-button-gathered-inactive { background: transparent; color: #fbbf24; border-color: #fbbf24; }
+.status-button-complete-active { background: #10b981; color: #fff; border-color: #10b981; }
+.status-button-complete-inactive { background: transparent; color: #10b981; border-color: #10b981; }
 .status-button-plated-active { background: var(--pico-primary-background); color: var(--pico-primary-inverse); border-color: var(--pico-primary-background); }
 .status-button-plated-inactive { background: transparent; color: var(--pico-primary); border-color: var(--pico-primary); }
 .status-button-packed-active { background: var(--pico-secondary-background); color: var(--pico-secondary-inverse); border-color: var(--pico-secondary-background); }
