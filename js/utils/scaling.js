@@ -6,12 +6,23 @@
  * @returns {number} Parsed numeric amount
  */
 const parseAmount = (amount) => {
-    if (typeof amount === 'number') return amount;
-    if (typeof amount === 'string' && amount.includes('/')) {
-        const [num, den] = amount.split('/').map(Number);
-        return num / den;
+    if (typeof amount === 'number' && Number.isFinite(amount)) {
+        return amount;
     }
-    return parseFloat(amount);
+    if (typeof amount === 'string') {
+        const trimmed = amount.trim();
+        if (!trimmed) return NaN;
+        if (trimmed.includes('/')) {
+            const [num, den] = trimmed.split('/').map(Number);
+            if (!Number.isFinite(num) || !Number.isFinite(den) || den === 0) {
+                return NaN;
+            }
+            return num / den;
+        }
+        const parsed = Number(trimmed);
+        return Number.isFinite(parsed) ? parsed : NaN;
+    }
+    return NaN;
 };
 
 /**
@@ -21,9 +32,40 @@ const parseAmount = (amount) => {
  * @returns {string} Formatted ingredient string
  */
 const scaleAmount = (ingredientObj, multiplier) => {
-    const scaledAmount = parseAmount(ingredientObj.amount) * multiplier;
-    const prep = ingredientObj.prep ? `, ${ingredientObj.prep}` : '';
-    return `${scaledAmount.toFixed(2)} ${ingredientObj.unit} ${ingredientObj.ingredient}${prep}`;
+    if (!ingredientObj) return '';
+    if (typeof ingredientObj === 'string') return ingredientObj;
+
+    const { amount, unit = '', ingredient = '', prep } = ingredientObj;
+    const parsedAmount = parseAmount(amount);
+    let parts = [];
+
+    if (Number.isFinite(parsedAmount) && Number.isFinite(multiplier)) {
+        const scaledAmount = parsedAmount * multiplier;
+        const displayAmount = Number.isInteger(scaledAmount)
+            ? scaledAmount.toString()
+            : scaledAmount.toFixed(2).replace(/\.?0+$/, '');
+        parts.push(displayAmount);
+    }
+
+    if (unit) {
+        parts.push(unit);
+    }
+
+    if (ingredient) {
+        parts.push(ingredient);
+    }
+
+    let result = parts.join(' ').trim();
+
+    if (!result && ingredient) {
+        result = ingredient;
+    }
+
+    if (prep) {
+        result = `${result}${result ? ', ' : ''}${prep}`;
+    }
+
+    return result;
 };
 
 /**

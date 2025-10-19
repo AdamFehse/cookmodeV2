@@ -1,44 +1,26 @@
-// Recipe status styles
-const STATUS_STYLES = {
-    'gathered': 'recipe-status-gathered',
-    'complete': 'recipe-status-complete',
-    'plated': 'recipe-status-plated',
-    'packed': 'recipe-status-packed'
+// Global constants for CookMode
+const DEFAULT_CHEF_COLOR = '#a855f7';
+
+// Chef color mappings (CSS var -> hex)
+const CHEF_COLORS = {
+    'var(--chef-purple)': '#a855f7',
+    'var(--chef-blue)': '#3b82f6',
+    'var(--chef-red)': '#ef4444',
+    'var(--chef-teal)': '#14b8a6',
+    'var(--chef-orange)': '#f97316',
+    'var(--chef-yellow)': '#eab308',
+    'var(--chef-pink)': '#ec4899'
 };
 
-// Status button styles
-const STATUS_BUTTON_STYLES = {
-    'gathered': {
-        active: 'status-button-gathered-active',
-        inactive: 'status-button-gathered-inactive'
-    },
-    'complete': {
-        active: 'status-button-complete-active',
-        inactive: 'status-button-complete-inactive'
-    },
-    'plated': {
-        active: 'status-button-plated-active',
-        inactive: 'status-button-plated-inactive'
-    },
-    'packed': {
-        active: 'status-button-packed-active',
-        inactive: 'status-button-packed-inactive'
-    }
+// Helper to resolve CSS variable to actual color
+const resolveChefColor = (color) => {
+    if (!color) return DEFAULT_CHEF_COLOR;
+    // If it's already a hex color, return it
+    if (color.startsWith('#')) return color;
+    // If it's a CSS variable, resolve it
+    return CHEF_COLORS[color] || DEFAULT_CHEF_COLOR;
 };
 
-// Status badge background colors
-const STATUS_BADGE_COLORS = {
-    'gathered': 'status-badge-gathered',
-    'complete': 'status-badge-complete',
-    'plated': 'status-badge-plated',
-    'packed': 'status-badge-packed'
-};
-
-// Default colors
-const DEFAULT_CHEF_COLOR = '#9333ea'; // Purple - matches database default
-
-// Export to global scope for other files
-window.STATUS_STYLES = STATUS_STYLES;
-window.STATUS_BUTTON_STYLES = STATUS_BUTTON_STYLES;
-window.STATUS_BADGE_COLORS = STATUS_BADGE_COLORS;
 window.DEFAULT_CHEF_COLOR = DEFAULT_CHEF_COLOR;
+window.CHEF_COLORS = CHEF_COLORS;
+window.resolveChefColor = resolveChefColor;

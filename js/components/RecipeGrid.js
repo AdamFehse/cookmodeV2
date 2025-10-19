@@ -1,15 +1,59 @@
-const RecipeGrid = ({ recipes, recipeStatus, recipeChefNames, orderCounts, setSelectedRecipe }) => {
-    const { useState, useMemo } = React;
-    const STATUS_BADGE_COLORS = window.STATUS_BADGE_COLORS;
+const RecipeGrid = ({
+    recipes,
+    recipeStatus,
+    recipeChefNames,
+    orderCounts,
+    setSelectedRecipe,
+    filterText,
+    setFilterText,
+    selectedCategory,
+    setSelectedCategory,
+    selectedDish,
+    setSelectedDish,
+    selectedIngredient,
+    setSelectedIngredient,
+    selectedComponent,
+    setSelectedComponent,
+    categories,
+    dishes,
+    ingredients,
+    components,
+    handleResetFilters
+}) => {
+    const { useMemo } = React;
+    const DEFAULT_CHEF_COLOR = window.DEFAULT_CHEF_COLOR || '#a855f7';
+    const resolveChefColor = window.resolveChefColor || ((color) => color);
     const slugToDisplayName = window.slugToDisplayName;
     const getIngredientName = window.getIngredientName || ((ing) => typeof ing === 'string' ? ing : ing.ingredient);
 
-    // State for filters
-    const [filterText, setFilterText] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('all');
-    const [selectedDish, setSelectedDish] = useState('all');
-    const [selectedIngredient, setSelectedIngredient] = useState('all');
-    const [selectedComponent, setSelectedComponent] = useState('all');
+    // Helper functions for badge styling with vibrant colors
+    const getStatusBadgeStyle = (status) => {
+        const colors = {
+            gathered: { bg: '#3b82f6', text: '#ffffff' },  // Blue
+            complete: { bg: '#10b981', text: '#ffffff' },  // Green
+            plated: { bg: '#f59e0b', text: '#000000' },    // Orange
+            packed: { bg: '#8b5cf6', text: '#ffffff' }     // Purple
+        };
+
+        const color = colors[status] || { bg: '#6b7280', text: '#ffffff' };
+
+        return {
+            backgroundColor: color.bg,
+            color: color.text,
+            border: 'none'
+        };
+    };
+
+    const getChefBadgeStyle = (color) => ({
+        backgroundColor: resolveChefColor(color),
+        color: '#ffffff',
+        border: 'none'
+    });
+
+    const getOrderBadgeStyle = () => ({
+        '--pico-code-background-color': 'var(--pico-primary-background)',
+        '--pico-code-color': 'var(--pico-primary-inverse)'
+    });
 
     if (Object.keys(recipes).length === 0) {
         return React.createElement('div', {
@@ -19,38 +63,6 @@ const RecipeGrid = ({ recipes, recipeStatus, recipeChefNames, orderCounts, setSe
 
     // Define category order
     const categoryOrder = ['Entree', 'Side', 'Soup', 'Dessert'];
-
-    // Extract unique values for dropdowns
-    const { categories, dishes, ingredients, components } = useMemo(() => {
-        const categoriesSet = new Set();
-        const dishesSet = new Set();
-        const ingredientsSet = new Set();
-        const componentsSet = new Set();
-
-        Object.values(recipes).forEach(recipe => {
-            if (recipe.category) categoriesSet.add(recipe.category);
-            if (recipe.name) dishesSet.add(recipe.name);
-
-            if (recipe.components) {
-                Object.keys(recipe.components).forEach(comp => componentsSet.add(comp));
-                Object.values(recipe.components).flat().forEach(ingredient => {
-                    const ingredientName = getIngredientName(ingredient);
-                    if (ingredientName) ingredientsSet.add(ingredientName);
-                });
-            }
-        });
-
-        return {
-            categories: Array.from(categoriesSet).sort((a, b) => {
-                const indexA = categoryOrder.indexOf(a);
-                const indexB = categoryOrder.indexOf(b);
-                return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
-            }),
-            dishes: Array.from(dishesSet).sort(),
-            ingredients: Array.from(ingredientsSet).sort(),
-            components: Array.from(componentsSet).sort()
-        };
-    }, [recipes]);
 
     // Filter recipes based on all filters
     const filteredRecipes = Object.entries(recipes).filter(([, recipe]) => {
@@ -102,114 +114,59 @@ const RecipeGrid = ({ recipes, recipeStatus, recipeChefNames, orderCounts, setSe
         return orderA - orderB;
     });
 
-    return React.createElement('div', null, [
-        // Filter Bar - using Pico grid
-        React.createElement('section', { key: 'filters' }, [
-            React.createElement('h3', { key: 'filter-title' }, 'Filters'),
-            React.createElement('div', { key: 'filter-grid', className: 'grid', style: { gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' } }, [
-            React.createElement('select', {
-                key: 'category',
-                value: selectedCategory,
-                onChange: (e) => setSelectedCategory(e.target.value)
-            }, [
-                React.createElement('option', { key: 'all', value: 'all' }, 'All Categories'),
-                ...categories.map(cat => React.createElement('option', { key: cat, value: cat }, cat))
-            ]),
-
-            React.createElement('select', {
-                key: 'dish',
-                value: selectedDish,
-                onChange: (e) => setSelectedDish(e.target.value)
-            }, [
-                React.createElement('option', { key: 'all', value: 'all' }, 'All Dishes'),
-                ...dishes.map(dish => React.createElement('option', { key: dish, value: dish }, dish))
-            ]),
-
-            React.createElement('select', {
-                key: 'component',
-                value: selectedComponent,
-                onChange: (e) => setSelectedComponent(e.target.value)
-            }, [
-                React.createElement('option', { key: 'all', value: 'all' }, 'All Components'),
-                ...components.map(comp => React.createElement('option', { key: comp, value: comp }, comp))
-            ]),
-
-            React.createElement('select', {
-                key: 'ingredient',
-                value: selectedIngredient,
-                onChange: (e) => setSelectedIngredient(e.target.value)
-            }, [
-                React.createElement('option', { key: 'all', value: 'all' }, 'All Ingredients'),
-                ...ingredients.map(ing => React.createElement('option', { key: ing, value: ing }, ing))
-            ]),
-
-            React.createElement('input', {
-                key: 'search',
-                type: 'text',
-                placeholder: 'Search',
-                value: filterText,
-                onChange: (e) => setFilterText(e.target.value)
-            }),
-
-            React.createElement('button', {
-                key: 'clear',
-                type: 'button',
-                className: 'secondary',
-                onClick: () => {
-                    setFilterText('');
-                    setSelectedCategory('all');
-                    setSelectedDish('all');
-                    setSelectedIngredient('all');
-                    setSelectedComponent('all');
-                }
-            }, 'Clear Filters')
-        ])
-        ]),
-
+    return React.createElement('div', { className: 'recipe-grid-wrapper container-fluid' }, [
         // Recipe Grid - using semantic section
-        React.createElement('section', { key: 'recipes-section' }, [
-            React.createElement('h2', { key: 'recipes-title' }, 'Recipes'),
+        React.createElement('section', { key: 'recipes-section', className: 'recipes-section container' }, [
             React.createElement('div', {
                 key: 'grid',
-                className: 'recipe-grid'
+                className: 'grid',
+                style: {
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                    '--pico-grid-gap': 'calc(var(--pico-spacing) * 1.25)',
+                    marginBlock: 'var(--pico-spacing)'
+                }
             }, sortedRecipes.length > 0 ? sortedRecipes.map(([slug, recipe]) => {
             const status = recipeStatus[slug];
             const chefData = recipeChefNames[slug];
             const chefName = chefData?.name || '';
-            const chefColor = chefData?.color || '#362500ff';
+            const chefColor = chefData?.color || '';
             const orderCount = orderCounts[slug] || 1;
             const displayName = recipe.name || slugToDisplayName(slug);
 
             return React.createElement('article', {
                 key: slug,
-                className: 'recipe-card',
-                onClick: () => setSelectedRecipe(slug)
+                onClick: () => setSelectedRecipe(slug),
+                tabIndex: 0
             }, [
-                status && React.createElement('span', {
-                    key: 'status',
-                    className: `status-badge ${STATUS_BADGE_COLORS[status]}`
-                }, status.toUpperCase()),
-
-                chefName && React.createElement('span', {
-                    key: 'chef',
-                    className: 'chef-badge',
-                    style: { backgroundColor: chefColor }
-                }, `${chefName}`),
-
-                orderCount > 1 && React.createElement('span', {
-                    key: 'order',
-                    className: 'order-badge'
-                }, `×${orderCount}`),
-
                 recipe.images?.[0] && React.createElement('img', {
                     key: 'image',
                     src: recipe.images[0],
                     alt: displayName,
-                    className: 'recipe-image'
+                    loading: 'lazy'
                 }),
-
-                React.createElement('h3', { key: 'name' }, displayName),
-                recipe.category && React.createElement('small', { key: 'category' }, recipe.category)
+                React.createElement('div', { key: 'body' }, [
+                    React.createElement('hgroup', { key: 'title' }, [
+                        React.createElement('h4', { key: 'name' }, displayName),
+                        recipe.category && React.createElement('p', { key: 'category' }, recipe.category)
+                    ]),
+                    (status || chefName || orderCount > 1) && React.createElement('p', {
+                        key: 'badges',
+                        style: { display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }
+                    }, [
+                        status && React.createElement('mark', {
+                            key: 'status',
+                            style: getStatusBadgeStyle(status)
+                        }, status.toUpperCase()),
+                        chefName && React.createElement('kbd', {
+                            key: 'chef',
+                            style: getChefBadgeStyle(chefColor)
+                        }, chefName),
+                        orderCount > 1 && React.createElement('kbd', {
+                            key: 'order',
+                            style: getOrderBadgeStyle()
+                        }, `×${orderCount}`)
+                    ].filter(Boolean))
+                ])
             ]);
         }) : [
             React.createElement('p', { key: 'no-results' }, 'No recipes match your filters.')

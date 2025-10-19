@@ -1,0 +1,21 @@
+/* Vanta.js 3D animated background */
+
+#vanta-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}
+
+/* Ensure content stays above Vanta background */
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+body {
+  overflow-x: hidden;
+  background: transparent;
+}

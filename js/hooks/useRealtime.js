@@ -17,16 +17,13 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
             'postgres_changes',
             { event: '*', schema: 'public', table: 'ingredient_checks' },
             (payload) => {
-                console.log('Ingredient update from Supabase:', payload);
                 if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
                     const item = payload.new;
                     const key = generateIngredientKeyFromItem(item);
-                    console.log('Updating key:', key, 'to', item.is_checked);
-                    setCompletedIngredients(prev => {
-                        const updated = { ...prev, [key]: item.is_checked };
-                        console.log('New ingredient state:', updated);
-                        return updated;
-                    });
+                    setCompletedIngredients(prev => ({
+                        ...prev,
+                        [key]: item.is_checked
+                    }));
                 } else if (payload.eventType === 'DELETE') {
                     const item = payload.old;
                     const key = generateIngredientKeyFromItem(item);
@@ -44,7 +41,6 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
             'postgres_changes',
             { event: '*', schema: 'public', table: 'step_completions' },
             (payload) => {
-                console.log('Step update:', payload);
                 if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
                     const item = payload.new;
                     const key = generateStepKeyFromItem(item);
@@ -58,7 +54,6 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
             'postgres_changes',
             { event: '*', schema: 'public', table: 'recipe_status' },
             (payload) => {
-                console.log('Recipe status update:', payload);
                 if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
                     const item = payload.new;
                     setRecipeStatus(prev => ({ ...prev, [item.recipe_slug]: item.status }));
@@ -78,7 +73,6 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
             'postgres_changes',
             { event: '*', schema: 'public', table: 'order_counts' },
             (payload) => {
-                console.log('Order count update:', payload);
                 if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
                     const item = payload.new;
                     setOrderCounts(prev => ({ ...prev, [item.recipe_slug]: item.count }));
@@ -91,7 +85,6 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
             'postgres_changes',
             { event: '*', schema: 'public', table: 'recipe_chef_names' },
             (payload) => {
-                console.log('Chef name update:', payload);
                 if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
                     const item = payload.new;
                     setRecipeChefNames(prev => ({
@@ -114,8 +107,6 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
 
         channel.subscribe();
         channelRef.current = channel;
-
-        console.log('Listening for real-time updates...');
 
         // Cleanup on unmount
         return () => {

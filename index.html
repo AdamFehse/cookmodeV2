@@ -1,29 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CookMode V2</title>
 
-    <!-- Pico CSS - Minimal, classless CSS framework -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <!-- Pico CSS - Orange theme (vibrant, energetic) -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.orange.min.css"
+    />
 
     <!-- Custom styles -->
-    <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="./styles/background.css" />
+    <link rel="stylesheet" href="./styles/main.css" />
 
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+    ></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body>
+
+    <!-- Vanta.js dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.halo.min.js"
+      integrity="sha512-gRIqup64NLSGaR/I3X+mtgekcMOf9mQhmA4dKplXPYpXRUyV3ToH35BE5ftKCHNgWyFb4pMiQzeBEXqXrd4JSg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <body>
+    <!-- Vanta.js background container -->
+    <div id="vanta-background"></div>
+
     <div id="root"></div>
 
     <script type="module">
-        import { RECIPES } from './recipes.js';
-        import { SUPABASE_CONFIG } from './supabase-config.js';
-        window.RECIPES = RECIPES;
-        window.SUPABASE_CONFIG = SUPABASE_CONFIG;
+      import { RECIPES } from "./recipes.js";
+      import { SUPABASE_CONFIG } from "./supabase-config.js";
+      window.RECIPES = RECIPES;
+      window.SUPABASE_CONFIG = SUPABASE_CONFIG;
     </script>
 
     <script type="text/babel" src="./js/constants/index.js"></script>
@@ -39,7 +61,21 @@
     <script type="text/babel" src="./js/components/App.js"></script>
 
     <script type="text/babel">
-        ReactDOM.render(React.createElement(App), document.getElementById('root'));
+      ReactDOM.render(
+        React.createElement(App),
+        document.getElementById("root")
+      );
     </script>
-</body>
+
+    <script>
+      VANTA.HALO({
+        el: "#vanta-background",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.0,
+        minWidth: 200.0,
+      });
+    </script>
+  </body>
 </html>

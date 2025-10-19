@@ -1,7 +1,20 @@
 const Lightbox = ({ lightboxImage, lightboxIndex, setLightboxImage, setLightboxIndex }) => {
+    const { useRef, useEffect } = React;
+    const dialogRef = useRef(null);
+
+    // Use native dialog.showModal() API
+    useEffect(() => {
+        if (lightboxImage && dialogRef.current) {
+            dialogRef.current.showModal();
+        }
+    }, [lightboxImage]);
+
     if (!lightboxImage) return null;
 
     const closeLightbox = () => {
+        if (dialogRef.current) {
+            dialogRef.current.close();
+        }
         setLightboxImage(null);
         setLightboxIndex(0);
     };
@@ -14,45 +27,53 @@ const Lightbox = ({ lightboxImage, lightboxIndex, setLightboxImage, setLightboxI
         setLightboxIndex((prev) => (prev - 1 + lightboxImage.length) % lightboxImage.length);
     };
 
-    return React.createElement('div', {
-        className: 'lightbox-overlay',
-        onClick: closeLightbox
+    // Handle backdrop click
+    const handleDialogClick = (e) => {
+        if (e.target === dialogRef.current) {
+            closeLightbox();
+        }
+    };
+
+    return React.createElement('dialog', {
+        ref: dialogRef,
+        className: 'modal lightbox',
+        onClick: handleDialogClick,
+        onClose: closeLightbox
     }, [
-        React.createElement('button', {
-            key: 'close',
-            className: 'lightbox-close',
-            onClick: (e) => {
-                e.stopPropagation();
-                closeLightbox();
-            }
-        }, '×'),
+        React.createElement('article', { key: 'content', className: 'lightbox-content' }, [
+            React.createElement('a', {
+                key: 'close',
+                href: '#close',
+                className: 'close',
+                'aria-label': 'Close lightbox',
+                onClick: (event) => {
+                    event.preventDefault();
+                    closeLightbox();
+                }
+            }),
 
-        React.createElement('img', {
-            key: 'image',
-            src: lightboxImage[lightboxIndex],
-            alt: 'Full size',
-            className: 'lightbox-image',
-            onClick: (e) => e.stopPropagation()
-        }),
+            React.createElement('img', {
+                key: 'image',
+                src: lightboxImage[lightboxIndex],
+                alt: 'Full size',
+                className: 'lightbox-image'
+            }),
 
-        lightboxImage.length > 1 && React.createElement('button', {
-            key: 'prev',
-            className: 'lightbox-nav lightbox-nav-prev',
-            onClick: (e) => {
-                e.stopPropagation();
-                prevImage();
-            }
-        }, '‹'),
+            lightboxImage.length > 1 && React.createElement('button', {
+                key: 'prev',
+                className: 'lightbox-nav lightbox-nav-prev',
+                type: 'button',
+                onClick: prevImage
+            }, '‹'),
 
-        lightboxImage.length > 1 && React.createElement('button', {
-            key: 'next',
-            className: 'lightbox-nav lightbox-nav-next',
-            onClick: (e) => {
-                e.stopPropagation();
-                nextImage();
-            }
-        }, '›')
-    ].filter(Boolean));
+            lightboxImage.length > 1 && React.createElement('button', {
+                key: 'next',
+                className: 'lightbox-nav lightbox-nav-next',
+                type: 'button',
+                onClick: nextImage
+            }, '›')
+        ].filter(Boolean))
+    ]);
 };
 
 window.Lightbox = Lightbox;

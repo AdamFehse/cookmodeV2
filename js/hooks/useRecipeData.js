@@ -166,6 +166,26 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
         loadInitialData();
     }, [supabase]);
 
+    const serializeIngredient = (ingredient) => {
+        if (!ingredient) return '';
+        if (typeof ingredient === 'string') return ingredient;
+        if (typeof window.scaleAmount === 'function') {
+            return window.scaleAmount(ingredient, 1);
+        }
+        const { ingredient: name = '', unit = '', prep, amount } = ingredient;
+        const pieces = [];
+        if (amount !== null && amount !== undefined && amount !== '') {
+            pieces.push(String(amount));
+        }
+        if (unit) pieces.push(unit);
+        if (name) pieces.push(name);
+        let result = pieces.join(' ').trim();
+        if (prep) {
+            result = `${result}${result ? ', ' : ''}${prep}`;
+        }
+        return result;
+    };
+
     const updateOrderCount = async (slug, count) => {
         console.log('🔢 Updating order count:', slug, count);
 
@@ -196,7 +216,7 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                         recipe_slug: recipeSlug,
                         ingredient_index: ingredientIndex,
                         component_name: componentName,
-                        ingredient_text: ingredientText,
+                        ingredient_text: serializeIngredient(ingredientText),
                         is_checked: newCheckedState
                     }, {
                         onConflict: 'recipe_slug,ingredient_index,component_name'
