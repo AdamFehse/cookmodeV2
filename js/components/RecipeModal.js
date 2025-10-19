@@ -15,15 +15,23 @@ const RecipeModal = ({
     openLightbox
 }) =>
     {
-    const { useRef, useEffect } = React;
+    const { useRef, useEffect, useState } = React;
     const dialogRef = useRef(null);
+    const chefNameTimeoutRef = useRef(null);
 
     // ALL HOOKS MUST BE CALLED BEFORE ANY EARLY RETURNS
     const scaleAmount = window.scaleAmount || ((ingredient) => ingredient);
     const slugToDisplayName = window.slugToDisplayName || ((slug) => slug);
+    const DEFAULT_CHEF_COLOR = window.DEFAULT_CHEF_COLOR || '#a855f7';
+    const resolveChefColor = window.resolveChefColor || ((color) => color);
 
     // Get current recipe data (with fallbacks for when selectedRecipe is null)
     const recipe = selectedRecipe ? recipes[selectedRecipe] : null;
+    const currentChefData = selectedRecipe ? (recipeChefNames[selectedRecipe] || { name: '', color: DEFAULT_CHEF_COLOR }) : { name: '', color: DEFAULT_CHEF_COLOR };
+
+    // Local state for chef name and color (debounced) - MUST be before early returns
+    const [localChefName, setLocalChefName] = useState(currentChefData.name || '');
+    const [localChefColor, setLocalChefColor] = useState(currentChefData.color || '');
 
     // Use native dialog.showModal() API
     useEffect(() => {
@@ -31,6 +39,12 @@ const RecipeModal = ({
             dialogRef.current.showModal();
         }
     }, [selectedRecipe]);
+
+    // Update local state when recipe changes
+    useEffect(() => {
+        setLocalChefName(currentChefData.name || '');
+        setLocalChefColor(currentChefData.color || '');
+    }, [selectedRecipe, currentChefData.name, currentChefData.color]);
 
     // NOW we can do early returns
     if (!selectedRecipe) return null;
@@ -77,6 +91,31 @@ const RecipeModal = ({
     const orderCount = orderCounts[selectedRecipe] ?? 1;
     const sliderId = `${selectedRecipe}-orders-slider`;
 
+    // Debounced chef name update
+    const handleChefNameChange = (newName) => {
+        setLocalChefName(newName);
+
+        // Clear existing timeout
+        if (chefNameTimeoutRef.current) {
+            clearTimeout(chefNameTimeoutRef.current);
+        }
+
+        // Set new timeout to update database after 500ms of no typing
+        chefNameTimeoutRef.current = setTimeout(() => {
+            if (updateChefName) {
+                updateChefName(selectedRecipe, newName, localChefColor || DEFAULT_CHEF_COLOR);
+            }
+        }, 500);
+    };
+
+    // Handle color change
+    const handleChefColorChange = (newColor) => {
+        setLocalChefColor(newColor);
+        if (updateChefName && localChefName) {
+            updateChefName(selectedRecipe, localChefName, newColor || DEFAULT_CHEF_COLOR);
+        }
+    };
+
     const handleOrderChange = (event) => {
         const nextValue = parseInt(event.target.value, 10);
         const safeValue = Number.isNaN(nextValue) ? 1 : Math.min(Math.max(nextValue, 1), 50);
@@ -119,6 +158,74 @@ const RecipeModal = ({
                         }
                     }),
                     React.createElement('h2', { key: 'title' }, displayName)
+                ]),
+
+                // Control section - Chef name & Status buttons
+                React.createElement('section', { key: 'controls', className: 'modal-controls' }, [
+                    // Chef name input
+                    React.createElement('div', { key: 'chef', className: 'chef-control' }, [
+                        React.createElement('input', {
+                            key: 'name',
+                            type: 'text',
+                            placeholder: 'Chef name',
+                            value: localChefName,
+                            onChange: (event) => handleChefNameChange(event.target.value),
+                            style: { marginBottom: '0.5rem' }
+                        }),
+                        React.createElement('select', {
+                            key: 'color',
+                            value: localChefColor || '',
+                            onChange: (event) => handleChefColorChange(event.target.value),
+                            disabled: !localChefName
+                        }, [
+                            React.createElement('option', { key: 'none', value: '' }, 'Badge color...'),
+                            React.createElement('option', { key: 'purple', value: 'var(--chef-purple)' }, 'Purple'),
+                            React.createElement('option', { key: 'blue', value: 'var(--chef-blue)' }, 'Blue'),
+                            React.createElement('option', { key: 'red', value: 'var(--chef-red)' }, 'Red'),
+                            React.createElement('option', { key: 'teal', value: 'var(--chef-teal)' }, 'Teal'),
+                            React.createElement('option', { key: 'orange', value: 'var(--chef-orange)' }, 'Orange'),
+                            React.createElement('option', { key: 'yellow', value: 'var(--chef-yellow)' }, 'Yellow'),
+                            React.createElement('option', { key: 'pink', value: 'var(--chef-pink)' }, 'Pink')
+                        ]),
+                        localChefName && localChefColor && React.createElement('kbd', {
+                            key: 'preview',
+                            style: {
+                                backgroundColor: resolveChefColor(localChefColor),
+                                color: '#ffffff',
+                                marginTop: '0.5rem',
+                                display: 'inline-block'
+                            }
+                        }, localChefName)
+                    ]),
+
+                    // Status section
+                    React.createElement('div', { key: 'status', className: 'status-control' }, [
+                        React.createElement('div', { key: 'status-info', style: { marginBottom: '0.5rem' } }, [
+                            'Status: ',
+                            React.createElement('mark', {
+                                key: 'badge',
+                                style: getStatusBadgeStyle(recipeStatus[selectedRecipe])
+                            }, recipeStatus[selectedRecipe] ? recipeStatus[selectedRecipe].toUpperCase() : 'NONE')
+                        ]),
+                        React.createElement('div', {
+                            key: 'status-buttons',
+                            role: 'group',
+                            style: { display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }
+                        },
+                            ['gathered', 'complete', 'plated', 'packed'].map((status) => {
+                                const isActive = recipeStatus[selectedRecipe] === status;
+                                const buttonClass = isActive ? '' : 'outline secondary';
+                                return React.createElement('button', {
+                                    key: status,
+                                    type: 'button',
+                                    className: buttonClass,
+                                    style: getStatusButtonStyle(status, isActive),
+                                    'aria-pressed': isActive,
+                                    onClick: () => updateRecipeStatus && updateRecipeStatus(selectedRecipe, isActive ? null : status)
+                                }, status.charAt(0).toUpperCase() + status.slice(1));
+                            })
+                        )
+                    ])
                 ]),
 
                 // Main layout with photos sidebar
@@ -194,35 +301,7 @@ const RecipeModal = ({
 
                     // Instructions column
                     React.createElement('section', { key: 'instructions' }, [
-                        React.createElement('hgroup', { key: 'header' }, [
-                            React.createElement('h3', { key: 'title' }, 'Instructions'),
-                            React.createElement('p', { key: 'status' }, [
-                                'Status: ',
-                                React.createElement('mark', {
-                                    style: getStatusBadgeStyle(recipeStatus[selectedRecipe])
-                                }, recipeStatus[selectedRecipe] ? recipeStatus[selectedRecipe].toUpperCase() : 'NONE')
-                            ])
-                        ]),
-                        React.createElement('div', {
-                            key: 'status-buttons',
-                            role: 'group',
-                            style: { display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }
-                        },
-                            ['gathered', 'complete', 'plated', 'packed'].map((status) => {
-                                const isActive = recipeStatus[selectedRecipe] === status;
-                                const buttonClass = isActive ?
-                                    (status === 'plated' ? 'contrast' : status === 'packed' ? 'secondary' : '') :
-                                    'outline secondary';
-                                return React.createElement('button', {
-                                    key: status,
-                                    type: 'button',
-                                    className: buttonClass,
-                                    style: getStatusButtonStyle(status, isActive),
-                                    'aria-pressed': isActive,
-                                    onClick: () => updateRecipeStatus && updateRecipeStatus(selectedRecipe, isActive ? null : status)
-                                }, status.charAt(0).toUpperCase() + status.slice(1));
-                            })
-                        ),
+                        React.createElement('h3', { key: 'title' }, 'Instructions'),
                         React.createElement('ol', { key: 'steps' },
                             (recipe.instructions || []).map((step, index) => {
                                 const stepKey = `${selectedRecipe}-step-${index}`;

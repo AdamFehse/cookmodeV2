@@ -108,6 +108,34 @@ dialog article.recipe-modal {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Modal controls section (chef + status) */
+.modal-controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--pico-border-radius);
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .modal-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.chef-control,
+.status-control {
+  display: flex;
+  flex-direction: column;
+}
+
+.chef-control input,
+.chef-control select {
+  margin-bottom: 0;
+}
+
 /* Modal layout: photos sidebar + main content */
 .modal-layout {
   display: grid;
