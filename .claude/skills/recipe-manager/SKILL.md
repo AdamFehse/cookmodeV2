@@ -19,7 +19,7 @@ Invoke this skill when the user wants to:
 - Convert recipe formats
 - Bulk update recipe properties
 
-## Recipe Data Schema
+## Recipe Data Schema (Structured Object Format)
 
 ### Standard Recipe Structure
 
@@ -29,8 +29,12 @@ Invoke this skill when the user wants to:
     category: 'Entree' | 'Side' | 'Soup' | 'Dessert',
     components: {
         'Component Name': [
-            '2 cups ingredient name',
-            '1/4 tsp another ingredient'
+            {
+                amount: number | string,    // 2, 0.5, '1/4', '1/3'
+                unit: string,              // 'cup', 'tbsp', 'oz', 'lb', etc.
+                ingredient: string,        // 'carrots', 'olive oil'
+                prep: string               // Optional: 'diced', 'minced'
+            }
         ]
     },
     instructions: [
@@ -45,41 +49,94 @@ Invoke this skill when the user wants to:
 ### Required Fields
 - `name` (string): Display name of the recipe
 - `category` (string): One of: Entree, Side, Soup, Dessert
-- `components` (object): Ingredient lists grouped by component
+- `components` (object): Ingredient lists grouped by component (array of objects)
 - `instructions` (array): Step-by-step cooking instructions
 
 ### Optional Fields
 - `notes` (string or array): Additional tips or information
 - `images` (array): URLs to recipe photos
 
-## Ingredient Format Rules
+## Ingredient Object Structure
 
-### Quantity Patterns
-Ingredients MUST start with a number for scaling to work:
+### Required Fields (per ingredient)
+- `amount`: Number or fraction string
+  - Numbers: `2`, `0.5`, `1.5`
+  - Fractions: `'1/2'`, `'1/4'`, `'1/3'`
+- `unit`: Unit of measurement
+  - Volume: `'cup'`, `'tbsp'`, `'tsp'`
+  - Weight: `'oz'`, `'lb'`, `'g'`, `'kg'`
+  - Count: `'large'`, `'medium'`, `'small'`, `'cloves'`, `'whole'`
+  - Other: `'recipe'`, `'pinch'`, `'dash'`
+- `ingredient`: The ingredient name
+  - Descriptive: `'all-purpose flour'`, `'cremini mushrooms'`
+  - Simple: `'carrots'`, `'garlic'`, `'olive oil'`
 
-✅ **Correct**:
+### Optional Fields (per ingredient)
+- `prep`: Preparation instructions
+  - Cutting: `'diced'`, `'minced'`, `'sliced'`, `'chopped'`
+  - State: `'softened'`, `'melted'`, `'room temperature'`
+  - Additional: `'divided'`, `'plus more to taste'`, `'Pinot Noir recommended'`
+
+### Examples
+
 ```javascript
-'2 cups all-purpose flour'
-'1/4 tsp salt'
-'0.5 lb butter, softened'
-'1 medium onion, diced'
+// Simple ingredient
+{ amount: 2, unit: 'cups', ingredient: 'flour' }
+
+// With preparation
+{ amount: 1, unit: 'large', ingredient: 'onion', prep: 'diced' }
+
+// Fraction amount
+{ amount: '1/4', unit: 'tsp', ingredient: 'salt' }
+
+// Complex prep note
+{ amount: 5, unit: 'large', ingredient: 'carrots', prep: 'peeled and sliced into large chunks' }
+
+// Non-standard unit
+{ amount: 1, unit: 'recipe', ingredient: 'mashed potatoes', prep: 'or serve with rice' }
 ```
 
-❌ **Incorrect**:
+### Scaling Logic (New)
+Much simpler with object format!
+
 ```javascript
-'Salt to taste'           // No number
-'Pinch of cinnamon'       // No number
-'Some olive oil'          // No number
+function scaleIngredient(ingredientObj, multiplier) {
+    const scaledAmount = parseAmount(ingredientObj.amount) * multiplier;
+    return {
+        ...ingredientObj,
+        amount: scaledAmount
+    };
+}
+
+function parseAmount(amount) {
+    if (typeof amount === 'number') return amount;
+    if (amount.includes('/')) {
+        const [num, den] = amount.split('/').map(Number);
+        return num / den;
+    }
+    return parseFloat(amount);
+}
 ```
 
-### Scaling Logic
-The `scaleAmount()` function in `/js/utils/scaling.js`:
-- Extracts the number at the start: `/^([\d.\/]+)\s+(.+)$/`
-- Handles fractions: `1/4` → `0.25`
-- Multiplies by order count
-- Returns: `{scaledAmount} {restOfIngredient}`
+### Display Formatting
 
-Example: `"1 cup flour"` with 3x scaling → `"3.00 cup flour"`
+```javascript
+function formatIngredient(obj, orderCount = 1) {
+    const scaledAmount = parseAmount(obj.amount) * orderCount;
+    const prep = obj.prep ? `, ${obj.prep}` : '';
+    return `${scaledAmount.toFixed(2)} ${obj.unit} ${obj.ingredient}${prep}`;
+}
+
+// Examples:
+// { amount: 2, unit: 'cups', ingredient: 'flour' }
+// → "2.00 cups flour"
+
+// { amount: 1, unit: 'large', ingredient: 'onion', prep: 'diced' }
+// → "1.00 large onion, diced"
+
+// { amount: '1/4', unit: 'tsp', ingredient: 'salt', prep: 'plus more to taste' }
+// → "0.25 tsp salt, plus more to taste"
+```
 
 ## Category Order
 
@@ -123,8 +180,13 @@ When adding/editing recipes, verify:
 - [ ] Slug is kebab-case (lowercase, hyphens)
 - [ ] Name is human-readable
 - [ ] Category is one of: Entree, Side, Soup, Dessert
-- [ ] All ingredients start with a number
+- [ ] All ingredients are objects with `amount`, `unit`, `ingredient` fields
+- [ ] `amount` is a number or fraction string ('1/2', '1/4')
+- [ ] `unit` is a string (never empty)
+- [ ] `ingredient` is a string (never empty)
+- [ ] `prep` is optional string
 - [ ] Components object has at least one entry
+- [ ] Each component has array of ingredient objects
 - [ ] Instructions array has at least one step
 - [ ] Notes field is string OR array (not object)
 - [ ] Images are valid URLs (if provided)
@@ -136,17 +198,26 @@ When adding/editing recipes, verify:
 ### Adding a New Recipe
 
 1. Create kebab-case slug
-2. Follow schema structure
-3. Ensure all ingredients have quantities
-4. Add to appropriate category
-5. Validate syntax
+2. Follow schema structure (object format)
+3. Ensure all ingredients have `amount`, `unit`, `ingredient` fields
+4. Add optional `prep` field for preparation notes
+5. Add to appropriate category
+6. Validate syntax
 
-### Fixing Scaling Issues
+### Converting String Format to Object Format
 
-If ingredients don't scale properly:
-1. Check ingredient starts with number
-2. Verify number format (decimal or fraction)
-3. Test with `scaleAmount()` function
+**Old string format**:
+```javascript
+'2 cups all-purpose flour, sifted'
+```
+
+**New object format**:
+```javascript
+{ amount: 2, unit: 'cups', ingredient: 'all-purpose flour', prep: 'sifted' }
+```
+
+**Use ChatGPT/Claude to batch convert**:
+> "Convert these recipe ingredients to structured format with amount, unit, ingredient, prep fields"
 
 ### Converting Recipes
 
@@ -174,7 +245,7 @@ This file is loaded as a global `window.RECIPES` object and accessed by:
 4. **Precise quantities**: Include unit of measure
 5. **Actionable instructions**: Each step should be clear
 
-## Example: Adding a New Recipe
+## Example: Adding a New Recipe (New Object Format)
 
 ```javascript
 'chocolate-chip-cookies': {
@@ -182,17 +253,17 @@ This file is loaded as a global `window.RECIPES` object and accessed by:
     category: 'Dessert',
     components: {
         'Dough': [
-            '2 cups all-purpose flour',
-            '1 tsp baking soda',
-            '1/2 tsp salt',
-            '1 cup butter, softened',
-            '3/4 cup granulated sugar',
-            '3/4 cup brown sugar',
-            '2 large eggs',
-            '2 tsp vanilla extract'
+            { amount: 2, unit: 'cups', ingredient: 'all-purpose flour' },
+            { amount: 1, unit: 'tsp', ingredient: 'baking soda' },
+            { amount: 0.5, unit: 'tsp', ingredient: 'salt' },
+            { amount: 1, unit: 'cup', ingredient: 'butter', prep: 'softened' },
+            { amount: 0.75, unit: 'cup', ingredient: 'granulated sugar' },
+            { amount: 0.75, unit: 'cup', ingredient: 'brown sugar' },
+            { amount: 2, unit: 'large', ingredient: 'eggs' },
+            { amount: 2, unit: 'tsp', ingredient: 'vanilla extract' }
         ],
         'Mix-ins': [
-            '2 cups chocolate chips'
+            { amount: 2, unit: 'cups', ingredient: 'chocolate chips' }
         ]
     },
     instructions: [
@@ -207,6 +278,20 @@ This file is loaded as a global `window.RECIPES` object and accessed by:
     ],
     notes: 'For chewier cookies, slightly underbake and let cool on baking sheet.'
 }
+```
+
+### ChatGPT Conversion Prompt
+
+Use this to convert existing recipes:
+
+```
+Convert this recipe to JavaScript object format with the following structure:
+- amount: number or fraction string ('1/2', '1/4')
+- unit: string (cup, tbsp, tsp, oz, lb, etc.)
+- ingredient: string (the ingredient name)
+- prep: string (optional, preparation notes like 'diced', 'softened')
+
+[Paste recipe here]
 ```
 
 Remember: Keep recipes cook-friendly and maintainable!

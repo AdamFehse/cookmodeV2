@@ -34,7 +34,11 @@ const STATUS_BADGE_COLORS = {
     'packed': 'status-badge-packed'
 };
 
+// Default colors
+const DEFAULT_CHEF_COLOR = '#9333ea'; // Purple - matches database default
+
 // Export to global scope for other files
 window.STATUS_STYLES = STATUS_STYLES;
 window.STATUS_BUTTON_STYLES = STATUS_BUTTON_STYLES;
 window.STATUS_BADGE_COLORS = STATUS_BADGE_COLORS;
+window.DEFAULT_CHEF_COLOR = DEFAULT_CHEF_COLOR;

@@ -38,9 +38,7 @@ const App = () => {
         supabase,
         isSupabaseConnected,
         recipeData.setCompletedIngredients,
-        recipeData.setIngredientMetadata,
         recipeData.setCompletedSteps,
-        recipeData.setStepMetadata,
         recipeData.setRecipeStatus,
         recipeData.setOrderCounts,
         recipeData.setRecipeChefNames

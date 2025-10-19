@@ -1,6 +1,6 @@
 # CookMode V2 - Project Documentation
 
-**Last Updated**: 2025-01-18
+**Last Updated**: 2025-10-18
 
 ## Project Overview
 
@@ -37,7 +37,7 @@ cookmodeV2/
 ├── supabase-schema.sql                 # Database schema
 ├── supabase-migration-*.sql            # Database migrations
 ├── styles/
-│   └── main.css                        # Custom Pico CSS overrides (~330 lines)
+│   └── main.css                        # Custom Pico CSS overrides (~330 lines, uses Pico variables)
 ├── js/
 │   ├── components/                     # React components
 │   │   ├── App.js                     # Root component
@@ -50,9 +50,10 @@ cookmodeV2/
 │   │   ├── useRecipeData.js           # Recipe state management
 │   │   └── useRealtime.js             # Real-time subscriptions
 │   ├── utils/                          # Utility functions
-│   │   └── scaling.js                 # Ingredient scaling logic
+│   │   ├── scaling.js                 # Ingredient scaling logic
+│   │   └── keys.js                    # State key generation utilities
 │   └── constants/
-│       └── index.js                   # Status constants and styles
+│       └── index.js                   # Status constants (DEFAULT_CHEF_COLOR, etc.)
 └── .claude/                            # Claude Code configuration
     ├── SKILLS_GUIDE.md                # How to use skills
     └── skills/                        # Specialized AI agents
@@ -280,7 +281,11 @@ Central state management for all recipe data.
 - `updateOrderCount()`, `toggleIngredient()`, `toggleStep()`
 - `updateRecipeStatus()`, `updateChefName()`
 
-**Pattern**: Optimistic updates + async Supabase sync
+**Helper Functions** (eliminates duplication):
+- `upsertToSupabase(table, data, conflictKey)` - Centralized upsert with error handling
+- `deleteFromSupabase(table, slug)` - Centralized delete with error handling
+
+**Pattern**: Optimistic updates + async Supabase sync via helpers
 
 #### useRealtime.js
 Establishes real-time subscriptions for collaborative features.
@@ -299,41 +304,138 @@ useRealtime(
 
 Listens to `INSERT`, `UPDATE`, `DELETE` on all tables.
 
+**Uses key generation utilities** from `/js/utils/keys.js` to maintain consistency.
+
+### Utilities
+
+#### keys.js
+Centralized key generation for state tracking.
+
+**Functions**:
+- `generateIngredientKey(recipeSlug, componentName, ingredientIndex)` - Creates ingredient state key
+- `generateIngredientKeyFromItem(item)` - Creates key from database item
+- `generateStepKey(recipeSlug, stepIndex)` - Creates step state key
+- `generateStepKeyFromItem(item)` - Creates key from database item
+
+**Format**: `${recipeSlug}-ing-${componentName}-${ingredientIndex}` for ingredients, `${recipeSlug}-step-${stepIndex}` for steps
+
+**Purpose**: Single source of truth for key formatting prevents inconsistencies across hooks.
+
+#### scaling.js
+Ingredient amount scaling and formatting.
+
+**Functions**:
+- `parseAmount(amount)` - Converts strings/fractions to numbers
+- `scaleAmount(ingredientObj, multiplier)` - Scales ingredient by order count
+- `getIngredientName(ingredientObj)` - Extracts ingredient name from object
+
+**Works exclusively with object format** - no backward compatibility for string format.
+
 ## Styling Architecture
 
 ### Pico CSS Approach
 
-**Philosophy**: Semantic HTML + minimal overrides
+**Philosophy**: ZERO custom CSS if possible - rely entirely on Pico's semantic HTML styling
 
-**Base Styles** (from Pico):
-- Typography (headings, paragraphs)
-- Forms (inputs, selects, buttons)
-- Components (cards, modals, navigation)
-- Grid system
-- Dark mode support
+**Core Principle**: If you need custom CSS, you're probably using the wrong HTML element.
 
-**Custom Overrides** (`styles/main.css`):
-- Recipe grid layout
-- Status badges and buttons
-- Modal dimensions
-- Lightbox controls
-- Checkbox styling (li.checked)
+**Base Styles** (from Pico - use these, not custom CSS):
+- Typography (headings, paragraphs, blockquote)
+- Forms (inputs, selects, buttons, fieldset, legend, label)
+- Components (article, dialog, nav, mark)
+- Grid system (native CSS grid via className="grid")
+- Semantic elements (header, section, details, summary)
+- Dark mode (automatic via @media prefers-color-scheme)
 
-**Total Custom CSS**: ~330 lines (down from 1030 Tailwind utilities)
+### Custom CSS Strategy
+
+**Current State**: ~330 lines in `styles/main.css`
+
+**Goal**: Minimize to absolute essentials only:
+- Application-specific layouts that Pico doesn't provide
+- Functional requirements (positioning, sizing) not semantic styling
+- Zero color overrides (use Pico's CSS variables)
+- Zero typography changes (use Pico's defaults)
+
+**When Custom CSS is Acceptable**:
+1. Layout-only (grid, flex positioning)
+2. Functional (hover effects for interactions)
+3. Cannot be achieved with semantic HTML + Pico
+
+**When Custom CSS is NOT Acceptable**:
+1. Colors (use Pico variables like `--pico-primary`)
+2. Typography (use semantic elements like `<mark>`, `<strong>`)
+3. Spacing (use Pico's spacing variables)
+4. Component styling (use correct semantic element)
 
 ### Color Scheme
 
-**Status Colors**:
-- Gathered: `#fbbf24` (amber)
-- Complete: `#10b981` (green)
-- Plated: Pico primary (blue)
-- Packed: Pico secondary (gray)
+**Status Colors** (using Pico CSS variables):
+- Gathered: `var(--pico-ins-color)` ✅
+- Complete: `var(--pico-valid-color)` ✅
+- Plated: `var(--pico-primary-background)` ✅
+- Packed: `var(--pico-secondary-background)` ✅
 
-**Chef Badges**: User-defined hex colors (default `#9333ea`)
+**Chef Badges**:
+- Default: `DEFAULT_CHEF_COLOR` constant (`#9333ea` purple)
+- User-defined: Hex colors from database (inline styles only)
+
+### Pico CSS Elements Reference
+
+**Use these before writing custom CSS**:
+
+#### Semantic Structure
+- `<header>` - Page/section header with automatic styling
+- `<nav>` - Navigation with horizontal layout
+- `<main>` - Main content area
+- `<section>` - Content sections with spacing
+- `<article>` - Card-like containers with borders/shadows
+- `<aside>` - Sidebar content
+- `<footer>` - Footer with muted styling
+
+#### Typography
+- `<h1>` through `<h6>` - Headings with appropriate sizing
+- `<p>` - Paragraphs with proper spacing
+- `<blockquote>` - Quoted content with left border
+- `<mark>` - Highlighted text (use for badges!)
+- `<strong>`, `<em>` - Bold and italic
+- `<small>` - Smaller text
+
+#### Forms
+- `<input>` - All types styled consistently
+- `<select>` - Dropdown menus
+- `<button>` - Primary, secondary, contrast variants
+- `<fieldset>` + `<legend>` - Form grouping
+- `<label>` - Form labels with proper spacing
+
+#### Interactive
+- `<details>` + `<summary>` - Collapsible sections
+- `<dialog>` - Modal overlays
+- `<a>` - Links with hover states
+- `<button>` - Interactive buttons
+
+#### Layout
+- `className="grid"` - CSS Grid layout
+- `className="container"` - Centered content
+- `className="container-fluid"` - Full-width content
+
+#### Pico CSS Variables (use these for colors/spacing)
+```css
+--pico-primary               /* Primary color */
+--pico-primary-background    /* Primary button bg */
+--pico-secondary             /* Secondary color */
+--pico-contrast              /* High contrast text */
+--pico-muted-color           /* Muted/disabled text */
+--pico-spacing               /* Standard spacing unit */
+--pico-border-radius         /* Border radius */
+--pico-font-family           /* Base font */
+```
+
+**Example**: Instead of custom `.badge { background: #3b82f6 }`, use `<mark>` which automatically uses Pico's styling.
 
 ## Recipe Data Format
 
-### Schema
+### Schema (New Structured Format)
 
 ```javascript
 'recipe-slug': {
@@ -341,7 +443,12 @@ Listens to `INSERT`, `UPDATE`, `DELETE` on all tables.
     category: 'Entree|Side|Soup|Dessert',    // Required
     components: {                            // Required
         'Component Name': [
-            'number unit ingredient description'
+            {
+                amount: number | string,     // 2, 0.5, '1/3', '1/2'
+                unit: string,               // 'cup', 'tbsp', 'oz', 'lb', 'cloves', etc.
+                ingredient: string,         // 'carrots', 'olive oil', 'garlic'
+                prep: string                // Optional: 'diced', 'minced', 'divided'
+            }
         ]
     },
     instructions: [                          // Required
@@ -353,32 +460,115 @@ Listens to `INSERT`, `UPDATE`, `DELETE` on all tables.
 }
 ```
 
-### Ingredient Format Rules
-
-**MUST start with number for scaling**:
-```javascript
-✅ '2 cups flour'
-✅ '1/4 tsp salt'
-✅ '0.5 lb butter'
-
-❌ 'Salt to taste'     // No number
-❌ 'Pinch of cinnamon' // No number
-```
-
-Regex pattern: `/^([\d.\/]+)\s+(.+)$/`
-
-### Scaling Logic
+### Example Recipe
 
 ```javascript
-// Input: "2 cups flour", orderCount: 3
-// Process:
-1. Extract: amount = "2", rest = "cups flour"
-2. Parse: 2 (or handle fraction 1/2 → 0.5)
-3. Multiply: 2 * 3 = 6
-4. Format: "6.00 cups flour"
+'mushroom-bourguignon': {
+    name: 'Mushroom Bourguignon',
+    category: 'Entree',
+    components: {
+        'Mushroom Bourguignon': [
+            { amount: 2, unit: 'tbsp', ingredient: 'olive oil', prep: 'divided' },
+            { amount: 16, unit: 'oz', ingredient: 'cremini mushrooms', prep: 'sliced' },
+            { amount: 5, unit: 'large', ingredient: 'carrots', prep: 'peeled and sliced' },
+            { amount: 1, unit: 'large', ingredient: 'sweet onion', prep: 'diced' },
+            { amount: 4, unit: 'cloves', ingredient: 'garlic', prep: 'minced' },
+            { amount: 1.5, unit: 'cups', ingredient: 'red wine', prep: 'Pinot Noir' },
+            { amount: 2, unit: 'cups', ingredient: 'vegetable broth' }
+        ],
+        'Serving Suggestion': [
+            { amount: 1, unit: 'recipe', ingredient: 'mashed potatoes', prep: 'or rice/pasta' }
+        ]
+    },
+    instructions: [
+        'Heat 1 tbsp olive oil in large pot over medium-high heat...',
+        'Add carrots and onions, cook until softened...'
+    ],
+    notes: 'Pairs well with truffle mashed potatoes.'
+}
 ```
 
-Implementation: `/js/utils/scaling.js:3-20`
+### Ingredient Object Structure
+
+**Required Fields**:
+- `amount`: Number or fraction string (2, 0.5, '1/4', '1/3')
+- `unit`: Unit of measurement ('cup', 'tbsp', 'tsp', 'oz', 'lb', 'cloves', 'large', 'medium', etc.)
+- `ingredient`: The ingredient name ('carrots', 'garlic', 'olive oil')
+
+**Optional Fields**:
+- `prep`: Preparation notes ('diced', 'minced', 'divided', 'plus more to taste')
+
+### Amount Format
+
+**Numbers** (preferred):
+```javascript
+{ amount: 2, unit: 'cups', ingredient: 'flour' }           // 2 cups
+{ amount: 0.5, unit: 'lb', ingredient: 'butter' }          // 0.5 lb
+{ amount: 0.25, unit: 'tsp', ingredient: 'salt' }          // 0.25 tsp
+```
+
+**Fractions** (as strings):
+```javascript
+{ amount: '1/2', unit: 'cup', ingredient: 'milk' }         // 1/2 cup
+{ amount: '1/4', unit: 'tsp', ingredient: 'pepper' }       // 1/4 tsp
+{ amount: '1/3', unit: 'cup', ingredient: 'water' }        // 1/3 cup
+```
+
+### Scaling Logic (New)
+
+```javascript
+// Object format - much simpler!
+const scaled = {
+    ...ingredientObj,
+    amount: parseAmount(ingredientObj.amount) * orderCount
+};
+
+function parseAmount(amount) {
+    if (typeof amount === 'number') return amount;
+    // Handle fractions: '1/2' → 0.5
+    if (amount.includes('/')) {
+        const [num, den] = amount.split('/').map(Number);
+        return num / den;
+    }
+    return parseFloat(amount);
+}
+
+// Display: "6.00 cups flour, diced"
+```
+
+Implementation: `/js/utils/scaling.js`
+
+### Display Format
+
+```javascript
+// Format for display in RecipeModal
+function formatIngredient(obj, orderCount) {
+    const scaledAmount = parseAmount(obj.amount) * orderCount;
+    const prep = obj.prep ? `, ${obj.prep}` : '';
+    return `${scaledAmount.toFixed(2)} ${obj.unit} ${obj.ingredient}${prep}`;
+}
+
+// Output: "6.00 cups flour, sifted"
+```
+
+### Migration from Old Format
+
+**Old (string format)**:
+```javascript
+'2 cups all-purpose flour'
+'1/4 tsp salt'
+'1 large onion, diced'
+```
+
+**New (object format)**:
+```javascript
+{ amount: 2, unit: 'cups', ingredient: 'all-purpose flour' }
+{ amount: 0.25, unit: 'tsp', ingredient: 'salt' }
+{ amount: 1, unit: 'large', ingredient: 'onion', prep: 'diced' }
+```
+
+**Conversion Tool**: Use ChatGPT/Claude to convert existing recipes:
+> "Convert this recipe to the structured format with amount, unit, ingredient, prep fields"
 
 ## Development Workflow
 
@@ -418,10 +608,23 @@ Implementation: `/js/utils/scaling.js:3-20`
 4. Test real-time sync
 
 #### Styling Changes
-1. Check if Pico CSS provides what you need
-2. Only add custom CSS if necessary
-3. Use Pico variables for consistency
-4. Keep overrides minimal
+1. **First**: Try to solve with semantic HTML (right element = right style)
+2. **Second**: Use Pico CSS variables (no custom colors/fonts)
+3. **Third**: Inline styles for one-off positioning/sizing
+4. **Last Resort**: Custom CSS in main.css (layout/functional only)
+5. **Never**: Custom colors, typography, or component styling
+
+**Decision Tree**:
+```
+Need styling?
+  → Try different HTML element (article, mark, dialog, etc.)
+    → Still need styling?
+      → Use Pico variable (--pico-primary, --pico-spacing, etc.)
+        → Still need styling?
+          → Inline style for positioning/sizing
+            → Still need styling?
+              → Document why in main.css comment
+```
 
 ### Git Workflow
 
@@ -549,31 +752,81 @@ See `.claude/SKILLS_GUIDE.md` for detailed usage and creation instructions.
 
 ### Best Practices
 
-1. **Keep It Simple**: Follow Pico CSS philosophy
-2. **Semantic HTML**: Use proper elements
-3. **Optimistic UI**: Update locally, sync async
-4. **No Build Tools**: Stay vanilla
-5. **Document Changes**: Update CLAUDE.md
+1. **Zero Custom CSS**: Exhaust semantic HTML and Pico variables first
+2. **Semantic HTML First**: `<mark>` not `.highlight`, `<dialog>` not `.modal`
+3. **Pico Variables Only**: `--pico-primary` not `#3b82f6`
+4. **Optimistic UI**: Update locally, sync async
+5. **No Build Tools**: Stay vanilla JavaScript
+6. **DRY Principles**: Use helper functions and utilities to eliminate duplication
+7. **Centralize Constants**: Single source of truth (DEFAULT_CHEF_COLOR, key formats, etc.)
+8. **Key Generation**: Always use utilities from `/js/utils/keys.js` for state keys
+9. **Document Changes**: Update CLAUDE.md after major features
+
+### CSS Refactoring Opportunities
+
+**Goal**: Reduce `styles/main.css` from ~330 lines toward zero.
+
+**Completed** (2025-10-18):
+- ✅ Status button colors now use Pico CSS variables (`--pico-ins-color`, `--pico-valid-color`)
+- ✅ DEFAULT_CHEF_COLOR centralized as constant
+
+**Remaining Candidates**:
+- Custom badge styling → Use `<mark>` element
+- Typography overrides → Use correct semantic elements
+- Spacing adjustments → Use Pico spacing variables
+- Layout-specific CSS → Evaluate if achievable with grid/flex + Pico
+
+**Process**:
+1. Identify custom CSS rule
+2. Find equivalent Pico element/variable
+3. Update component to use semantic HTML
+4. Remove custom CSS
+5. Test thoroughly
 
 ## Project History
 
 ### Recent Major Changes
 
-**2025-01-18**: Skills system implementation
+**2025-10-18**: Codebase Refactoring (Phases 1-3)
+- **Phase 1: Quick Wins** (~17 lines removed)
+  - Removed backward compatibility for old string-based recipe format
+  - Centralized DEFAULT_CHEF_COLOR constant in `/js/constants/index.js`
+  - Replaced hardcoded hex colors with Pico CSS variables (`--pico-ins-color`, `--pico-valid-color`)
+  - Updated all components/hooks to use centralized constant
+- **Phase 2: Dead Code Removal** (~32 lines removed)
+  - Completed metadata removal (ingredientMetadata, stepMetadata states)
+  - Aligned codebase with documented 2024-12 metadata removal
+  - Removed unused checked_by tracking from hooks
+- **Phase 3: Hooks Refactoring** (~125 lines removed)
+  - Created `/js/utils/keys.js` with centralized key generation utilities
+  - Added helper functions in useRecipeData.js (upsertToSupabase, deleteFromSupabase)
+  - Refactored updateOrderCount, updateRecipeStatus, updateChefName (55% code reduction)
+  - Updated useRealtime.js and useRecipeData.js to use key utilities
+  - **Total reduction**: ~174 lines (~19% of hooks code)
+- **Benefits**: Improved maintainability, DRY principles, single source of truth for constants and key formats
+
+**2025-01-18**: Skills system + Zero CSS philosophy + Structured recipe format
 - Created source-of-truth, recipe-manager, database-manager skills
 - Added SKILLS_GUIDE.md
 - Created this CLAUDE.md documentation
+- **New philosophy**: ZERO custom CSS - semantic HTML + Pico only
+- Goal: Reduce main.css from 330 lines toward zero
+- **BREAKING**: New structured recipe format (objects instead of strings)
+  - Old: `'2 cups flour'`
+  - New: `{ amount: 2, unit: 'cups', ingredient: 'flour' }`
+  - **Requires**: Update `scaling.js`, `RecipeModal.js`, `RecipeGrid.js`
+  - **Benefit**: No regex parsing, better filtering, cleaner scaling
 
 **2025-01**: Pico CSS Migration
-- Removed Tailwind CSS
-- Adopted Pico CSS v2
+- Removed Tailwind CSS (~1030 lines of utilities)
+- Adopted Pico CSS v2 (classless, semantic)
 - Reduced custom CSS from 1030 → 330 lines
-- Used semantic HTML throughout
+- Used semantic HTML throughout (dialog, article, fieldset, etc.)
 
 **2024-12**: Metadata Removal
 - Removed ingredient/step checked_by tracking
 - Simplified database writes
-- Improved performance
+- Improved performance (no lag on checkbox clicks)
 
 ## Future Considerations
 
@@ -612,4 +865,4 @@ See `.claude/SKILLS_GUIDE.md` for detailed usage and creation instructions.
 
 **Remember**: This document should be updated regularly. After major features or changes, update this file to keep context fresh for future Claude sessions.
 
-Last updated: 2025-01-18 by Claude Code
+Last updated: 2025-10-18 by Claude Code

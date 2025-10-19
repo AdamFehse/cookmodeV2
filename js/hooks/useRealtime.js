@@ -1,9 +1,13 @@
 // Custom hook for real-time Supabase subscriptions
-const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, setIngredientMetadata, setCompletedSteps, setStepMetadata, setRecipeStatus, setOrderCounts, setRecipeChefNames) => {
+const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, setCompletedSteps, setRecipeStatus, setOrderCounts, setRecipeChefNames) => {
     const channelRef = React.useRef(null);
 
     React.useEffect(() => {
         if (!supabase || !isSupabaseConnected) return;
+
+        const DEFAULT_CHEF_COLOR = window.DEFAULT_CHEF_COLOR || '#9333ea';
+        const generateIngredientKeyFromItem = window.generateIngredientKeyFromItem;
+        const generateStepKeyFromItem = window.generateStepKeyFromItem;
 
         // Create a channel for all real-time updates
         const channel = supabase.channel('kitchen-updates');
@@ -16,24 +20,16 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
                 console.log('Ingredient update from Supabase:', payload);
                 if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
                     const item = payload.new;
-                    // Generate the same key format as the UI
-                    const key = `${item.recipe_slug}-ing-${item.component_name}-${item.ingredient_index}`;
+                    const key = generateIngredientKeyFromItem(item);
                     console.log('Updating key:', key, 'to', item.is_checked);
                     setCompletedIngredients(prev => {
                         const updated = { ...prev, [key]: item.is_checked };
                         console.log('New ingredient state:', updated);
                         return updated;
                     });
-                    setIngredientMetadata(prev => ({
-                        ...prev,
-                        [key]: {
-                            checked_by: item.checked_by,
-                            checked_at: item.checked_at
-                        }
-                    }));
                 } else if (payload.eventType === 'DELETE') {
                     const item = payload.old;
-                    const key = `${item.recipe_slug}-ing-${item.component_name}-${item.ingredient_index}`;
+                    const key = generateIngredientKeyFromItem(item);
                     setCompletedIngredients(prev => {
                         const updated = { ...prev };
                         delete updated[key];
@@ -51,15 +47,8 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
                 console.log('Step update:', payload);
                 if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
                     const item = payload.new;
-                    const key = `${item.recipe_slug}-step-${item.step_index}`;
+                    const key = generateStepKeyFromItem(item);
                     setCompletedSteps(prev => ({ ...prev, [key]: item.is_completed }));
-                    setStepMetadata(prev => ({
-                        ...prev,
-                        [key]: {
-                            completed_by: item.completed_by,
-                            completed_at: item.completed_at
-                        }
-                    }));
                 }
             }
         );
@@ -109,7 +98,7 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
                         ...prev,
                         [item.recipe_slug]: {
                             name: item.chef_name,
-                            color: item.chef_color || '#9333ea'
+                            color: item.chef_color || DEFAULT_CHEF_COLOR
                         }
                     }));
                 } else if (payload.eventType === 'DELETE') {

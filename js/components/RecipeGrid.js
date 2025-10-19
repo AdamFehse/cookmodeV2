@@ -2,6 +2,7 @@ const RecipeGrid = ({ recipes, recipeStatus, recipeChefNames, orderCounts, setSe
     const { useState, useMemo } = React;
     const STATUS_BADGE_COLORS = window.STATUS_BADGE_COLORS;
     const slugToDisplayName = window.slugToDisplayName;
+    const getIngredientName = window.getIngredientName || ((ing) => typeof ing === 'string' ? ing : ing.ingredient);
 
     // State for filters
     const [filterText, setFilterText] = useState('');
@@ -33,8 +34,8 @@ const RecipeGrid = ({ recipes, recipeStatus, recipeChefNames, orderCounts, setSe
             if (recipe.components) {
                 Object.keys(recipe.components).forEach(comp => componentsSet.add(comp));
                 Object.values(recipe.components).flat().forEach(ingredient => {
-                    const cleanIngredient = ingredient.replace(/^[\d.\/\s]+/, '').trim();
-                    if (cleanIngredient) ingredientsSet.add(cleanIngredient);
+                    const ingredientName = getIngredientName(ingredient);
+                    if (ingredientName) ingredientsSet.add(ingredientName);
                 });
             }
         });
@@ -62,7 +63,11 @@ const RecipeGrid = ({ recipes, recipeStatus, recipeChefNames, orderCounts, setSe
         }
 
         if (selectedIngredient !== 'all') {
-            const recipeIngredients = Object.values(recipe.components || {}).flat().join(' ').toLowerCase();
+            const recipeIngredients = Object.values(recipe.components || {})
+                .flat()
+                .map(ing => getIngredientName(ing))
+                .join(' ')
+                .toLowerCase();
             if (!recipeIngredients.includes(selectedIngredient.toLowerCase())) return false;
         }
 
@@ -70,7 +75,11 @@ const RecipeGrid = ({ recipes, recipeStatus, recipeChefNames, orderCounts, setSe
             const searchText = filterText.toLowerCase();
             const name = (recipe.name || '').toLowerCase();
             const category = (recipe.category || '').toLowerCase();
-            const recipeIngredients = Object.values(recipe.components || {}).flat().join(' ').toLowerCase();
+            const recipeIngredients = Object.values(recipe.components || {})
+                .flat()
+                .map(ing => getIngredientName(ing))
+                .join(' ')
+                .toLowerCase();
             const componentNames = Object.keys(recipe.components || {}).join(' ').toLowerCase();
 
             return name.includes(searchText) ||

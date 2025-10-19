@@ -9,12 +9,58 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
     });
     const [completedIngredients, setCompletedIngredients] = React.useState({});
     const [completedSteps, setCompletedSteps] = React.useState({});
-    const [ingredientMetadata, setIngredientMetadata] = React.useState({});
-    const [stepMetadata, setStepMetadata] = React.useState({});
     const [recipeStatus, setRecipeStatus] = React.useState({});
     const [recipeChefNames, setRecipeChefNames] = React.useState({});
     const [isLoading, setIsLoading] = React.useState(true);
     const [loadError, setLoadError] = React.useState(null);
+
+    const DEFAULT_CHEF_COLOR = window.DEFAULT_CHEF_COLOR || '#9333ea';
+    const generateIngredientKeyFromItem = window.generateIngredientKeyFromItem;
+    const generateStepKeyFromItem = window.generateStepKeyFromItem;
+    const generateIngredientKey = window.generateIngredientKey;
+    const generateStepKey = window.generateStepKey;
+
+    // Helper: Upsert data to Supabase
+    const upsertToSupabase = async (table, data, conflictKey) => {
+        if (!supabase || !isSupabaseConnected) {
+            console.warn(`Supabase not connected - ${table} change only local`);
+            return null;
+        }
+
+        try {
+            const { data: result, error } = await supabase
+                .from(table)
+                .upsert(data, { onConflict: conflictKey });
+
+            if (error) {
+                console.error(`Error updating ${table}:`, error);
+                return null;
+            }
+            return result;
+        } catch (error) {
+            console.error(`Exception updating ${table}:`, error);
+            return null;
+        }
+    };
+
+    // Helper: Delete from Supabase
+    const deleteFromSupabase = async (table, slug) => {
+        if (!supabase || !isSupabaseConnected) {
+            console.warn(`Supabase not connected - ${table} delete only local`);
+            return;
+        }
+
+        try {
+            const { error } = await supabase
+                .from(table)
+                .delete()
+                .eq('recipe_slug', slug);
+
+            if (error) console.error(`Error deleting from ${table}:`, error);
+        } catch (error) {
+            console.error(`Exception deleting from ${table}:`, error);
+        }
+    };
 
     // Load initial data from Supabase
     React.useEffect(() => {
@@ -37,17 +83,11 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
 
                 if (ingredientData) {
                     const ingredientMap = {};
-                    const metadataMap = {};
                     ingredientData.forEach(item => {
-                        const key = `${item.recipe_slug}-ing-${item.component_name}-${item.ingredient_index}`;
+                        const key = generateIngredientKeyFromItem(item);
                         ingredientMap[key] = item.is_checked;
-                        metadataMap[key] = {
-                            checked_by: item.checked_by,
-                            checked_at: item.checked_at
-                        };
                     });
                     setCompletedIngredients(ingredientMap);
-                    setIngredientMetadata(metadataMap);
                 }
 
                 // Load step completions
@@ -59,17 +99,11 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
 
                 if (stepData) {
                     const stepMap = {};
-                    const stepMetaMap = {};
                     stepData.forEach(item => {
-                        const key = `${item.recipe_slug}-step-${item.step_index}`;
+                        const key = generateStepKeyFromItem(item);
                         stepMap[key] = item.is_completed;
-                        stepMetaMap[key] = {
-                            completed_by: item.completed_by,
-                            completed_at: item.completed_at
-                        };
                     });
                     setCompletedSteps(stepMap);
-                    setStepMetadata(stepMetaMap);
                 }
 
                 // Load recipe status
@@ -114,7 +148,7 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                     chefData.forEach(item => {
                         chefMap[item.recipe_slug] = {
                             name: item.chef_name,
-                            color: item.chef_color || '#9333ea'
+                            color: item.chef_color || DEFAULT_CHEF_COLOR
                         };
                     });
                     setRecipeChefNames(chefMap);
@@ -139,30 +173,12 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
         setOrderCounts(prev => ({ ...prev, [slug]: count }));
 
         // Sync to Supabase
-        if (supabase && isSupabaseConnected) {
-            try {
-                const { data, error } = await supabase
-                    .from('order_counts')
-                    .upsert({
-                        recipe_slug: slug,
-                        count: count,
-                        updated_by: cookName || 'Unknown',
-                        updated_at: new Date().toISOString()
-                    }, {
-                        onConflict: 'recipe_slug'
-                    });
-
-                if (error) {
-                    console.error('Error updating order count:', error);
-                } else {
-                    console.log('Order count saved:', data);
-                }
-            } catch (error) {
-                console.error('Exception updating order count:', error);
-            }
-        } else {
-            console.warn('Supabase not connected, order count only local');
-        }
+        await upsertToSupabase('order_counts', {
+            recipe_slug: slug,
+            count: count,
+            updated_by: cookName || 'Unknown',
+            updated_at: new Date().toISOString()
+        }, 'recipe_slug');
     };
 
     const toggleIngredient = async (recipeSlug, ingredientKey, componentName, ingredientIndex, ingredientText) => {
@@ -231,48 +247,19 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
         setRecipeStatus(prev => ({ ...prev, [slug]: status }));
 
         // Sync to Supabase
-        if (supabase && isSupabaseConnected) {
-            try {
-                if (status === null) {
-                    // Delete status
-                    const { error } = await supabase
-                        .from('recipe_status')
-                        .delete()
-                        .eq('recipe_slug', slug);
-
-                    if (error) {
-                        console.error('Error deleting recipe status:', error);
-                    } else {
-                        console.log('Recipe status cleared');
-                    }
-                } else {
-                    // Upsert status
-                    const { data, error } = await supabase
-                        .from('recipe_status')
-                        .upsert({
-                            recipe_slug: slug,
-                            status: status,
-                            updated_by: cookName || 'Unknown',
-                            updated_at: new Date().toISOString()
-                        }, {
-                            onConflict: 'recipe_slug'
-                        });
-
-                    if (error) {
-                        console.error('Error updating recipe status:', error);
-                    } else {
-                        console.log('Recipe status saved:', data);
-                    }
-                }
-            } catch (error) {
-                console.error('Exception updating recipe status:', error);
-            }
+        if (status === null) {
+            await deleteFromSupabase('recipe_status', slug);
         } else {
-            console.warn(' Supabase not connected, status change only local');
+            await upsertToSupabase('recipe_status', {
+                recipe_slug: slug,
+                status: status,
+                updated_by: cookName || 'Unknown',
+                updated_at: new Date().toISOString()
+            }, 'recipe_slug');
         }
     };
 
-    const updateChefName = async (slug, chefName, chefColor = '#9333ea') => {
+    const updateChefName = async (slug, chefName, chefColor = DEFAULT_CHEF_COLOR) => {
         console.log('👨‍🍳 Updating chef name:', slug, chefName, chefColor);
 
         // Optimistically update UI
@@ -290,44 +277,15 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
         }
 
         // Sync to Supabase
-        if (supabase && isSupabaseConnected) {
-            try {
-                if (!chefName) {
-                    // Delete chef name
-                    const { error } = await supabase
-                        .from('recipe_chef_names')
-                        .delete()
-                        .eq('recipe_slug', slug);
-
-                    if (error) {
-                        console.error(' Error deleting chef name:', error);
-                    } else {
-                        console.log('Chef name cleared');
-                    }
-                } else {
-                    // Upsert chef name with color
-                    const { data, error } = await supabase
-                        .from('recipe_chef_names')
-                        .upsert({
-                            recipe_slug: slug,
-                            chef_name: chefName,
-                            chef_color: chefColor,
-                            updated_at: new Date().toISOString()
-                        }, {
-                            onConflict: 'recipe_slug'
-                        });
-
-                    if (error) {
-                        console.error(' Error updating chef name:', error);
-                    } else {
-                        console.log('Chef name saved:', data);
-                    }
-                }
-            } catch (error) {
-                console.error(' Exception updating chef name:', error);
-            }
+        if (!chefName) {
+            await deleteFromSupabase('recipe_chef_names', slug);
         } else {
-            console.warn(' Supabase not connected, chef name change only local');
+            await upsertToSupabase('recipe_chef_names', {
+                recipe_slug: slug,
+                chef_name: chefName,
+                chef_color: chefColor,
+                updated_at: new Date().toISOString()
+            }, 'recipe_slug');
         }
     };
 
@@ -336,8 +294,6 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
         orderCounts,
         completedIngredients,
         completedSteps,
-        ingredientMetadata,
-        stepMetadata,
         recipeStatus,
         recipeChefNames,
         isLoading,
@@ -347,8 +303,6 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
         setOrderCounts,
         setCompletedIngredients,
         setCompletedSteps,
-        setIngredientMetadata,
-        setStepMetadata,
         setRecipeStatus,
         setRecipeChefNames,
 

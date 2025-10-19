@@ -39,7 +39,8 @@ Invoke this skill when the user needs:
 
 ### Core Architecture
 - **Frontend**: Vanilla React (React.createElement, no JSX)
-- **CSS Framework**: Pico CSS v2 (minimal, classless)
+- **CSS Framework**: Pico CSS v2 (~10kb, classless, semantic HTML)
+- **Styling Philosophy**: ZERO custom CSS goal - use semantic HTML + Pico variables only
 - **Database**: Supabase (PostgreSQL with real-time subscriptions)
 - **State Management**: React hooks (useState, useEffect, custom hooks)
 
@@ -104,15 +105,29 @@ When documenting, provide:
 
 ## Recent Project Changes (Context)
 
-### CSS Simplification (Latest)
+### Styling Philosophy (Current)
+- **Goal**: ZERO custom CSS - rely entirely on Pico CSS
+- **Principle**: If you need custom CSS, you're using the wrong HTML element
+- **Current State**: ~330 lines in main.css (target: minimal or zero)
+- **Approach**: Semantic HTML first, Pico variables second, custom CSS last resort
+
+**Decision Tree for Styling**:
+1. Try semantic HTML element (dialog, mark, article, etc.)
+2. Use Pico CSS variable (--pico-primary, --pico-spacing, etc.)
+3. Inline style for positioning/sizing only
+4. Custom CSS only if absolutely necessary (document why)
+
+### CSS Simplification (Recent)
 - Migrated from Tailwind utilities to Pico CSS
 - Reduced custom CSS from 1030 lines → 330 lines
 - Used semantic HTML5 elements (dialog, article, section, fieldset)
+- Target: Further reduce to near-zero custom CSS
 
 ### Removed Features
 - Ingredient/step metadata tracking (checked_by, checked_at)
 - Shopping list feature
 - Complex inline styles
+- Tailwind utility classes
 
 ### Database Tables
 - `ingredient_checks` - Tracks checked ingredients

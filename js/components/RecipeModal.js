@@ -23,11 +23,12 @@ const RecipeModal = ({
     const STATUS_BUTTON_STYLES = window.STATUS_BUTTON_STYLES || {};
     const scaleAmount = window.scaleAmount || ((ingredient) => ingredient);
     const slugToDisplayName = window.slugToDisplayName || ((slug) => slug);
+    const DEFAULT_CHEF_COLOR = window.DEFAULT_CHEF_COLOR || '#9333ea';
 
     const displayName = recipe.name || slugToDisplayName(selectedRecipe);
-    const currentChefData = recipeChefNames[selectedRecipe] || { name: '', color: '#9333ea' };
+    const currentChefData = recipeChefNames[selectedRecipe] || { name: '', color: DEFAULT_CHEF_COLOR };
     const currentChefName = currentChefData.name || '';
-    const currentChefColor = currentChefData.color || '#00fed0ff';
+    const currentChefColor = currentChefData.color || DEFAULT_CHEF_COLOR;
     const orderCount = orderCounts[selectedRecipe] ?? 1;
     const sliderId = `${selectedRecipe}-orders-slider`;
 
