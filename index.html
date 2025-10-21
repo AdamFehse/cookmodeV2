@@ -29,8 +29,7 @@
     <!-- Vanta.js dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.halo.min.js"
-      integrity="sha512-gRIqup64NLSGaR/I3X+mtgekcMOf9mQhmA4dKplXPYpXRUyV3ToH35BE5ftKCHNgWyFb4pMiQzeBEXqXrd4JSg=="
+      src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.fog.min.js"
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
@@ -69,13 +68,19 @@
     </script>
 
     <script>
-      VANTA.HALO({
+      VANTA.FOG({
         el: "#vanta-background",
         mouseControls: true,
         touchControls: true,
         gyroControls: false,
         minHeight: 200.0,
         minWidth: 200.0,
+        highlightColor: 0x3a506b,
+        midtoneColor: 0x1c2541,
+        lowlightColor: 0x0b132b,
+        baseColor: 0x04040c,
+        speed: 0.6,
+        zoom: 0.85,
       });
     </script>
   </body>
