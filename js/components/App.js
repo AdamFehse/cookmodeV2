@@ -11,6 +11,7 @@ const App = () => {
     const [selectedRecipe, setSelectedRecipe] = useState(null);
     const [lightboxImage, setLightboxImage] = useState(null);
     const [lightboxIndex, setLightboxIndex] = useState(0);
+    const [selectedChefForList, setSelectedChefForList] = useState(null);
 
     // Filter state
     const [filterText, setFilterText] = useState('');
@@ -176,7 +177,9 @@ const App = () => {
             dishes,
             ingredients,
             components,
-            handleResetFilters
+            handleResetFilters,
+            recipeChefNames: recipeData.recipeChefNames,
+            setSelectedChefForList
         }),
 
         // Recipe Grid
@@ -234,6 +237,16 @@ const App = () => {
             lightboxIndex,
             setLightboxImage,
             setLightboxIndex
+        }),
+
+        // Chef Ingredients List
+        selectedChefForList && React.createElement(window.ChefIngredientsList, {
+            key: 'chef-list',
+            recipes,
+            orderCounts: recipeData.orderCounts,
+            recipeChefNames: recipeData.recipeChefNames,
+            selectedChef: selectedChefForList,
+            onClose: () => setSelectedChefForList(null)
         })
     ]);
 };

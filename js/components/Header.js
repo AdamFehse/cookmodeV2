@@ -15,8 +15,20 @@ const Header = ({
     dishes,
     ingredients,
     components,
-    handleResetFilters
+    handleResetFilters,
+    recipeChefNames,
+    setSelectedChefForList
 }) => {
+    const { useMemo } = React;
+
+    // Get unique chef names
+    const chefNames = useMemo(() => {
+        const names = new Set();
+        Object.values(recipeChefNames || {}).forEach(chefData => {
+            if (chefData.name) names.add(chefData.name);
+        });
+        return Array.from(names).sort();
+    }, [recipeChefNames]);
     const connectionState = supabase
         ? isSupabaseConnected
             ? 'Live'
@@ -38,14 +50,27 @@ const Header = ({
                 React.createElement('ul', { key: 'brand' }, [
                     React.createElement('li', { key: 'title' }, React.createElement('strong', null, 'CookMode V2'))
                 ]),
-                React.createElement('ul', { key: 'status' }, [
-                    React.createElement('li', { key: 'badge' },
+                React.createElement('ul', { key: 'actions' }, [
+                    chefNames.length > 0 && React.createElement('li', { key: 'chef-list' },
+                        React.createElement('select', {
+                            'aria-label': 'View chef ingredients',
+                            onChange: (e) => e.target.value && setSelectedChefForList(e.target.value),
+                            value: '',
+                            style: { width: 'auto' }
+                        }, [
+                            React.createElement('option', { key: 'default', value: '' }, 'Chef\'s List...'),
+                            ...chefNames.map(name =>
+                                React.createElement('option', { key: name, value: name }, name)
+                            )
+                        ])
+                    ),
+                    React.createElement('li', { key: 'status' },
                         React.createElement('span', {
                             className: connectionClass,
                             role: 'status'
                         }, connectionState)
                     )
-                ])
+                ].filter(Boolean))
             ]),
 
             // Filter row
