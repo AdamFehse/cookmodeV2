@@ -1,0 +1,230 @@
+/* ============================================
+   THEME.CSS - Design Tokens & CSS Variables
+   ============================================
+   Central definition of colors, spacing, typography,
+   and semantic design tokens. Supports light/dark modes
+   with fallbacks to Pico CSS variables.
+   ============================================ */
+
+:root {
+  /* ============================================
+     PRIMARY BRAND COLORS
+     ============================================ */
+  --color-primary: #ff9800;
+  --color-primary-light: #ffb74d;
+  --color-primary-muted: rgba(255, 152, 0, 0.3);
+  --color-primary-subtle: rgba(255, 152, 0, 0.1);
+  --color-primary-dark: #f57c00;
+
+  /* ============================================
+     STATUS & SEMANTIC COLORS
+     ============================================ */
+  --color-success: #10b981;
+  --color-success-bg: rgba(16, 185, 129, 0.1);
+  --color-success-border: #10b981;
+
+  --color-warning: var(--color-primary);
+  --color-warning-bg: var(--color-primary-subtle);
+
+  --color-error: #ef4444;
+  --color-error-bg: rgba(239, 68, 68, 0.1);
+
+  /* ============================================
+     SURFACE COLORS (Semantic - backgrounds & cards)
+     ============================================ */
+  --surface-bg: var(--pico-background-color, #0a0e27);
+  --surface-overlay: rgba(0, 0, 0, 0.6);
+  --surface-card: rgba(255, 255, 255, 0.08);
+  --surface-card-hover: rgba(255, 255, 255, 0.12);
+  --surface-elevated: rgba(255, 255, 255, 0.12);
+  --surface-form: rgba(30, 30, 50, 0.8);
+  --surface-form-focus: rgba(50, 50, 80, 0.95);
+
+  /* ============================================
+     BORDER COLORS
+     ============================================ */
+  --surface-border: rgba(255, 152, 0, 0.2);
+  --surface-border-hover: rgba(255, 152, 0, 0.4);
+  --surface-border-strong: rgba(255, 152, 0, 0.6);
+  --surface-border-muted: rgba(255, 255, 255, 0.05);
+
+  /* ============================================
+     TEXT COLORS
+     ============================================ */
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-muted: #aaaaaa;
+  --text-inverse: #000000;
+  --text-accent: var(--color-primary);
+
+  /* ============================================
+     SPACING SCALE (8px base unit)
+     ============================================ */
+  --space-xs: 0.25rem;  /* 4px */
+  --space-sm: 0.5rem;   /* 8px */
+  --space-md: 1rem;     /* 16px */
+  --space-lg: 1.5rem;   /* 24px */
+  --space-xl: 2rem;     /* 32px */
+  --space-2xl: 3rem;    /* 48px */
+
+  /* ============================================
+     TYPOGRAPHY
+     ============================================ */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+
+  /* ============================================
+     SHADOWS
+     ============================================ */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.25);
+  --shadow-2xl: 0 20px 48px rgba(0, 0, 0, 0.3);
+  --shadow-modal: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  /* ============================================
+     BORDER RADIUS
+     ============================================ */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* ============================================
+     TRANSITIONS & ANIMATIONS
+     ============================================ */
+  --transition-fast: 0.15s ease;
+  --transition-standard: 0.2s ease;
+  --transition-slow: 0.3s ease;
+
+  /* ============================================
+     BACKDROP & OVERLAY
+     ============================================ */
+  --backdrop-blur: blur(10px);
+  --backdrop-blur-sm: blur(4px);
+
+  /* ============================================
+     GAPS & GAPS (for grid/flexbox)
+     ============================================ */
+  --gap-xs: 0.25rem;
+  --gap-sm: 0.5rem;
+  --gap-md: 1rem;
+  --gap-lg: 1.5rem;
+  --gap-xl: 2rem;
+
+  /* ============================================
+     MODAL SIZES
+     ============================================ */
+  --modal-sm-width: 400px;
+  --modal-md-width: 600px;
+  --modal-lg-width: 900px;
+  --modal-xl-width: 1200px;
+  --modal-max-width: 1400px;
+  --modal-max-height: 90vh;
+
+  /* ============================================
+     BREAKPOINTS (for responsive design)
+     ============================================ */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* ============================================
+     Z-INDEX SCALE
+     ============================================ */
+  --z-dropdown: 100;
+  --z-modal: 1000;
+  --z-tooltip: 1100;
+  --z-notification: 1200;
+
+  /* ============================================
+     FORM ELEMENT SIZES
+     ============================================ */
+  --input-height: 2.5rem;
+  --input-padding-x: 0.75rem;
+  --input-padding-y: 0.5rem;
+  --input-border-width: 1px;
+  --input-focus-ring: 3px;
+
+  /* ============================================
+     BUTTON SIZES
+     ============================================ */
+  --btn-height: 2.5rem;
+  --btn-padding-x: 1rem;
+  --btn-padding-y: 0.5rem;
+  --btn-font-weight: var(--font-weight-semibold);
+
+  /* ============================================
+     COMPONENT SPECIFIC
+     ============================================ */
+  --checkbox-size: 18px;
+  --progress-height: 8px;
+  --progress-radius: 4px;
+}
+
+/* ============================================
+   LIGHT MODE OVERRIDES
+   ============================================ */
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Surface colors for light mode */
+    --surface-bg: #f5f5f5;
+    --surface-overlay: rgba(0, 0, 0, 0.3);
+    --surface-card: rgba(0, 0, 0, 0.05);
+    --surface-card-hover: rgba(0, 0, 0, 0.08);
+    --surface-elevated: rgba(0, 0, 0, 0.08);
+    --surface-form: rgba(255, 255, 255, 0.9);
+    --surface-form-focus: #ffffff;
+
+    /* Border colors for light mode */
+    --surface-border: rgba(255, 152, 0, 0.15);
+    --surface-border-hover: rgba(255, 152, 0, 0.3);
+    --surface-border-strong: rgba(255, 152, 0, 0.5);
+    --surface-border-muted: rgba(0, 0, 0, 0.08);
+
+    /* Text colors for light mode */
+    --text-primary: #1a1a1a;
+    --text-secondary: #424242;
+    --text-muted: #757575;
+    --text-inverse: #ffffff;
+
+    /* Card and interactive elements */
+    --surface-card: rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* ============================================
+   HIGH CONTRAST MODE (accessibility)
+   ============================================ */
+@media (prefers-contrast: more) {
+  :root {
+    --surface-border: var(--color-primary);
+    --text-muted: var(--text-secondary);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ============================================
+   REDUCED MOTION (accessibility)
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0s;
+    --transition-standard: 0s;
+    --transition-slow: 0s;
+  }
+}

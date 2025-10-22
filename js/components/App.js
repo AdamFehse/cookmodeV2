@@ -148,6 +148,7 @@ const App = () => {
         chefSummaries.length > 0 && React.createElement(window.ChefPrepSummary, {
             key: 'chef-summary',
             chefSummaries,
+            chefAssignments,
             onSelectChef: (chefName) => setSelectedChefForList(chefName)
         }),
 

@@ -299,93 +299,99 @@ const RecipeModal = ({
                         )
                     ),
 
-                    // Main content (ingredients + instructions)
+                    // Main content area - ingredients and instructions stacked vertically
                     React.createElement('div', { key: 'main-content', className: 'modal-main' }, [
                         // Ingredients section
-                        React.createElement('section', { key: 'ingredients' }, [
-                        React.createElement('hgroup', { key: 'header' }, [
-                            React.createElement('h3', { key: 'title' }, 'Ingredients'),
-                            React.createElement('p', { key: 'label' }, [
-                                React.createElement('label', { htmlFor: sliderId }, [
-                                    `Orders: ${orderCount}x`,
-                                    React.createElement('input', {
-                                        key: 'slider',
-                                        id: sliderId,
-                                        type: 'range',
-                                        min: 1,
-                                        max: 50,
-                                        value: orderCount,
-                                        onChange: handleOrderChange
-                                    })
+                        React.createElement('section', { key: 'ingredients', className: 'ingredients-section' }, [
+                            React.createElement('header', { key: 'header', className: 'section-header' }, [
+                                React.createElement('h3', { key: 'title' }, 'Ingredients'),
+                                React.createElement('div', { key: 'order-control' }, [
+                                    React.createElement('label', { htmlFor: sliderId, className: 'order-label' }, [
+                                        `Orders: ${orderCount}x`,
+                                        React.createElement('input', {
+                                            key: 'slider',
+                                            id: sliderId,
+                                            type: 'range',
+                                            min: 1,
+                                            max: 50,
+                                            value: orderCount,
+                                            onChange: handleOrderChange,
+                                            className: 'order-slider'
+                                        })
+                                    ])
                                 ])
-                            ])
+                            ]),
+                            React.createElement('div', { key: 'ingredients-content', className: 'ingredients-content' },
+                                recipe.components && Object.entries(recipe.components).map(([component, ingredients]) =>
+                                    React.createElement('div', { key: component, className: 'ingredient-group' }, [
+                                        React.createElement('h4', { key: 'component-title', className: 'component-title' }, component),
+                                        React.createElement('ul', { key: 'list', className: 'ingredient-list' },
+                                            ingredients.map((ingredient, index) => {
+                                                const ingredientKey = `${selectedRecipe}-ing-${component}-${index}`;
+                                                const isCompleted = completedIngredients[ingredientKey];
+
+                                                return React.createElement('li', {
+                                                    key: index,
+                                                    className: `ingredient-item ${isCompleted ? 'checked' : ''}`
+                                                },
+                                                    React.createElement('label', { className: 'ingredient-label' }, [
+                                                        React.createElement('input', {
+                                                            key: 'checkbox',
+                                                            type: 'checkbox',
+                                                            checked: isCompleted || false,
+                                                            onChange: () => toggleIngredient && toggleIngredient(selectedRecipe, ingredientKey, component, index, ingredient),
+                                                            className: 'ingredient-checkbox'
+                                                        }),
+                                                        React.createElement('span', { key: 'text', className: 'ingredient-text' }, scaleAmount(ingredient, orderCount))
+                                                    ])
+                                                );
+                                            })
+                                        )
+                                    ])
+                                )
+                            )
                         ]),
-                        recipe.components && Object.entries(recipe.components).map(([component, ingredients]) =>
-                            React.createElement('details', {
-                                key: component,
-                                open: true
-                            }, [
-                                React.createElement('summary', { key: 'header' }, React.createElement('strong', null, component)),
-                                React.createElement('ul', { key: 'list' },
-                                    ingredients.map((ingredient, index) => {
-                                        const ingredientKey = `${selectedRecipe}-ing-${component}-${index}`;
-                                        const isCompleted = completedIngredients[ingredientKey];
+
+                        // Instructions section
+                        React.createElement('section', { key: 'instructions', className: 'instructions-section' }, [
+                            React.createElement('header', { key: 'header', className: 'section-header' }, [
+                                React.createElement('h3', { key: 'title' }, 'Instructions')
+                            ]),
+                            React.createElement('div', { key: 'instructions-content', className: 'instructions-content' }, [
+                                React.createElement('ol', { key: 'steps', className: 'instructions-list' },
+                                    (recipe.instructions || []).map((step, index) => {
+                                        const stepKey = `${selectedRecipe}-step-${index}`;
+                                        const isCompleted = completedSteps[stepKey];
 
                                         return React.createElement('li', {
                                             key: index,
-                                            className: isCompleted ? 'checked' : ''
+                                            className: `instruction-item ${isCompleted ? 'checked' : ''}`
                                         },
-                                            React.createElement('label', null, [
+                                            React.createElement('label', { className: 'instruction-label' }, [
                                                 React.createElement('input', {
                                                     key: 'checkbox',
                                                     type: 'checkbox',
                                                     checked: isCompleted || false,
-                                                    onChange: () => toggleIngredient && toggleIngredient(selectedRecipe, ingredientKey, component, index, ingredient)
+                                                    onChange: () => toggleStep && toggleStep(selectedRecipe, stepKey, index, step),
+                                                    className: 'instruction-checkbox'
                                                 }),
-                                                scaleAmount(ingredient, orderCount)
+                                                React.createElement('span', { key: 'text', className: 'instruction-text' }, step)
                                             ])
                                         );
                                     })
-                                )
+                                ),
+                                recipe.notes && React.createElement('div', { key: 'notes', className: 'recipe-notes' }, [
+                                    React.createElement('h4', { key: 'notes-title' }, 'Notes'),
+                                    typeof recipe.notes === 'string'
+                                        ? React.createElement('p', { key: 'notes-text' }, recipe.notes)
+                                        : Array.isArray(recipe.notes)
+                                            ? React.createElement('div', { key: 'notes-list' }, recipe.notes.map((note, idx) =>
+                                                React.createElement('p', { key: idx }, note)
+                                            ))
+                                            : null
+                                ])
                             ])
-                        )
-                    ]),
-
-                    // Instructions column
-                    React.createElement('section', { key: 'instructions' }, [
-                        React.createElement('h3', { key: 'title' }, 'Instructions'),
-                        React.createElement('ol', { key: 'steps' },
-                            (recipe.instructions || []).map((step, index) => {
-                                const stepKey = `${selectedRecipe}-step-${index}`;
-                                const isCompleted = completedSteps[stepKey];
-
-                                return React.createElement('li', {
-                                    key: index,
-                                    className: isCompleted ? 'checked' : ''
-                                },
-                                    React.createElement('label', null, [
-                                        React.createElement('input', {
-                                            key: 'checkbox',
-                                            type: 'checkbox',
-                                            checked: isCompleted || false,
-                                            onChange: () => toggleStep && toggleStep(selectedRecipe, stepKey, index, step)
-                                        }),
-                                        step
-                                    ])
-                                );
-                            })
-                        ),
-                        recipe.notes && React.createElement('blockquote', { key: 'notes', className: 'modal-notes' }, [
-                            React.createElement('strong', { key: 'title' }, 'Notes'),
-                            typeof recipe.notes === 'string'
-                                ? React.createElement('p', { key: 'text' }, recipe.notes)
-                                : Array.isArray(recipe.notes)
-                                    ? React.createElement('div', { key: 'list' }, recipe.notes.map((note, idx) =>
-                                        React.createElement('p', { key: idx }, note)
-                                    ))
-                                    : null
                         ])
-                    ])
                     ])
                 ].filter(Boolean))
             ])

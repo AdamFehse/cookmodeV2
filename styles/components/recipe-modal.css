@@ -1,0 +1,379 @@
+/* ============================================
+   RECIPE-MODAL.CSS - Recipe Modal Styles
+   ============================================
+   Styles for the standard recipe modal
+   (non-prep modal). Includes layout, sections,
+   ingredients, and instructions.
+   ============================================ */
+
+/* ============================================
+   MODAL STRUCTURE
+   ============================================ */
+
+dialog article.recipe-modal {
+  max-width: 1200px;
+  width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  will-change: transform;
+  -webkit-overflow-scrolling: touch;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* ============================================
+   MODAL CONTROLS & LAYOUT
+   ============================================ */
+
+.modal-controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap-lg);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-lg);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--surface-border);
+}
+
+.chef-control,
+.status-control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.chef-control label,
+.status-control label {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-sm);
+  font-size: var(--font-size-base);
+}
+
+.chef-control input,
+.chef-control select,
+.status-control input,
+.status-control select {
+  margin-bottom: 0;
+}
+
+/* ============================================
+   MODAL LAYOUT - TWO COLUMN
+   ============================================ */
+
+.modal-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap-lg);
+}
+
+/* ============================================
+   PHOTOS SIDEBAR
+   ============================================ */
+
+.photos-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.thumbnail-button {
+  padding: 0;
+  border: 2px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  width: 100%;
+  background: none;
+  aspect-ratio: 4 / 3;
+}
+
+.thumbnail-button:hover {
+  transform: translateY(-2px);
+  border-color: var(--surface-border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.thumbnail-button:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.thumbnail-button.active {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 8px rgba(255, 152, 0, 0.3);
+}
+
+.thumbnail-button img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+/* ============================================
+   MODAL MAIN CONTENT AREA
+   ============================================ */
+
+.modal-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+/* ============================================
+   SECTION HEADERS
+   ============================================ */
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.section-header h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.order-label {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.order-slider {
+  width: 80px;
+  height: 4px;
+  background: var(--surface-border);
+  outline: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+/* ============================================
+   INGREDIENTS SECTION
+   ============================================ */
+
+.ingredients-section {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
+  flex: 1;
+}
+
+.ingredients-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+.ingredient-group {
+  margin-bottom: 0;
+}
+
+.component-title {
+  color: var(--text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 var(--space-md) 0;
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.ingredient-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--gap-sm);
+}
+
+.ingredient-item {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+  border: 1px solid rgba(255, 152, 0, 0.1);
+  transition: all var(--transition-standard);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.ingredient-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 152, 0, 0.3);
+}
+
+.ingredient-item.checked {
+  background-color: var(--color-success-bg);
+  border-color: var(--color-success);
+  opacity: 0.7;
+}
+
+.ingredient-label {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  cursor: pointer;
+  margin: 0;
+  width: 100%;
+}
+
+.ingredient-checkbox {
+  margin: 0;
+  flex-shrink: 0;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  cursor: pointer;
+}
+
+.ingredient-text {
+  color: var(--text-secondary);
+  line-height: 1.3;
+  flex: 1;
+  word-break: break-word;
+  font-size: var(--font-size-base);
+}
+
+/* ============================================
+   INSTRUCTIONS SECTION
+   ============================================ */
+
+.instructions-section {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
+  flex: 1;
+}
+
+.instructions-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+.instructions-list {
+  list-style: none;
+  counter-reset: step-counter;
+  padding: 0;
+  margin: 0;
+}
+
+.instruction-item {
+  counter-increment: step-counter;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--gap-sm);
+  border: 1px solid rgba(255, 152, 0, 0.1);
+  transition: all var(--transition-standard);
+  position: relative;
+}
+
+.instruction-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 152, 0, 0.3);
+}
+
+.instruction-item.checked {
+  background-color: var(--color-success-bg);
+  border-color: var(--color-success);
+  opacity: 0.7;
+}
+
+.instruction-item::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: -0.5rem;
+  top: var(--space-md);
+  background-color: var(--color-primary);
+  color: var(--text-inverse);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.instruction-label {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-md);
+  cursor: pointer;
+  margin: 0;
+  width: 100%;
+  padding-left: var(--space-md);
+}
+
+.instruction-checkbox {
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.instruction-text {
+  color: var(--text-secondary);
+  line-height: 1.5;
+  flex: 1;
+  font-size: var(--font-size-base);
+}
+
+/* ============================================
+   RECIPE NOTES
+   ============================================ */
+
+.recipe-notes {
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  background-color: var(--color-warning-bg);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--color-primary);
+}
+
+.recipe-notes h4 {
+  color: var(--color-primary);
+  margin: 0 0 var(--space-sm) 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.recipe-notes p {
+  margin: var(--space-xs) 0;
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: var(--font-size-sm);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (min-width: 768px) {
+  .modal-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .modal-layout {
+    grid-template-columns: 150px 1fr;
+  }
+}

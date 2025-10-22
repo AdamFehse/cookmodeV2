@@ -1,0 +1,421 @@
+/* ============================================
+   PICO-OVERRIDES.CSS - Framework Customizations
+   ============================================
+   Customizations and overrides for Pico CSS
+   framework defaults. Integrates theme variables.
+   ============================================ */
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+body {
+  min-block-size: 100vh;
+  background: transparent;
+}
+
+body,
+body * {
+  color: var(--text-secondary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ============================================
+   LINKS
+   ============================================ */
+
+a {
+  color: var(--pico-form-element-focus-color, var(--color-primary));
+  text-decoration: underline;
+  transition: color var(--transition-standard);
+}
+
+a:hover {
+  color: var(--color-primary-light);
+}
+
+a:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   BUTTONS & FORM BUTTONS
+   ============================================ */
+
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.tag {
+  color: var(--text-inverse) !important;
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  font-weight: var(--font-weight-semibold) !important;
+  transition: all var(--transition-standard);
+  padding: var(--btn-padding-y) var(--btn-padding-x) !important;
+}
+
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+.tag:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+button:active,
+input[type="button"]:active,
+input[type="submit"]:active,
+input[type="reset"]:active {
+  transform: translateY(0);
+}
+
+button:disabled,
+input[type="button"]:disabled,
+input[type="submit"]:disabled,
+input[type="reset"]:disabled,
+.tag:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Secondary Button Variant */
+button.secondary,
+input[type="button"].secondary,
+input[type="submit"].secondary,
+input[type="reset"].secondary,
+.tag.secondary {
+  color: var(--text-primary) !important;
+  background-color: rgba(255, 152, 0, 0.6) !important;
+  border-color: var(--color-primary) !important;
+}
+
+button.secondary:hover,
+input[type="button"].secondary:hover,
+input[type="submit"].secondary:hover,
+input[type="reset"].secondary:hover,
+.tag.secondary:hover {
+  background-color: rgba(255, 152, 0, 0.8) !important;
+}
+
+/* Outline Button Variant */
+button.outline,
+input[type="button"].outline,
+input[type="submit"].outline,
+input[type="reset"].outline,
+.tag.outline {
+  color: var(--text-primary) !important;
+  background-color: transparent !important;
+  border-color: var(--color-primary) !important;
+}
+
+button.outline:hover,
+input[type="button"].outline:hover,
+input[type="submit"].outline:hover,
+input[type="reset"].outline:hover,
+.tag.outline:hover {
+  background-color: rgba(255, 152, 0, 0.1) !important;
+}
+
+/* Contrast Button Variant */
+button.contrast,
+input[type="button"].contrast,
+input[type="submit"].contrast,
+input[type="reset"].contrast {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* ============================================
+   FORM INPUTS & TEXTAREAS
+   ============================================ */
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="url"],
+input[type="tel"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+select,
+textarea {
+  background-color: var(--surface-form) !important;
+  color: var(--text-primary) !important;
+  border: var(--input-border-width) solid var(--surface-border) !important;
+  padding: var(--input-padding-y) var(--input-padding-x) !important;
+  font-size: var(--font-size-base) !important;
+  transition: all var(--transition-standard);
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="number"]::placeholder,
+input[type="password"]::placeholder,
+input[type="search"]::placeholder,
+input[type="url"]::placeholder,
+input[type="tel"]::placeholder,
+textarea::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* ============================================
+   FORM INPUTS - FOCUS STATE
+   ============================================ */
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="url"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="datetime-local"]:focus,
+input[type="month"]:focus,
+input[type="week"]:focus,
+select:focus,
+textarea:focus {
+  background-color: var(--surface-form-focus) !important;
+  border-color: var(--color-primary-light) !important;
+  outline: none;
+  box-shadow: 0 0 0 var(--input-focus-ring) rgba(255, 152, 0, 0.2) !important;
+}
+
+/* ============================================
+   SELECT DROPDOWN
+   ============================================ */
+
+select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff9800' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right var(--input-padding-x) center !important;
+  background-size: 1.5em 1.5em !important;
+  padding-right: 2.5rem !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+
+select:hover {
+  border-color: var(--color-primary-light) !important;
+  background-color: rgba(40, 40, 70, 0.9) !important;
+}
+
+select option {
+  background-color: #1e1e32;
+  color: var(--text-primary);
+  padding: var(--input-padding-y) var(--input-padding-x);
+}
+
+/* ============================================
+   CHECKBOXES & RADIO BUTTONS
+   ============================================ */
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  transition: all var(--transition-standard);
+}
+
+input[type="checkbox"]:hover,
+input[type="radio"]:hover {
+  opacity: 0.8;
+}
+
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+input[type="checkbox"]:disabled,
+input[type="radio"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   RANGE SLIDER
+   ============================================ */
+
+input[type="range"] {
+  accent-color: var(--color-primary);
+}
+
+/* ============================================
+   DIALOGS & MODALS
+   ============================================ */
+
+dialog {
+  border: 2px solid var(--surface-border) !important;
+  background-color: rgba(30, 30, 50, 0.95) !important;
+  backdrop-filter: var(--backdrop-blur);
+  box-shadow: var(--shadow-modal);
+  border-radius: var(--pico-border-radius) !important;
+}
+
+dialog::backdrop {
+  background-color: var(--surface-overlay);
+  backdrop-filter: var(--backdrop-blur-sm);
+}
+
+dialog article {
+  padding: var(--space-xl);
+}
+
+dialog p {
+  color: var(--text-secondary);
+  margin: var(--space-md) 0;
+}
+
+dialog header {
+  border-bottom: 2px solid var(--surface-border);
+  padding-bottom: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+dialog footer {
+  border-top: 1px solid var(--surface-border);
+  padding-top: var(--space-md);
+  margin-top: var(--space-lg);
+  display: flex;
+  gap: var(--gap-md);
+  justify-content: flex-end;
+}
+
+/* Close button in dialogs */
+dialog .close {
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--transition-standard);
+}
+
+dialog .close:hover {
+  color: var(--text-primary);
+}
+
+/* ============================================
+   ARTICLES & CARDS
+   ============================================ */
+
+article {
+  background-color: var(--surface-card) !important;
+  border-color: var(--surface-border) !important;
+  border: 1px solid var(--surface-border) !important;
+  transition: all var(--transition-standard);
+}
+
+article:hover {
+  background-color: var(--surface-card-hover) !important;
+  border-color: var(--surface-border-hover) !important;
+}
+
+article header {
+  background-color: transparent !important;
+  border-bottom: 1px solid var(--surface-border);
+  padding-bottom: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+article header h3,
+article header h4 {
+  color: var(--text-primary) !important;
+  margin: 0 !important;
+}
+
+article footer {
+  background-color: transparent !important;
+  border-top: 1px solid var(--surface-border);
+  padding-top: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+/* ============================================
+   PROGRESS BARS
+   ============================================ */
+
+progress {
+  height: var(--progress-height);
+  border-radius: var(--progress-radius);
+  accent-color: var(--color-primary);
+}
+
+/* ============================================
+   LABELS & FIELDSETS
+   ============================================ */
+
+label {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+  display: block;
+  margin-bottom: var(--space-sm);
+}
+
+label small {
+  color: var(--text-muted);
+  font-weight: var(--font-weight-regular);
+  display: block;
+  margin-top: 0.25rem;
+}
+
+fieldset {
+  border-color: var(--surface-border);
+  padding: var(--space-md);
+}
+
+legend {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+table {
+  border-collapse: collapse;
+}
+
+table th {
+  background-color: var(--surface-elevated);
+  color: var(--text-primary);
+  border-color: var(--surface-border);
+}
+
+table td {
+  border-color: var(--surface-border);
+  color: var(--text-secondary);
+}
+
+table tr:hover {
+  background-color: var(--surface-card-hover);
+}
+
+/* ============================================
+   UTILITY CLASSES FROM PICO
+   ============================================ */
+
+.muted {
+  color: var(--text-muted) !important;
+}
+
+.contrast {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: var(--text-inverse) !important;
+}
