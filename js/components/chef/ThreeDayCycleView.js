@@ -3,7 +3,7 @@ const ChefChip = ({ chef, color, totalOrders, onSelectChef }) => {
 
     return React.createElement('button', {
         type: 'button',
-        className: 'secondary outline',
+        className: 'outline',
         style: {
             display: 'flex',
             justifyContent: 'space-between',

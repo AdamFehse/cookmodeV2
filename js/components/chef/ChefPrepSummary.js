@@ -10,7 +10,7 @@ const ChefPrepSummary = ({ chefSummaries = [], onSelectChef }) => {
                 borderTop: `4px solid ${borderColor}`
             };
 
-            return React.createElement('article', { key: summary.name, style: headerStyle }, [
+            return React.createElement('article', { key: summary.name, className: 'chef-summary-article', style: headerStyle }, [
                 React.createElement('header', { key: 'header' }, [
                     React.createElement('h3', { key: 'title', style: { marginBottom: '0.25rem' } }, summary.name),
                     React.createElement('small', { key: 'subtitle', style: { color: 'var(--muted-color)' } },

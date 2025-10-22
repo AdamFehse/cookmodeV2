@@ -165,13 +165,13 @@ const App = () => {
             React.createElement('button', {
                 key: 'toggle-overview',
                 type: 'button',
-                className: 'secondary outline',
+                className: 'outline',
                 onClick: () => setShowOverview((prev) => !prev)
             }, showOverview ? 'Hide Kitchen Overview' : 'Show Kitchen Overview'),
             React.createElement('button', {
                 key: 'toggle-cycle',
                 type: 'button',
-                className: 'secondary outline',
+                className: 'outline',
                 onClick: () => setShowCycleView((prev) => !prev)
             }, showCycleView ? 'Hide 3-Day Cycle' : 'Show 3-Day Cycle')
         ]),

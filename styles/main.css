@@ -1,59 +1,137 @@
+/* ============================================
+   UNIFIED CSS - CookMode V2
+   ============================================
+   Color System:
+   - Text: White/Light gray (high contrast)
+   - Buttons: Orange (Pico theme)
+   - Backgrounds: Dark semi-transparent
+   - Borders: Orange accent
+   ============================================ */
+
 body {
-  background: transparent;
   min-block-size: 100vh;
-  color: #787977;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: #d1b742;
-}
-
-.page-header {
   background: transparent;
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(181, 158, 114, 0.2);
-  padding: 1rem 0;
-  margin-bottom: 1.5rem;
 }
 
-.page-header nav,
-.page-header nav ul,
-.page-header form {
-  margin: 0;
+/* Base text styles - ensure readability */
+body,
+body * {
+  color: #f5f5f5;
 }
 
-.page-header form {
-  margin-top: 0.5rem;
+/* Headings - bright white for maximum contrast */
+h1, h2, h3, h4, h5, h6 {
+  color: #ffffff;
+  font-weight: 600;
 }
 
-.page-header select,
-.page-header input[type="search"] {
-  background: rgba(24, 20, 17, 0.7);
-  border-color: rgba(181, 158, 114, 0.2);
-  color: inherit;
+/* Links - orange for visibility */
+a {
+  color: var(--pico-form-element-focus-color, #ff9800);
+  text-decoration: underline;
 }
 
-.page-header select:focus,
-.page-header input[type="search"]:focus {
-  border-color: #b59e72;
+a:hover {
+  color: #ffb74d;
 }
+
+/* ============================================
+   BUTTON & FORM ELEMENTS
+   ============================================ */
+
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.tag {
+  color: #ffffff !important;
+  background-color: var(--pico-form-element-focus-color) !important;
+  border-color: var(--pico-form-element-focus-color) !important;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+.tag:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+button.secondary,
+input[type="button"].secondary,
+input[type="submit"].secondary,
+input[type="reset"].secondary,
+.tag.secondary {
+  color: #ffffff !important;
+  background-color: rgba(255, 152, 0, 0.6) !important;
+  border-color: #ff9800 !important;
+}
+
+button.outline,
+input[type="button"].outline,
+input[type="submit"].outline,
+input[type="reset"].outline,
+.tag.outline {
+  color: #ffffff !important;
+  background-color: transparent !important;
+  border-color: #ff9800 !important;
+}
+
+/* Form inputs */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="select"],
+select,
+textarea {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 152, 0, 0.5) !important;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="number"]::placeholder,
+input[type="password"]::placeholder,
+input[type="search"]::placeholder,
+textarea::placeholder {
+  color: #aaaaaa !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+select:focus,
+textarea:focus {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-color: #ff9800 !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.2) !important;
+}
+
+/* ============================================
+   RECIPE GRID LAYOUT
+   ============================================ */
+
 .grid > article {
   cursor: pointer;
-  background: transparent;
-  backdrop-filter: blur(100px);
-  border: 1px solid rgba(181, 158, 114, 0.25);
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 152, 0, 0.3) !important;
+  border: 1px solid rgba(255, 152, 0, 0.3);
 }
 
 .grid > article:hover {
   transform: translateY(-4px);
-  border-color: #ddff00;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 24px rgba(255, 152, 0, 0.15);
+  border-color: rgba(255, 152, 0, 0.6);
 }
 
 .grid > article img {
@@ -61,10 +139,12 @@ h6 {
   height: 180px;
   width: 100%;
   object-fit: cover;
+  border-radius: var(--pico-border-radius);
 }
 
 .grid > article hgroup {
   margin-bottom: 0.5rem;
+  padding-top: 0.5rem;
 }
 
 .grid > article hgroup h4 {
@@ -75,12 +155,18 @@ h6 {
   overflow: hidden;
   line-height: 1.3;
   margin-bottom: 0.25rem;
+  color: #ffffff;
 }
 
 .grid > article hgroup p {
   margin: 0;
-  color: #b5b5b4;
+  color: #d0d0d0;
+  font-size: 0.9rem;
 }
+
+/* ============================================
+   RECIPE SECTIONS & LAYOUT
+   ============================================ */
 
 .recipe-grid-wrapper {
   margin-block: calc(var(--pico-spacing) * 1.5);
@@ -88,11 +174,27 @@ h6 {
 
 .filters-section {
   margin-bottom: calc(var(--pico-spacing) * 1.5);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  border-radius: var(--pico-border-radius);
+  border: 1px solid rgba(255, 152, 0, 0.2);
 }
 
-/* Modal styling */
+/* Section headings */
+.filters-section h2,
+.recipe-grid-wrapper h2 {
+  color: #ffffff;
+  margin-top: 0;
+}
+
+/* ============================================
+   MODAL STYLING
+   ============================================ */
+
 dialog {
-  border: none;
+  border: 1px solid rgba(255, 152, 0, 0.3) !important;
+  background-color: rgba(30, 30, 50, 0.95) !important;
+  backdrop-filter: blur(10px);
 }
 
 dialog article.recipe-modal {
@@ -100,23 +202,26 @@ dialog article.recipe-modal {
   width: 90vw;
   max-height: 85vh;
   overflow-y: auto;
-  background: transparent;
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(181, 158, 114, 0.3);
-  /* Improve scrolling performance */
   will-change: transform;
   -webkit-overflow-scrolling: touch;
+  background-color: transparent;
 }
 
-/* Modal controls section (chef + status) */
+/* Modal paragraph text */
+dialog p {
+  color: #e0e0e0;
+}
+
+/* Modal controls grid */
 .modal-controls {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
   padding: 1rem;
-  background: rgba(0, 0, 0, 0.2);
   border-radius: var(--pico-border-radius);
   margin-bottom: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 152, 0, 0.2);
 }
 
 @media (min-width: 768px) {
@@ -131,12 +236,85 @@ dialog article.recipe-modal {
   flex-direction: column;
 }
 
+.chef-control label,
+.status-control label {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
 .chef-control input,
-.chef-control select {
+.chef-control select,
+.status-control input,
+.status-control select {
   margin-bottom: 0;
 }
 
-/* Modal layout: photos sidebar + main content */
+/* ============================================
+   CHEF CARDS & SUMMARY STYLES
+   ============================================ */
+
+/* Chef prep summary cards */
+.chef-summary-article {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 152, 0, 0.3) !important;
+}
+
+.chef-summary-article header {
+  background-color: transparent !important;
+  border-bottom: 1px solid rgba(255, 152, 0, 0.2);
+}
+
+.chef-summary-article header h3 {
+  color: #ffffff !important;
+  margin: 0 !important;
+}
+
+.chef-summary-article header small {
+  color: #d0d0d0 !important;
+}
+
+.chef-summary-stats {
+  color: #e0e0e0 !important;
+}
+
+.chef-summary-stats li {
+  color: #e0e0e0 !important;
+}
+
+.chef-summary-article footer {
+  background-color: transparent !important;
+  border-top: 1px solid rgba(255, 152, 0, 0.2);
+  padding-top: 0.75rem;
+}
+
+.chef-summary-article footer button {
+  width: 100%;
+}
+
+/* Generic article cards */
+article {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #e0e0e0 !important;
+}
+
+article header {
+  background-color: transparent !important;
+}
+
+article header h3,
+article header h4 {
+  color: #ffffff !important;
+}
+
+article footer {
+  background-color: transparent !important;
+}
+
+/* ============================================
+   MODAL LAYOUT - Photos sidebar + content
+   ============================================ */
+
 .modal-layout {
   display: grid;
   grid-template-columns: 1fr;
@@ -156,20 +334,26 @@ dialog article.recipe-modal {
   gap: 0.5rem;
 }
 
-/* Photo thumbnails in sidebar */
+/* Photo thumbnails */
 .thumbnail-button {
   padding: 0;
-  border: none;
-  background: transparent;
+  border: 2px solid rgba(255, 152, 0, 0.3);
   border-radius: var(--pico-border-radius);
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, border-color 0.15s ease;
   width: 100%;
+  background: none;
 }
 
 .thumbnail-button:hover {
   transform: translateY(-2px);
+  border-color: rgba(255, 152, 0, 0.8);
+}
+
+.thumbnail-button.active {
+  border-color: #ff9800;
+  box-shadow: 0 0 8px rgba(255, 152, 0, 0.3);
 }
 
 .thumbnail-button img {
@@ -180,7 +364,7 @@ dialog article.recipe-modal {
   border-radius: var(--pico-border-radius);
 }
 
-/* Main content area (ingredients + instructions) */
+/* Main content area */
 .modal-main {
   display: grid;
   grid-template-columns: 1fr;
@@ -191,4 +375,22 @@ dialog article.recipe-modal {
   .modal-main {
     grid-template-columns: 1fr 1fr;
   }
+}
+
+/* Modal content sections */
+.modal-main section {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  border-radius: var(--pico-border-radius);
+  border: 1px solid rgba(255, 152, 0, 0.2);
+}
+
+.modal-main section h3 {
+  color: #ffffff;
+  margin-top: 0;
+}
+
+.modal-main section p,
+.modal-main section li {
+  color: #e0e0e0;
 }

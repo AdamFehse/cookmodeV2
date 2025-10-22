@@ -166,7 +166,7 @@ const ChefWorkloadRow = ({ summary, onSelectChef }) => {
         onSelectChef && React.createElement('footer', { key: 'footer' }, [
             React.createElement('button', {
                 type: 'button',
-                className: 'secondary outline',
+                className: 'outline',
                 onClick: () => onSelectChef(summary.name)
             }, 'Open ingredient rollup')
         ])

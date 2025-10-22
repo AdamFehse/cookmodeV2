@@ -9,10 +9,12 @@
   z-index: -1;
 }
 
-/* Ensure content stays above Vanta background */
+/* Ensure content stays above Vanta background with improved visibility */
 #root {
   position: relative;
   z-index: 1;
+  background: rgba(20, 20, 35, 0.75);
+  backdrop-filter: blur(8px);
 }
 
 body {

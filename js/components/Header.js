@@ -8,8 +8,8 @@ const Header = ({
             : 'Connecting'
         : 'Offline';
     const connectionClass = (() => {
-        if (!supabase) return 'tag secondary';
-        return isSupabaseConnected ? 'tag contrast' : 'tag outline';
+        if (!supabase) return 'tag';
+        return isSupabaseConnected ? 'tag contrast' : 'tag';
     })();
 
     return React.createElement('header', { className: 'page-header' },
