@@ -12,6 +12,8 @@ const App = () => {
     const [lightboxImage, setLightboxImage] = useState(null);
     const [lightboxIndex, setLightboxIndex] = useState(0);
     const [selectedChefForList, setSelectedChefForList] = useState(null);
+    const [showOverview, setShowOverview] = useState(false);
+    const [showCycleView, setShowCycleView] = useState(false);
 
     // Filter state
     const [filterText, setFilterText] = useState('');
@@ -90,28 +92,20 @@ const App = () => {
         setLightboxIndex(index);
     };
 
+    const { chefAssignments, chefSummaries } = window.useChefData(
+        recipes,
+        recipeData.orderCounts,
+        recipeData.recipeChefNames,
+        recipeData.completedSteps
+    );
+
     // Show loading state
     if (recipeData.isLoading) {
         return React.createElement('main', { className: 'container-fluid' }, [
             React.createElement(window.Header, {
                 key: 'header',
                 supabase,
-                isSupabaseConnected,
-                filterText: '',
-                setFilterText: () => {},
-                selectedCategory: 'all',
-                setSelectedCategory: () => {},
-                selectedDish: 'all',
-                setSelectedDish: () => {},
-                selectedIngredient: 'all',
-                setSelectedIngredient: () => {},
-                selectedComponent: 'all',
-                setSelectedComponent: () => {},
-                categories: [],
-                dishes: [],
-                ingredients: [],
-                components: [],
-                handleResetFilters: () => {}
+                isSupabaseConnected
             }),
             React.createElement('section', { key: 'loading' }, [
                 React.createElement('article', null, [
@@ -127,22 +121,7 @@ const App = () => {
             React.createElement(window.Header, {
                 key: 'header',
                 supabase,
-                isSupabaseConnected,
-                filterText: '',
-                setFilterText: () => {},
-                selectedCategory: 'all',
-                setSelectedCategory: () => {},
-                selectedDish: 'all',
-                setSelectedDish: () => {},
-                selectedIngredient: 'all',
-                setSelectedIngredient: () => {},
-                selectedComponent: 'all',
-                setSelectedComponent: () => {},
-                categories: [],
-                dishes: [],
-                ingredients: [],
-                components: [],
-                handleResetFilters: () => {}
+                isSupabaseConnected
             }),
             React.createElement('section', { key: 'error' }, [
                 React.createElement('article', null, [
@@ -158,11 +137,65 @@ const App = () => {
     }
 
     return React.createElement('main', { className: 'container-fluid' }, [
-        // Header with filters
+        // Header
         React.createElement(window.Header, {
             key: 'header',
             supabase,
-            isSupabaseConnected,
+            isSupabaseConnected
+        }),
+
+        // Chef prep summary
+        chefSummaries.length > 0 && React.createElement(window.ChefPrepSummary, {
+            key: 'chef-summary',
+            chefSummaries,
+            onSelectChef: (chefName) => setSelectedChefForList(chefName)
+        }),
+
+        React.createElement('section', {
+            key: 'overview-toggle',
+            className: 'container-fluid',
+            style: {
+                marginBottom: '1rem',
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '0.5rem',
+                flexWrap: 'wrap'
+            }
+        }, [
+            React.createElement('button', {
+                key: 'toggle-overview',
+                type: 'button',
+                className: 'secondary outline',
+                onClick: () => setShowOverview((prev) => !prev)
+            }, showOverview ? 'Hide Kitchen Overview' : 'Show Kitchen Overview'),
+            React.createElement('button', {
+                key: 'toggle-cycle',
+                type: 'button',
+                className: 'secondary outline',
+                onClick: () => setShowCycleView((prev) => !prev)
+            }, showCycleView ? 'Hide 3-Day Cycle' : 'Show 3-Day Cycle')
+        ]),
+
+        showOverview && React.createElement(window.GhostKitchenOverview, {
+            key: 'overview',
+            recipes,
+            recipeStatus: recipeData.recipeStatus,
+            recipeChefNames: recipeData.recipeChefNames,
+            orderCounts: recipeData.orderCounts,
+            chefSummaries,
+            onSelectRecipe: setSelectedRecipe,
+            onSelectChef: (chefName) => setSelectedChefForList(chefName)
+        }),
+
+        showCycleView && React.createElement(window.ThreeDayCycleView, {
+            key: 'cycle-view',
+            cycleData: recipeData.threeDayPrep,
+            onSelectRecipe: setSelectedRecipe,
+            onSelectChef: (chefName) => setSelectedChefForList(chefName)
+        }),
+
+        React.createElement(window.RecipeFilters, {
+            key: 'filters',
             filterText,
             setFilterText,
             selectedCategory,
@@ -177,9 +210,7 @@ const App = () => {
             dishes,
             ingredients,
             components,
-            handleResetFilters,
-            recipeChefNames: recipeData.recipeChefNames,
-            setSelectedChefForList
+            handleResetFilters
         }),
 
         // Recipe Grid
@@ -239,12 +270,10 @@ const App = () => {
             setLightboxIndex
         }),
 
-        // Chef Ingredients List
-        selectedChefForList && React.createElement(window.ChefIngredientsList, {
-            key: 'chef-list',
-            recipes,
-            orderCounts: recipeData.orderCounts,
-            recipeChefNames: recipeData.recipeChefNames,
+        // Chef Ingredients Modal
+        selectedChefForList && React.createElement(window.ChefIngredientsModal, {
+            key: 'chef-modal',
+            chefAssignments,
             selectedChef: selectedChefForList,
             onClose: () => setSelectedChefForList(null)
         })

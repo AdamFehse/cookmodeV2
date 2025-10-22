@@ -14,11 +14,17 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [loadError, setLoadError] = React.useState(null);
 
+    const recipes = window.RECIPES || {};
     const DEFAULT_CHEF_COLOR = window.DEFAULT_CHEF_COLOR || '#9333ea';
+    const getAssignedChefColor = window.getAssignedChefColor || (() => null);
+    const suggestChefColor = window.suggestChefColor || (() => 'var(--chef-purple)');
+    const registerChefColor = window.registerChefColor || (() => null);
     const generateIngredientKeyFromItem = window.generateIngredientKeyFromItem;
     const generateStepKeyFromItem = window.generateStepKeyFromItem;
     const generateIngredientKey = window.generateIngredientKey;
     const generateStepKey = window.generateStepKey;
+    const slugToDisplayName = window.slugToDisplayName;
+    const resolveChefColor = window.resolveChefColor || ((color) => color);
 
     // Helper: Upsert data to Supabase
     const upsertToSupabase = async (table, data, conflictKey) => {
@@ -146,9 +152,18 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                 } else if (chefData) {
                     const chefMap = {};
                     chefData.forEach(item => {
+                        if (!item.chef_name) {
+                            chefMap[item.recipe_slug] = { name: '', color: '' };
+                            return;
+                        }
+
+                        const assignedColor =
+                            registerChefColor(item.chef_name, item.chef_color) ||
+                            suggestChefColor(item.chef_name);
+
                         chefMap[item.recipe_slug] = {
                             name: item.chef_name,
-                            color: item.chef_color || DEFAULT_CHEF_COLOR
+                            color: assignedColor || ''
                         };
                     });
                     setRecipeChefNames(chefMap);
@@ -279,35 +294,169 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
         }
     };
 
-    const updateChefName = async (slug, chefName, chefColor = DEFAULT_CHEF_COLOR) => {
-        console.log('👨‍🍳 Updating chef name:', slug, chefName, chefColor);
+    const updateChefName = async (slug, chefName, chefColor) => {
+        const trimmedName = (chefName || '').trim();
+        console.log('👨‍🍳 Updating chef name:', slug, trimmedName, chefColor);
 
-        // Optimistically update UI
-        if (chefName) {
-            setRecipeChefNames(prev => ({
-                ...prev,
-                [slug]: { name: chefName, color: chefColor }
-            }));
-        } else {
+        if (!trimmedName) {
             setRecipeChefNames(prev => {
                 const newState = { ...prev };
                 delete newState[slug];
                 return newState;
             });
+            await deleteFromSupabase('recipe_chef_names', slug);
+            return;
         }
 
-        // Sync to Supabase
-        if (!chefName) {
-            await deleteFromSupabase('recipe_chef_names', slug);
-        } else {
-            await upsertToSupabase('recipe_chef_names', {
-                recipe_slug: slug,
-                chef_name: chefName,
-                chef_color: chefColor,
-                updated_at: new Date().toISOString()
-            }, 'recipe_slug');
-        }
+        const explicitColor =
+            chefColor === null
+                ? null
+                : (typeof chefColor === 'string' && chefColor.trim() !== '' ? chefColor : null);
+
+        const resolvedColor = registerChefColor(trimmedName, explicitColor);
+
+        const colorForState = resolvedColor || '';
+
+        setRecipeChefNames(prev => ({
+            ...prev,
+            [slug]: { name: trimmedName, color: colorForState }
+        }));
+
+        await upsertToSupabase('recipe_chef_names', {
+            recipe_slug: slug,
+            chef_name: trimmedName,
+            chef_color: resolvedColor,
+            updated_at: new Date().toISOString()
+        }, 'recipe_slug');
     };
+
+    const recipesByChef = React.useMemo(() => {
+        const map = {};
+
+        Object.entries(recipes).forEach(([slug, recipe]) => {
+            const chefMeta = recipeChefNames[slug];
+            const chefName = chefMeta?.name || 'Unassigned';
+            if (!map[chefName]) {
+                map[chefName] = {
+                    chef: chefName,
+                    color: resolveChefColor(chefMeta?.color || ''),
+                    recipes: [],
+                    totalOrders: 0
+                };
+            }
+
+            const orderCount = orderCounts[slug] || 1;
+            map[chefName].recipes.push({
+                slug,
+                name: recipe.name || slugToDisplayName?.(slug) || slug,
+                orderCount,
+                status: recipeStatus[slug] || null
+            });
+            map[chefName].totalOrders += orderCount;
+        });
+
+        return map;
+    }, [recipes, recipeChefNames, orderCounts, recipeStatus]);
+
+    const ordersByStatus = React.useMemo(() => {
+        const map = {};
+
+        Object.entries(recipes).forEach(([slug, recipe]) => {
+            const status = recipeStatus[slug] || 'unassigned';
+            if (!map[status]) {
+                map[status] = {
+                    status,
+                    recipes: [],
+                    totalOrders: 0
+                };
+            }
+
+            const orderCount = orderCounts[slug] || 1;
+            map[status].recipes.push({
+                slug,
+                name: recipe.name || slugToDisplayName?.(slug) || slug,
+                orderCount,
+                chefName: recipeChefNames[slug]?.name || 'Unassigned'
+            });
+            map[status].totalOrders += orderCount;
+        });
+
+        return map;
+    }, [recipes, recipeStatus, orderCounts, recipeChefNames]);
+
+    const threeDayPrep = React.useMemo(() => {
+        const dayConfig = [
+            { key: 'prep', label: 'Sunday Prep' },
+            { key: 'cook', label: 'Monday Cook' },
+            { key: 'delivery', label: 'Tuesday Delivery' }
+        ];
+
+        const buckets = dayConfig.reduce((acc, day) => {
+            acc[day.key] = {
+                key: day.key,
+                label: day.label,
+                totalOrders: 0,
+                recipes: [],
+                chefBreakdown: {}
+            };
+            return acc;
+        }, {});
+
+        const categorize = (status) => {
+            switch (status) {
+                case 'packed':
+                case 'plated':
+                    return 'delivery';
+                case 'complete':
+                    return 'cook';
+                case 'gathered':
+                default:
+                    return 'prep';
+            }
+        };
+
+        Object.entries(recipes).forEach(([slug, recipe]) => {
+            const status = recipeStatus[slug] || null;
+            const bucketKey = categorize(status);
+            const bucket = buckets[bucketKey] || buckets.prep;
+            const orderCount = orderCounts[slug] || 1;
+            const chefMeta = recipeChefNames[slug];
+            const chefName = chefMeta?.name || 'Unassigned';
+
+            bucket.totalOrders += orderCount;
+            bucket.recipes.push({
+                slug,
+                name: recipe.name || slugToDisplayName?.(slug) || slug,
+                status,
+                orderCount,
+                chefName,
+                chefColor: resolveChefColor(chefMeta?.color || '')
+            });
+
+            if (!bucket.chefBreakdown[chefName]) {
+                bucket.chefBreakdown[chefName] = {
+                    chef: chefName,
+                    color: resolveChefColor(chefMeta?.color || ''),
+                    totalOrders: 0,
+                    recipes: 0
+                };
+            }
+            bucket.chefBreakdown[chefName].totalOrders += orderCount;
+            bucket.chefBreakdown[chefName].recipes += 1;
+        });
+
+        return dayConfig.map(({ key }) => {
+            const bucket = buckets[key];
+            return {
+                ...bucket,
+                chefBreakdown: Object.values(bucket.chefBreakdown).sort((a, b) => {
+                    if (a.chef === 'Unassigned') return 1;
+                    if (b.chef === 'Unassigned') return -1;
+                    return a.chef.localeCompare(b.chef);
+                })
+            };
+        });
+    }, [recipes, recipeStatus, recipeChefNames, orderCounts]);
 
     return {
         // State (read-only for components)
@@ -318,6 +467,9 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
         recipeChefNames,
         isLoading,
         loadError,
+        recipesByChef,
+        ordersByStatus,
+        threeDayPrep,
 
         // Setters (only for useRealtime hook)
         setOrderCounts,

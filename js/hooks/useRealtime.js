@@ -6,6 +6,8 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
         if (!supabase || !isSupabaseConnected) return;
 
         const DEFAULT_CHEF_COLOR = window.DEFAULT_CHEF_COLOR || '#9333ea';
+        const registerChefColor = window.registerChefColor || (() => null);
+        const suggestChefColor = window.suggestChefColor || (() => 'var(--chef-purple)');
         const generateIngredientKeyFromItem = window.generateIngredientKeyFromItem;
         const generateStepKeyFromItem = window.generateStepKeyFromItem;
 
@@ -87,11 +89,24 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
             (payload) => {
                 if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
                     const item = payload.new;
+                    if (!item.chef_name) {
+                        setRecipeChefNames(prev => ({
+                            ...prev,
+                            [item.recipe_slug]: { name: '', color: '' }
+                        }));
+                        return;
+                    }
+
+                    const assignedColor =
+                        registerChefColor(item.chef_name, item.chef_color) ||
+                        suggestChefColor(item.chef_name) ||
+                        DEFAULT_CHEF_COLOR;
+
                     setRecipeChefNames(prev => ({
                         ...prev,
                         [item.recipe_slug]: {
                             name: item.chef_name,
-                            color: item.chef_color || DEFAULT_CHEF_COLOR
+                            color: assignedColor
                         }
                     }));
                 } else if (payload.eventType === 'DELETE') {

@@ -22,12 +22,15 @@ const RecipeModal = ({
     // ALL HOOKS MUST BE CALLED BEFORE ANY EARLY RETURNS
     const scaleAmount = window.scaleAmount || ((ingredient) => ingredient);
     const slugToDisplayName = window.slugToDisplayName || ((slug) => slug);
-    const DEFAULT_CHEF_COLOR = window.DEFAULT_CHEF_COLOR || '#a855f7';
     const resolveChefColor = window.resolveChefColor || ((color) => color);
+    const getAssignedChefColor = window.getAssignedChefColor || (() => null);
+    const suggestChefColor = window.suggestChefColor || (() => 'var(--chef-purple)');
+    const getChefColorLabel = window.getChefColorLabel || (() => 'Custom');
+    const getChefColorOptions = window.getChefColorOptions || (() => []);
 
     // Get current recipe data (with fallbacks for when selectedRecipe is null)
     const recipe = selectedRecipe ? recipes[selectedRecipe] : null;
-    const currentChefData = selectedRecipe ? (recipeChefNames[selectedRecipe] || { name: '', color: DEFAULT_CHEF_COLOR }) : { name: '', color: DEFAULT_CHEF_COLOR };
+    const currentChefData = selectedRecipe ? (recipeChefNames[selectedRecipe] || { name: '', color: '' }) : { name: '', color: '' };
 
     // Local state for chef name and color (debounced) - MUST be before early returns
     const [localChefName, setLocalChefName] = useState(currentChefData.name || '');
@@ -42,8 +45,16 @@ const RecipeModal = ({
 
     // Update local state when recipe changes
     useEffect(() => {
-        setLocalChefName(currentChefData.name || '');
-        setLocalChefColor(currentChefData.color || '');
+        const nextName = currentChefData.name || '';
+        setLocalChefName(nextName);
+        if (nextName) {
+            const trimmed = nextName.trim();
+            const assignedColor = getAssignedChefColor(trimmed);
+            const nextColor = assignedColor || currentChefData.color || suggestChefColor(trimmed);
+            setLocalChefColor(nextColor);
+        } else {
+            setLocalChefColor('');
+        }
     }, [selectedRecipe, currentChefData.name, currentChefData.color]);
 
     // NOW we can do early returns
@@ -88,32 +99,57 @@ const RecipeModal = ({
     };
 
     const displayName = recipe.name || slugToDisplayName(selectedRecipe);
+    const trimmedChefName = (localChefName || '').trim();
+    const colorOptions = getChefColorOptions(trimmedChefName, localChefColor || '');
     const orderCount = orderCounts[selectedRecipe] ?? 1;
     const sliderId = `${selectedRecipe}-orders-slider`;
 
     // Debounced chef name update
     const handleChefNameChange = (newName) => {
-        setLocalChefName(newName);
+        const trimmedName = newName.trim();
+        const nextColor = trimmedName
+            ? (getAssignedChefColor(trimmedName) || suggestChefColor(trimmedName))
+            : '';
 
-        // Clear existing timeout
+        setLocalChefName(newName);
+        setLocalChefColor(nextColor);
+
         if (chefNameTimeoutRef.current) {
             clearTimeout(chefNameTimeoutRef.current);
         }
 
-        // Set new timeout to update database after 500ms of no typing
         chefNameTimeoutRef.current = setTimeout(() => {
-            if (updateChefName) {
-                updateChefName(selectedRecipe, newName, localChefColor || DEFAULT_CHEF_COLOR);
+            if (!updateChefName) return;
+
+            if (!trimmedName) {
+                updateChefName(selectedRecipe, '', '');
+                return;
             }
+
+            updateChefName(selectedRecipe, trimmedName, nextColor);
         }, 500);
     };
 
-    // Handle color change
     const handleChefColorChange = (newColor) => {
-        setLocalChefColor(newColor);
-        if (updateChefName && localChefName) {
-            updateChefName(selectedRecipe, localChefName, newColor || DEFAULT_CHEF_COLOR);
+        const trimmedName = (localChefName || '').trim();
+        if (!trimmedName) return;
+
+        if (chefNameTimeoutRef.current) {
+            clearTimeout(chefNameTimeoutRef.current);
+            chefNameTimeoutRef.current = null;
         }
+
+        if (!updateChefName) return;
+
+        if (!newColor) {
+            const nextColor = suggestChefColor(trimmedName);
+            setLocalChefColor(nextColor);
+            updateChefName(selectedRecipe, trimmedName, null);
+            return;
+        }
+
+        setLocalChefColor(newColor);
+        updateChefName(selectedRecipe, trimmedName, newColor);
     };
 
     const handleOrderChange = (event) => {
@@ -172,30 +208,46 @@ const RecipeModal = ({
                             onChange: (event) => handleChefNameChange(event.target.value),
                             style: { marginBottom: '0.5rem' }
                         }),
-                        React.createElement('select', {
-                            key: 'color',
-                            value: localChefColor || '',
-                            onChange: (event) => handleChefColorChange(event.target.value),
-                            disabled: !localChefName
-                        }, [
-                            React.createElement('option', { key: 'none', value: '' }, 'Badge color...'),
-                            React.createElement('option', { key: 'purple', value: 'var(--chef-purple)' }, 'Purple'),
-                            React.createElement('option', { key: 'blue', value: 'var(--chef-blue)' }, 'Blue'),
-                            React.createElement('option', { key: 'red', value: 'var(--chef-red)' }, 'Red'),
-                            React.createElement('option', { key: 'teal', value: 'var(--chef-teal)' }, 'Teal'),
-                            React.createElement('option', { key: 'orange', value: 'var(--chef-orange)' }, 'Orange'),
-                            React.createElement('option', { key: 'yellow', value: 'var(--chef-yellow)' }, 'Yellow'),
-                            React.createElement('option', { key: 'pink', value: 'var(--chef-pink)' }, 'Pink')
-                        ]),
-                        localChefName && localChefColor && React.createElement('kbd', {
-                            key: 'preview',
+                        React.createElement('div', {
+                            key: 'color-display',
                             style: {
-                                backgroundColor: resolveChefColor(localChefColor),
-                                color: '#ffffff',
-                                marginTop: '0.5rem',
-                                display: 'inline-block'
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                minHeight: '2rem'
                             }
-                        }, localChefName)
+                        }, [
+                            React.createElement('span', {
+                                key: 'swatch',
+                                style: {
+                                    width: '1.25rem',
+                                    height: '1.25rem',
+                                    borderRadius: '999px',
+                                    border: '1px solid var(--pico-muted-border-color)',
+                                    backgroundColor: resolveChefColor(localChefColor || '')
+                                }
+                            }),
+                            React.createElement('span', {
+                                key: 'label',
+                                className: 'muted'
+                            }, trimmedChefName
+                                ? `${getChefColorLabel(localChefColor || '')} badge`
+                                : 'Enter a chef name to auto-assign color')
+                        ]),
+                        React.createElement('select', {
+                            key: 'color-select',
+                            value: (localChefColor || ''),
+                            onChange: (event) => handleChefColorChange(event.target.value),
+                            disabled: !trimmedChefName
+                        },
+                            colorOptions.map((option) =>
+                                React.createElement('option', {
+                                    key: option.value || '__auto__',
+                                    value: option.value,
+                                    disabled: option.disabled
+                                }, option.label)
+                            )
+                        )
                     ]),
 
                     // Status section

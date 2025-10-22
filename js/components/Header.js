@@ -1,34 +1,7 @@
 const Header = ({
     supabase,
     isSupabaseConnected,
-    filterText,
-    setFilterText,
-    selectedCategory,
-    setSelectedCategory,
-    selectedDish,
-    setSelectedDish,
-    selectedIngredient,
-    setSelectedIngredient,
-    selectedComponent,
-    setSelectedComponent,
-    categories,
-    dishes,
-    ingredients,
-    components,
-    handleResetFilters,
-    recipeChefNames,
-    setSelectedChefForList
 }) => {
-    const { useMemo } = React;
-
-    // Get unique chef names
-    const chefNames = useMemo(() => {
-        const names = new Set();
-        Object.values(recipeChefNames || {}).forEach(chefData => {
-            if (chefData.name) names.add(chefData.name);
-        });
-        return Array.from(names).sort();
-    }, [recipeChefNames]);
     const connectionState = supabase
         ? isSupabaseConnected
             ? 'Live'
@@ -51,19 +24,6 @@ const Header = ({
                     React.createElement('li', { key: 'title' }, React.createElement('strong', null, 'CookMode V2'))
                 ]),
                 React.createElement('ul', { key: 'actions' }, [
-                    chefNames.length > 0 && React.createElement('li', { key: 'chef-list' },
-                        React.createElement('select', {
-                            'aria-label': 'View chef ingredients',
-                            onChange: (e) => e.target.value && setSelectedChefForList(e.target.value),
-                            value: '',
-                            style: { width: 'auto' }
-                        }, [
-                            React.createElement('option', { key: 'default', value: '' }, 'Chef\'s List...'),
-                            ...chefNames.map(name =>
-                                React.createElement('option', { key: name, value: name }, name)
-                            )
-                        ])
-                    ),
                     React.createElement('li', { key: 'status' },
                         React.createElement('span', {
                             className: connectionClass,
@@ -71,78 +31,6 @@ const Header = ({
                         }, connectionState)
                     )
                 ].filter(Boolean))
-            ]),
-
-            // Filter row
-            React.createElement('form', {
-                key: 'filters',
-                className: 'grid',
-                style: {
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                    alignItems: 'end',
-                    gap: '0.5rem',
-                    marginBottom: 0
-                },
-                onSubmit: (e) => e.preventDefault(),
-                onReset: (e) => {
-                    e.preventDefault();
-                    handleResetFilters();
-                }
-            }, [
-                React.createElement('select', {
-                    key: 'category',
-                    'aria-label': 'Filter by category',
-                    value: selectedCategory,
-                    onChange: (e) => setSelectedCategory(e.target.value)
-                }, [
-                    React.createElement('option', { key: 'all', value: 'all' }, 'All Categories'),
-                    ...categories.map(cat => React.createElement('option', { key: cat, value: cat }, cat))
-                ]),
-
-                React.createElement('select', {
-                    key: 'dish',
-                    'aria-label': 'Filter by dish',
-                    value: selectedDish,
-                    onChange: (e) => setSelectedDish(e.target.value)
-                }, [
-                    React.createElement('option', { key: 'all', value: 'all' }, 'All Dishes'),
-                    ...dishes.map(dish => React.createElement('option', { key: dish, value: dish }, dish))
-                ]),
-
-                React.createElement('select', {
-                    key: 'component',
-                    'aria-label': 'Filter by component',
-                    value: selectedComponent,
-                    onChange: (e) => setSelectedComponent(e.target.value)
-                }, [
-                    React.createElement('option', { key: 'all', value: 'all' }, 'All Components'),
-                    ...components.map(comp => React.createElement('option', { key: comp, value: comp }, comp))
-                ]),
-
-                React.createElement('select', {
-                    key: 'ingredient',
-                    'aria-label': 'Filter by ingredient',
-                    value: selectedIngredient,
-                    onChange: (e) => setSelectedIngredient(e.target.value)
-                }, [
-                    React.createElement('option', { key: 'all', value: 'all' }, 'All Ingredients'),
-                    ...ingredients.map(ing => React.createElement('option', { key: ing, value: ing }, ing))
-                ]),
-
-                React.createElement('input', {
-                    key: 'search',
-                    type: 'search',
-                    placeholder: 'Search...',
-                    'aria-label': 'Search recipes',
-                    value: filterText,
-                    onChange: (e) => setFilterText(e.target.value)
-                }),
-
-                React.createElement('button', {
-                    key: 'clear',
-                    type: 'reset',
-                    className: 'secondary outline'
-                }, 'Clear')
             ])
         ])
     );
