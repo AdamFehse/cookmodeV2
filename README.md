@@ -25,17 +25,17 @@ CookMode unifies kitchen operations around a single source of truth. Recipe card
 
 ## Key Features
 
-✅ **Live Recipe Cards** — Clear instructions, ingredient lists, and images at your fingertips
+ **Live Recipe Cards** — Clear instructions, ingredient lists, and images at your fingertips
 
-✅ **Smart Scaling** — Adjust quantities on the fly for multiple orders
+ **Smart Scaling** — Adjust quantities on the fly for multiple orders
 
-✅ **Chef Assignments** — See who's cooking what, with automatic color badges for quick visual reference
+ **Chef Assignments** — See who's cooking what, with automatic color badges for quick visual reference
 
-✅ **Real-time Sync** — Changes appear instantly across all kitchen screens and devices
+ **Real-time Sync** — Changes appear instantly across all kitchen screens and devices
 
-✅ **Prep Tracking** — Check off ingredients and steps as they're completed
+ **Prep Tracking** — Check off ingredients and steps as they're completed
 
-✅ **Multi-Device Ready** — Works seamlessly on phones, tablets, and kitchen displays
+ **Multi-Device Ready** — Works seamlessly on phones, tablets, and kitchen displays
 
 ---
 
