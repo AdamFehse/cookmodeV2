@@ -1,5 +1,8 @@
 # CookMode V2
 
+**[DEMO OF THE APP](https://adamfehse.github.io/cookmodeV2/)**
+
+
 **Recipe Management & Kitchen Operations Dashboard**
 
 A real-time kitchen management system designed to connect chefs, cooks, and operations through unified recipe cards, live prep tracking, and instant order coordination.
