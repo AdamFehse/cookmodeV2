@@ -20,6 +20,7 @@ dialog article.recipe-modal {
   background-color: transparent;
   border: none;
   padding: 0;
+  min-height: 0;
 }
 
 /* ============================================
@@ -30,7 +31,7 @@ dialog article.recipe-modal {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--gap-lg);
-  padding: var(--space-md);
+  padding: var(--space-lg);
   border-radius: var(--radius-md);
   margin-bottom: var(--space-lg);
   background-color: rgba(255, 255, 255, 0.05);
@@ -172,7 +173,9 @@ dialog article.recipe-modal {
   padding: var(--space-lg);
   border-radius: var(--radius-md);
   border: 1px solid var(--surface-border);
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .ingredients-content {
@@ -259,7 +262,9 @@ dialog article.recipe-modal {
   padding: var(--space-lg);
   border-radius: var(--radius-md);
   border: 1px solid var(--surface-border);
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .instructions-content {

@@ -156,10 +156,28 @@
    ============================================ */
 
 .prep-modal-content {
-  flex: 1;
+  flex: 1 1 auto;
   overflow-y: auto;
   padding: var(--space-lg) var(--space-xl);
   -webkit-overflow-scrolling: touch;
+  min-height: 0;
+}
+
+.prep-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.prep-modal-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.prep-modal-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 152, 0, 0.4);
+  border-radius: 4px;
+}
+
+.prep-modal-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 152, 0, 0.6);
 }
 
 /* ============================================
@@ -241,8 +259,9 @@
   gap: 2px;
   width: 100%;
   padding: var(--space-xs);
-  max-height: 130px;
+  max-height: 150px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   border-radius: var(--radius-sm);
   background-color: rgba(0, 0, 0, 0.15);
 }
@@ -401,6 +420,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--gap-sm);
+  max-height: 220px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 4px;
 }
 
 .prep-step-item {
@@ -457,10 +480,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--gap-sm);
-  padding: var(--space-md) var(--space-xl);
-  border-top: 1px solid var(--surface-border);
+  padding: var(--space-lg) var(--space-xl);
+  border-top: 2px solid var(--surface-border);
   flex-shrink: 0;
-  background-color: rgba(255, 255, 255, 0.01);
+  background-color: rgba(255, 255, 255, 0.02);
 }
 
 .prep-modal-notes label {
@@ -493,10 +516,10 @@
   display: flex;
   justify-content: flex-end;
   gap: var(--gap-lg);
-  padding: var(--space-md) var(--space-xl);
-  border-top: 1px solid var(--surface-border);
+  padding: var(--space-lg) var(--space-xl);
+  border-top: 2px solid var(--surface-border);
   flex-shrink: 0;
-  background-color: rgba(255, 255, 255, 0.01);
+  background-color: rgba(255, 255, 255, 0.02);
 }
 
 .prep-modal-footer button {
@@ -564,7 +587,11 @@
 
   .prep-ingredients-columns {
     grid-template-columns: repeat(2, 1fr);
-    max-height: 110px;
+    max-height: 140px;
+  }
+
+  .prep-steps-list {
+    max-height: 200px;
   }
 }
 
@@ -594,7 +621,11 @@
 
   .prep-ingredients-columns {
     grid-template-columns: repeat(1, 1fr);
-    max-height: 100px;
+    max-height: 120px;
+  }
+
+  .prep-steps-list {
+    max-height: 180px;
   }
 }
 

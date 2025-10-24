@@ -5,6 +5,7 @@ const ChefPrepModal = ({ chefAssignments, chefName, onClose }) => {
     const [completedIngredients, setCompletedIngredients] = useState({});
     const [completedSteps, setCompletedSteps] = useState({});
     const [activeTab, setActiveTab] = useState({});  // Track which tab is active per dish (default: 'ingredients')
+    const [openMethodsModal, setOpenMethodsModal] = useState(null);  // Track which dish's methods modal is open
 
     if (!assignment) return null;
 
@@ -43,7 +44,11 @@ const ChefPrepModal = ({ chefAssignments, chefName, onClose }) => {
     };
 
     const handleTabChange = (slug, tab) => {
-        setActiveTab(prev => ({ ...prev, [slug]: tab }));
+        if (tab === 'methods') {
+            setOpenMethodsModal(slug);  // Open methods modal instead of switching tab
+        } else {
+            setActiveTab(prev => ({ ...prev, [slug]: tab }));
+        }
     };
 
     const handleMarkDishComplete = (slug, recipe) => {
@@ -141,7 +146,7 @@ const ChefPrepModal = ({ chefAssignments, chefName, onClose }) => {
                 }, '🥘 Ingredients'),
                 React.createElement('button', {
                     key: 'tab-methods',
-                    className: `prep-tab-button ${currentTab === 'methods' ? 'active' : ''}`,
+                    className: 'prep-tab-button',
                     onClick: () => handleTabChange(slug, 'methods')
                 }, '👨‍🍳 Methods')
             ]),
@@ -169,34 +174,6 @@ const ChefPrepModal = ({ chefAssignments, chefName, onClose }) => {
                 )
             ),
             
-            // Tab content: Methods (Steps)
-            currentTab === 'methods' && React.createElement('div', { key: 'methods-panel', className: 'prep-tab-content' },
-                dishSteps.length === 0 ? React.createElement('p', { key: 'no-steps', className: 'muted' }, 'No steps.') : React.createElement('ol', {
-                    key: 'steps',
-                    className: 'prep-steps-list'
-                },
-                    dishSteps.map((step, idx) => {
-                        const stepKey = `${slug}-step-${idx}`;
-                        const isCompleted = completedSteps[stepKey];
-                        return React.createElement('li', {
-                            key: stepKey,
-                            className: `prep-step-item ${isCompleted ? 'checked' : ''}`
-                        }, [
-                            React.createElement('label', { key: 'label', className: 'prep-step-label' }, [
-                                React.createElement('input', {
-                                    key: 'checkbox',
-                                    type: 'checkbox',
-                                    checked: isCompleted,
-                                    onChange: () => handleToggleStep(stepKey),
-                                    className: 'prep-step-checkbox'
-                                }),
-                                React.createElement('span', { key: 'text', className: 'prep-step-text' }, step)
-                            ])
-                        ]);
-                    })
-                )
-            ),
-            
             // Action button
             React.createElement('button', {
                 key: 'mark-complete',
@@ -212,6 +189,37 @@ const ChefPrepModal = ({ chefAssignments, chefName, onClose }) => {
     const dashboardContent = React.createElement('div', { key: 'dish-grid', className: 'prep-dish-grid' }, 
         dishCards
     );
+
+    // Render methods modal if one is open
+    const methodsModalContent = openMethodsModal ? (() => {
+        const dish = dishes.find(d => d.slug === openMethodsModal);
+        if (!dish) return null;
+
+        const { slug, recipe } = dish;
+        const dishSteps = recipe.instructions || [];
+        
+        // Create a map of step completion for this dish
+        const stepCompletionMap = {};
+        dishSteps.forEach((_, idx) => {
+            stepCompletionMap[idx] = completedSteps[`${slug}-step-${idx}`];
+        });
+
+        return React.createElement(window.MethodsModal, {
+            key: 'methods-modal',
+            recipeName: recipe.name,
+            steps: dishSteps,
+            completedSteps: stepCompletionMap,
+            onToggleStep: (idx) => {
+                const stepKey = `${slug}-step-${idx}`;
+                handleToggleStep(stepKey);
+            },
+            onMarkComplete: () => {
+                handleMarkDishComplete(slug, recipe);
+                setOpenMethodsModal(null);
+            },
+            onClose: () => setOpenMethodsModal(null)
+        });
+    })() : null;
 
     return React.createElement('dialog', {
         open: true,
@@ -266,7 +274,10 @@ const ChefPrepModal = ({ chefAssignments, chefName, onClose }) => {
                 className: 'secondary',
                 onClick: onClose
             }, 'Done')
-        ])
+        ]),
+
+        // Methods modal (rendered on top if open)
+        methodsModalContent
     ]);
 };
 
