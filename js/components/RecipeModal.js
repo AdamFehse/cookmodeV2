@@ -251,10 +251,10 @@ const RecipeModal = ({
                                 const isActive = recipeStatus[selectedRecipe] === status;
                                 const displayLabel = status === 'in-progress' ? 'In Progress' : status.charAt(0).toUpperCase() + status.slice(1);
                                 const colors = {
-                                    'in-progress': { bg: 'var(--status-in-progress)', text: '#000000' },
-                                    complete: { bg: 'var(--status-complete)', text: '#ffffff' },
-                                    plated: { bg: 'var(--status-plated)', text: '#000000' },
-                                    packed: { bg: 'var(--status-packed)', text: '#ffffff' }
+                                    'in-progress': { bg: '#eab308', text: '#000000' },
+                                    complete: { bg: '#10b981', text: '#ffffff' },
+                                    plated: { bg: '#f59e0b', text: '#000000' },
+                                    packed: { bg: '#8b5cf6', text: '#ffffff' }
                                 };
                                 const color = colors[status];
 
