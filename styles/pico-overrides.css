@@ -106,6 +106,19 @@ input[type="reset"].secondary:hover,
   background-color: rgba(255, 152, 0, 0.8) !important;
 }
 
+/* Status Button Variant */
+button.status-button {
+  background-color: transparent !important;
+  border-color: currentColor !important;
+  color: inherit !important;
+}
+
+button.status-button:hover {
+  opacity: 1 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
 /* Outline Button Variant */
 button.outline,
 input[type="button"].outline,
