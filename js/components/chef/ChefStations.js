@@ -34,7 +34,7 @@ const ChefStations = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, 
                 totalSteps += instructions.length;
 
                 instructions.forEach((_, index) => {
-                    const generateStepKey = window.generateStepKey || (() => `${slug}-${index}`);
+                    const generateStepKey = window.generateStepKey || (() => `${slug}-step-${index}`);
                     const key = generateStepKey(slug, index);
                     if (recipeData.completedSteps?.[key]) {
                         completedSteps += 1;
@@ -279,7 +279,7 @@ const ChefStations = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, 
                                             if (recipe?.instructions) {
                                                 recipeSteps = recipe.instructions.length;
                                                 recipe.instructions.forEach((_, index) => {
-                                                    const generateStepKey = window.generateStepKey || (() => slug + '-' + index);
+                                                    const generateStepKey = window.generateStepKey || (() => `${slug}-step-${index}`);
                                                     const key = generateStepKey(slug, index);
                                                     if (recipeData.completedSteps?.[key]) {
                                                         recipeCompletedSteps += 1;
