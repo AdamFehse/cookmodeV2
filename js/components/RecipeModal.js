@@ -304,24 +304,72 @@ const RecipeModal = ({
                     React.createElement('div', { key: 'main-content', className: 'modal-main' }, [
                         // Ingredients section
                         React.createElement('section', { key: 'ingredients', className: 'ingredients-section' }, [
-                            React.createElement('header', { key: 'header', className: 'section-header' }, [
-                                React.createElement('h3', { key: 'title' }, 'Ingredients'),
-                                React.createElement('div', { key: 'order-control' }, [
-                                    React.createElement('label', { htmlFor: sliderId, className: 'order-label' }, [
-                                        `Orders: ${orderCount}x`,
-                                        React.createElement('input', {
-                                            key: 'slider',
-                                            id: sliderId,
-                                            type: 'range',
-                                            min: 1,
-                                            max: 50,
-                                            value: orderCount,
-                                            onChange: handleOrderChange,
-                                            className: 'order-slider'
-                                        })
+                            (() => {
+                                // Check if all ingredients are completed
+                                let totalIngredients = 0;
+                                let completedCount = 0;
+                                if (recipe.components) {
+                                    Object.entries(recipe.components).forEach(([component, ingredients]) => {
+                                        ingredients.forEach((_, index) => {
+                                            const ingredientKey = `${selectedRecipe}-ing-${component}-${index}`;
+                                            totalIngredients++;
+                                            if (completedIngredients[ingredientKey]) {
+                                                completedCount++;
+                                            }
+                                        });
+                                    });
+                                }
+                                const allIngredientsCompleted = totalIngredients > 0 && completedCount === totalIngredients;
+
+                                return React.createElement('header', { key: 'header', className: 'section-header', style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' } }, [
+                                    React.createElement('h3', { key: 'title', style: { margin: 0 } }, 'Ingredients'),
+                                    React.createElement('div', { key: 'controls', style: { display: 'flex', gap: '0.5rem', alignItems: 'center' } }, [
+                                        React.createElement('button', {
+                                            key: 'toggle-all-ing',
+                                            type: 'button',
+                                            className: 'outline',
+                                            style: { padding: '0.4rem 0.8rem', fontSize: '0.85rem' },
+                                            onClick: () => {
+                                                if (recipe.components) {
+                                                    Object.entries(recipe.components).forEach(([component, ingredients]) => {
+                                                        ingredients.forEach((ingredient, index) => {
+                                                            const ingredientKey = `${selectedRecipe}-ing-${component}-${index}`;
+                                                            const isCompleted = completedIngredients[ingredientKey];
+                                                            // Only toggle items that don't match the target state
+                                                            if (allIngredientsCompleted && isCompleted) {
+                                                                // All completed - uncheck this one
+                                                                if (toggleIngredient) {
+                                                                    toggleIngredient(selectedRecipe, ingredientKey, component, index, ingredient);
+                                                                }
+                                                            } else if (!allIngredientsCompleted && !isCompleted) {
+                                                                // Not all completed - check this one
+                                                                if (toggleIngredient) {
+                                                                    toggleIngredient(selectedRecipe, ingredientKey, component, index, ingredient);
+                                                                }
+                                                            }
+                                                        });
+                                                    });
+                                                }
+                                            }
+                                        }, allIngredientsCompleted ? 'Uncheck All' : 'Check All'),
+                                        React.createElement('div', { key: 'order-control' }, [
+                                            React.createElement('label', { htmlFor: sliderId, className: 'order-label' }, [
+                                                `Orders: ${orderCount}x`,
+                                                React.createElement('input', {
+                                                    key: 'slider',
+                                                    id: sliderId,
+                                                    type: 'range',
+                                                    min: 1,
+                                                    max: 50,
+                                                    value: orderCount,
+                                                    onChange: handleOrderChange,
+                                                    className: 'order-slider'
+                                                })
+                                            ])
+                                        ])
                                     ])
-                                ])
-                            ]),
+                                ]);
+                            })(),
                             React.createElement('div', { key: 'ingredients-content', className: 'ingredients-content' },
                                 recipe.components && Object.entries(recipe.components).map(([component, ingredients]) =>
                                     React.createElement('div', { key: component, className: 'ingredient-group' }, [
@@ -352,9 +400,41 @@ const RecipeModal = ({
 
                         // Instructions section
                         React.createElement('section', { key: 'instructions', className: 'instructions-section' }, [
-                            React.createElement('header', { key: 'header', className: 'section-header' }, [
-                                React.createElement('h3', { key: 'title' }, 'Instructions')
-                            ]),
+                            (() => {
+                                // Check if all steps are completed
+                                const allStepsCompleted = (recipe.instructions || []).every((_, index) => {
+                                    const stepKey = `${selectedRecipe}-step-${index}`;
+                                    return completedSteps[stepKey];
+                                });
+
+                                return React.createElement('header', { key: 'header', className: 'section-header', style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
+                                    React.createElement('h3', { key: 'title', style: { margin: 0 } }, 'Instructions'),
+                                    React.createElement('button', {
+                                        key: 'toggle-all-steps',
+                                        type: 'button',
+                                        className: 'outline',
+                                        style: { padding: '0.4rem 0.8rem', fontSize: '0.85rem' },
+                                        onClick: () => {
+                                            (recipe.instructions || []).forEach((step, index) => {
+                                                const stepKey = `${selectedRecipe}-step-${index}`;
+                                                const isCompleted = completedSteps[stepKey];
+                                                // Only toggle items that don't match the target state
+                                                if (allStepsCompleted && isCompleted) {
+                                                    // All completed - uncheck this one
+                                                    if (toggleStep) {
+                                                        toggleStep(selectedRecipe, stepKey, index, step);
+                                                    }
+                                                } else if (!allStepsCompleted && !isCompleted) {
+                                                    // Not all completed - check this one
+                                                    if (toggleStep) {
+                                                        toggleStep(selectedRecipe, stepKey, index, step);
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }, allStepsCompleted ? 'Uncheck All' : 'Check All')
+                                ]);
+                            })(),
                             React.createElement('div', { key: 'instructions-content', className: 'instructions-content' }, [
                                 React.createElement('ol', { key: 'steps', className: 'instructions-list' },
                                     (recipe.instructions || []).map((step, index) => {

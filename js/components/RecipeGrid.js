@@ -17,10 +17,10 @@ const RecipeGrid = ({
     // Helper functions for badge styling with vibrant colors
     const getStatusBadgeStyle = (status) => {
         const colors = {
-            gathered: { bg: '#3b82f6', text: '#ffffff' },  // Blue
-            complete: { bg: '#10b981', text: '#ffffff' },  // Green
-            plated: { bg: '#f59e0b', text: '#000000' },    // Orange
-            packed: { bg: '#8b5cf6', text: '#ffffff' }     // Purple
+            'in-progress': { bg: '#eab308', text: '#000000' },  // Yellow
+            complete: { bg: '#10b981', text: '#ffffff' },       // Green
+            plated: { bg: '#f59e0b', text: '#000000' },         // Orange
+            packed: { bg: '#8b5cf6', text: '#ffffff' }          // Purple
         };
 
         const color = colors[status] || { bg: '#6b7280', text: '#ffffff' };
