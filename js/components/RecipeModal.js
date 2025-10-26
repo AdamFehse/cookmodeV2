@@ -82,20 +82,28 @@ const RecipeModal = ({
     };
 
     const getStatusButtonStyle = (status, isActive) => {
-        if (!isActive) return {};
-
         const colors = {
-            'in-progress': 'var(--status-in-progress)',
-            complete: 'var(--status-complete)',
-            plated: 'var(--status-plated)',
-            packed: 'var(--status-packed)'
+            'in-progress': { bg: 'var(--status-in-progress)', text: '#000000' },
+            complete: { bg: 'var(--status-complete)', text: '#ffffff' },
+            plated: { bg: 'var(--status-plated)', text: '#000000' },
+            packed: { bg: 'var(--status-packed)', text: '#ffffff' }
         };
 
-        return {
-            backgroundColor: colors[status],
-            borderColor: colors[status],
-            color: status === 'in-progress' || status === 'plated' ? '#000000' : '#ffffff'
-        };
+        const color = colors[status];
+
+        if (isActive) {
+            return {
+                backgroundColor: color.bg,
+                borderColor: color.bg,
+                color: color.text
+            };
+        } else {
+            return {
+                backgroundColor: 'transparent',
+                borderColor: color.bg,
+                color: color.bg
+            };
+        }
     };
 
     const displayName = recipe.name || slugToDisplayName(selectedRecipe);
@@ -266,13 +274,20 @@ const RecipeModal = ({
                         },
                             ['in-progress', 'complete', 'plated', 'packed'].map((status) => {
                                 const isActive = recipeStatus[selectedRecipe] === status;
-                                const buttonClass = isActive ? '' : 'outline secondary';
                                 const displayLabel = status === 'in-progress' ? 'In Progress' : status.charAt(0).toUpperCase() + status.slice(1);
                                 return React.createElement('button', {
                                     key: status,
                                     type: 'button',
-                                    className: buttonClass,
-                                    style: getStatusButtonStyle(status, isActive),
+                                    style: {
+                                        ...getStatusButtonStyle(status, isActive),
+                                        padding: '0.5rem 1rem',
+                                        borderWidth: '2px',
+                                        borderStyle: 'solid',
+                                        borderRadius: 'var(--pico-border-radius)',
+                                        cursor: 'pointer',
+                                        fontWeight: 'var(--font-weight-semibold)',
+                                        transition: 'all var(--transition-standard)'
+                                    },
                                     'aria-pressed': isActive,
                                     onClick: () => updateRecipeStatus && updateRecipeStatus(selectedRecipe, isActive ? null : status)
                                 }, displayLabel);
