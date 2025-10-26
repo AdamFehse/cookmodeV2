@@ -47,7 +47,7 @@ a:focus {
    BUTTONS & FORM BUTTONS
    ============================================ */
 
-button,
+button:not(.status-button),
 input[type="button"],
 input[type="submit"],
 input[type="reset"],
@@ -60,7 +60,7 @@ input[type="reset"],
   padding: var(--btn-padding-y) var(--btn-padding-x) !important;
 }
 
-button:hover,
+button:not(.status-button):hover,
 input[type="button"]:hover,
 input[type="submit"]:hover,
 input[type="reset"]:hover,
