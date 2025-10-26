@@ -106,14 +106,24 @@ input[type="reset"].secondary:hover,
   background-color: rgba(255, 152, 0, 0.8) !important;
 }
 
-/* Status Button Variant */
-button.status-button {
+/* Status Button Group */
+div[role="group"] button.status-button {
   background-color: transparent !important;
   border-color: currentColor !important;
   color: inherit !important;
 }
 
-button.status-button:hover {
+div[role="group"] {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* Status Button Variant */
+button.status-button {
+  background-color: transparent !important;
+  border-color: currentColor !important;
+  color: inherit !important;
   opacity: 1 !important;
   transform: none !important;
   box-shadow: none !important;
