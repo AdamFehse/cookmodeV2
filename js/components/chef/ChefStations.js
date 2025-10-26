@@ -123,12 +123,20 @@ const ChefStations = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, 
                     // Update badge
                     const badgeContainer = card.querySelector('div[style*="display: flex; gap: 0.25rem"]');
                     if (badgeContainer) {
-                        const statusBadge = badgeContainer.querySelector('span');
-                        if (status && statusBadge) {
-                            statusBadge.textContent = status;
-                            statusBadge.style.background = statusColor.bg;
-                            statusBadge.style.color = statusColor.text;
-                        }
+                        const statusBadges = badgeContainer.querySelectorAll('span');
+                        statusBadges.forEach((badge, idx) => {
+                            // First span is the status badge
+                            if (idx === 0) {
+                                if (status) {
+                                    badge.textContent = status;
+                                    badge.style.background = statusColor.bg;
+                                    badge.style.color = statusColor.text;
+                                    badge.style.display = 'inline-block';
+                                } else {
+                                    badge.style.display = 'none';
+                                }
+                            }
+                        });
                     }
 
                     // Update completion text

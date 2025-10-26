@@ -86,49 +86,6 @@ export const RECIPES = {
     "Adjust chili quantity to taste. For gluten-free, use dry sherry instead of Shaoxing wine and tamari instead of soy sauce. Works well with vegetables like bell pepper or eggplant for variation.",
   "images": ["https://thewoksoflife.com/wp-content/uploads/2017/09/tofu-black-bean-sauce-2.jpg"]
 },
-"vegan-pulled-pork-sandwich": {
-  "name": "Vegan Pulled Pork Sandwich",
-  "category": "Entree",
-  "description":
-    "A hearty 10-ingredient vegan 'pulled pork' sandwich made with lentils, smoky-sweet spices, and tangy BBQ sauce. High in protein and flavor, it’s the perfect plant-based comfort food.",
-  "components": {
-    "Lentils": [
-      { "amount": 4, "unit": "oz", "ingredient": "water" },
-      { "amount": 2, "unit": "oz", "ingredient": "green lentils", "prep": "well rinsed" }
-    ],
-    "Seasonings & Vegetables": [
-      { "amount": 0.5, "unit": "tbsp", "ingredient": "oil", "prep": "olive, avocado, or grapeseed" },
-      { "amount": 0.13, "unit": "medium", "ingredient": "onion", "prep": "white or yellow, minced" },
-      { "amount": 0.38, "unit": "cup", "ingredient": "carrot", "prep": "finely shredded or grated" },
-      { "amount": 0.5, "unit": "tbsp", "ingredient": "coconut sugar", "prep": "or organic brown sugar" },
-      { "amount": 0.38, "unit": "tsp", "ingredient": "smoked paprika" },
-      { "amount": 0.25, "unit": "tsp", "ingredient": "garlic powder" },
-      { "amount": 0.25, "unit": "pinch", "ingredient": "sea salt", "prep": "plus more to taste" },
-      { "amount": 0.25, "unit": "pinch", "ingredient": "black pepper", "prep": "plus more to taste" },
-      { "amount": 0.19, "unit": "cup", "ingredient": "vegan BBQ sauce", "prep": "plus more for serving, gluten-free if needed" },
-      { "amount": 0.5, "unit": "tbsp", "ingredient": "water", "prep": "for thinning" }
-    ],
-    "For Serving": [
-      { "amount": 1, "unit": "medium", "ingredient": "hamburger bun", "prep": "gluten-free or whole-wheat, toasted" },
-      { "amount": null, "unit": "", "ingredient": "purple cabbage", "prep": "finely chopped, optional" },
-      { "amount": null, "unit": "", "ingredient": "carrot", "prep": "finely chopped, optional" },
-      { "amount": null, "unit": "", "ingredient": "green onion", "prep": "finely sliced, optional" }
-    ]
-  },
-  "instructions": [
-    "Add water and rinsed lentils to a small saucepan and heat over medium-high. Bring to a low boil, then reduce to a simmer and cook uncovered for about 18 minutes, or until tender. Drain excess liquid and set aside.",
-    "When lentils are almost done, heat a large skillet over medium heat. Add oil and onion, season with salt and pepper, and sauté 4–5 minutes until softened and lightly browned.",
-    "Add cooked lentils, carrots, coconut sugar, paprika, garlic powder, salt, pepper, BBQ sauce, and 2 tbsp water. Stir to combine.",
-    "Cook over medium-low heat, stirring occasionally, until thickened and heated through, about 5–10 minutes.",
-    "Taste and adjust seasoning: add paprika for smokiness, salt for saltiness, coconut sugar for sweetness, or BBQ sauce for depth of flavor.",
-    "Optional: Pulse half of the mixture in a food processor for a more cohesive 'pulled' texture, then mix back together.",
-    "Serve the mixture on toasted buns with toppings of your choice such as shredded cabbage, carrots, and sliced green onions. Add extra BBQ sauce if desired.",
-    "Best served fresh. Store leftover mixture up to 3 days in the refrigerator and reheat with a splash of water if dry."
-  ],
-  "notes":
-    "For a gluten-free version, use tamari-friendly BBQ sauce and gluten-free buns. Adjust spice and sweetness to taste. The lentil mixture also works well in tacos or lettuce wraps.",
-  "images": []
-},
 "bbq-jackfruit-sandwich": {
   "name": "BBQ Jackfruit Sandwich",
   "category": "Entree",
@@ -182,7 +139,7 @@ export const RECIPES = {
   "notes":
     "For a milder BBQ flavor, use fewer chipotle peppers or omit the adobo sauce. For extra smokiness, add a dash of liquid smoke. Jackfruit mixture can also be used in tacos or wraps. Make ahead for easy entertaining.",
   "images": [
-    "https://cdn.loveandlemons.com/wp-content/uploads/2018/08/jackfruit-pulled-pork-recipe.jpg"
+    "https://www.noracooks.com/wp-content/uploads/2022/05/jackfruit-pulled-pork-10.jpg"
   ]
 },
 "lentil-sweet-potato-shepherds-pie": {
