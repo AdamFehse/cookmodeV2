@@ -262,10 +262,10 @@ const RecipeModal = ({
                                     key: status,
                                     type: 'button',
                                     className: 'status-button',
-                                    'data-status-color': color.bg,
-                                    'data-status-text': color.text,
                                     'data-active': isActive,
                                     style: {
+                                        '--status-bg': color.bg,
+                                        '--status-text': color.text,
                                         padding: '0.5rem 1rem',
                                         borderWidth: '2px',
                                         borderStyle: 'solid',

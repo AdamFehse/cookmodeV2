@@ -130,9 +130,9 @@ button.status-button {
 }
 
 button.status-button:not([data-active="true"]):hover {
-  background-color: currentColor !important;
-  color: #ffffff !important;
-  opacity: 0.8 !important;
+  background-color: var(--status-bg) !important;
+  color: var(--status-text) !important;
+  opacity: 1 !important;
   transform: none !important;
 }
 
