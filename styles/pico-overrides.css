@@ -136,6 +136,12 @@ button.status-button:not([data-active="true"]):hover {
   transform: none !important;
 }
 
+button.status-button[data-active="true"] {
+  background-color: var(--status-bg) !important;
+  color: var(--status-text) !important;
+  border-color: var(--status-bg) !important;
+}
+
 button.status-button[data-active="true"]:hover {
   opacity: 1 !important;
   transform: none !important;
