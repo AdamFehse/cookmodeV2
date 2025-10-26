@@ -39,8 +39,13 @@ const RecipeGrid = ({
     });
 
     const getOrderBadgeStyle = () => ({
-        '--pico-code-background-color': 'var(--pico-primary-background)',
-        '--pico-code-color': 'var(--pico-primary-inverse)'
+        backgroundColor: 'var(--color-primary)',
+        color: 'var(--text-inverse)',
+        border: 'none',
+        padding: '0.25rem 0.5rem',
+        borderRadius: 'var(--pico-border-radius)',
+        fontWeight: '700',
+        fontSize: '0.75rem'
     });
 
     if (Object.keys(recipes).length === 0) {

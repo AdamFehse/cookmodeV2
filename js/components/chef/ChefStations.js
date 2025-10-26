@@ -294,12 +294,12 @@ const ChefStations = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, 
                                                 <div class="mini-recipe-card" data-slug="${slug}" style="cursor: pointer; border-radius: 6px; overflow: hidden; transition: all 0.2s ease; border: 1px solid rgba(255, 152, 0, 0.3); background: ${overlayColor}; position: relative;">
                                                     ${imageUrl ? `<img src="${imageUrl}" alt="${displayName}" style="width: 100%; height: 100px; object-fit: cover; display: block; opacity: ${recipeStatus ? '0.7' : '1'};">` : `<div style="width: 100%; height: 100px; background: rgba(255, 152, 0, 0.1); display: flex; align-items: center; justify-content: center; color: var(--muted-color);">No Image</div>`}
                                                     <div style="padding: 0.5rem; text-align: center; position: relative;">
-                                                        <p style="margin: 0 0 0.25rem 0; font-size: 0.75rem; color: #ffffff; line-height: 1.2; word-break: break-word;">${displayName}</p>
+                                                        <p style="margin: 0 0 0.25rem 0; font-size: 0.75rem; color: var(--text-primary); line-height: 1.2; word-break: break-word;">${displayName}</p>
                                                         <div style="display: flex; gap: 0.25rem; flex-wrap: wrap; justify-content: center; margin-bottom: 0.25rem;">
                                                             ${recipeStatus ? `<span style="display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.4rem; background: ${statusColor.bg}; color: ${statusColor.text}; border-radius: 2px; text-transform: capitalize;">${recipeStatus}</span>` : ''}
-                                                            ${orderCount > 1 ? `<span style="display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.4rem; background: rgba(100, 200, 255, 0.6); color: #fff; border-radius: 2px;">×${orderCount}</span>` : ''}
+                                                            ${orderCount > 1 ? `<span style="display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.4rem; background: var(--color-primary); color: var(--text-inverse); border-radius: 2px;">×${orderCount}</span>` : ''}
                                                         </div>
-                                                        ${recipeCompletion > 0 && !recipeStatus ? `<div style="font-size: 0.65rem; color: rgba(76, 175, 80, 0.8); font-weight: 600;">${recipeCompletion}% done</div>` : ''}
+                                                        ${recipeCompletion > 0 && !recipeStatus ? `<div style="font-size: 0.65rem; color: var(--status-complete); font-weight: 600;">${recipeCompletion}% done</div>` : ''}
                                                     </div>
                                                 </div>
                                             `;
