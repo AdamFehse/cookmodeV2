@@ -263,6 +263,7 @@ const RecipeModal = ({
                                     type: 'button',
                                     className: 'status-button',
                                     'data-active': isActive,
+                                    'data-status': status,
                                     style: {
                                         '--status-bg': color.bg,
                                         '--status-text': color.text,
@@ -271,8 +272,6 @@ const RecipeModal = ({
                                         borderStyle: 'solid',
                                         borderColor: color.bg,
                                         borderRadius: 'var(--pico-border-radius)',
-                                        backgroundColor: isActive ? color.bg : 'transparent',
-                                        color: isActive ? color.text : color.bg,
                                         cursor: 'pointer',
                                         fontWeight: 'var(--font-weight-semibold)',
                                         transition: 'all var(--transition-standard)'

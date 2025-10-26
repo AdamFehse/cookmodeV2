@@ -107,28 +107,23 @@ input[type="reset"].secondary:hover,
 }
 
 /* Status Button Group */
-div[role="group"] button.status-button {
-  background-color: transparent !important;
-  border-color: currentColor !important;
-  color: inherit !important;
-}
-
 div[role="group"] {
   background-color: transparent !important;
   border: none !important;
   padding: 0 !important;
 }
 
-/* Status Button Variant */
+/* Status Button Variant - default inactive state */
 button.status-button {
   background-color: transparent !important;
-  border-color: currentColor !important;
-  color: inherit !important;
+  border-color: var(--status-bg) !important;
+  color: var(--status-bg) !important;
   opacity: 1 !important;
   transform: none !important;
   box-shadow: none !important;
 }
 
+/* Status Button - inactive hover state */
 button.status-button:not([data-active="true"]):hover {
   background-color: var(--status-bg) !important;
   color: var(--status-text) !important;
@@ -136,13 +131,19 @@ button.status-button:not([data-active="true"]):hover {
   transform: none !important;
 }
 
+/* Status Button - active state (stays colored when selected) */
 button.status-button[data-active="true"] {
   background-color: var(--status-bg) !important;
   color: var(--status-text) !important;
   border-color: var(--status-bg) !important;
+  opacity: 1 !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 button.status-button[data-active="true"]:hover {
+  background-color: var(--status-bg) !important;
+  color: var(--status-text) !important;
   opacity: 1 !important;
   transform: none !important;
 }
