@@ -17,7 +17,7 @@ const RecipeGrid = ({
     // Helper functions for badge styling with vibrant colors
     const getStatusBadgeStyle = (status) => {
         const colors = {
-            'in-progress': { bg: 'var(--status-in-progress)', text: '#000000' },
+            'in-progress': { bg: '#fbbf24', text: '#000000' },
             complete: { bg: 'var(--status-complete)', text: '#ffffff' },
             plated: { bg: 'var(--status-plated)', text: '#000000' },
             packed: { bg: 'var(--status-packed)', text: '#ffffff' }

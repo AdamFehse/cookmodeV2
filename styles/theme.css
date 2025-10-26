@@ -32,8 +32,8 @@
   /* ============================================
      RECIPE STATUS COLORS
      ============================================ */
-  --status-in-progress: #eab308;
-  --status-in-progress-bg: rgba(234, 179, 8, 0.15);
+  --status-in-progress: #fbbf24;
+  --status-in-progress-bg: rgba(251, 191, 36, 0.15);
   --status-complete: #10b981;
   --status-complete-bg: rgba(16, 185, 129, 0.15);
   --status-plated: #f59e0b;
