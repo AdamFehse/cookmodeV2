@@ -15,8 +15,7 @@ const ChefStations = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, 
 
     // Calculate kitchen-wide progress
     const kitchenProgress = calculateKitchenProgress(
-        chefAssignments,
-        recipeData.completedIngredients || {},
+        recipes,
         recipeData.completedSteps || {}
     );
 

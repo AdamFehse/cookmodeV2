@@ -95,32 +95,43 @@ const calculateChefProgress = (recipes, completedIngredients, completedSteps) =>
 
 /**
  * Calculate kitchen-wide progress
- * @param {array} chefSummaries - Array of chef summaries from useChefData
- * @param {object} chefAssignments - Chef assignments map
- * @param {object} completedIngredients - Completed ingredients map
+ * @param {object} allRecipes - All recipes in the system (slug -> recipe)
  * @param {object} completedSteps - Completed steps map
  * @returns {object} { percentage, completedItems, totalItems }
  */
-const calculateKitchenProgress = (chefAssignments, completedIngredients, completedSteps) => {
-    let totalItems = 0;
-    let completedItems = 0;
+const calculateKitchenProgress = (allRecipes, completedSteps) => {
+    let totalDishes = 0;
+    let completedDishes = 0;
 
-    Object.values(chefAssignments).forEach(assignment => {
-        const chefProgress = calculateChefProgress(
-            assignment.recipes,
-            completedIngredients,
-            completedSteps
-        );
-        totalItems += chefProgress.totalItems;
-        completedItems += chefProgress.completedItems;
+    // Count all recipes with instructions
+    Object.entries(allRecipes || {}).forEach(([slug, recipe]) => {
+        if (recipe?.instructions && recipe.instructions.length > 0) {
+            totalDishes++;
+
+            // Check if dish is 100% complete (all steps done)
+            const instructions = recipe.instructions || [];
+            const generateStepKey = window.generateStepKey || (() => '');
+
+            let allStepsDone = true;
+            instructions.forEach((_, idx) => {
+                const stepKey = generateStepKey(slug, idx);
+                if (!completedSteps?.[stepKey]) {
+                    allStepsDone = false;
+                }
+            });
+
+            if (allStepsDone) {
+                completedDishes++;
+            }
+        }
     });
 
-    const percentage = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+    const percentage = totalDishes > 0 ? Math.round((completedDishes / totalDishes) * 100) : 0;
 
     return {
         percentage,
-        completedItems,
-        totalItems
+        completedItems: completedDishes,
+        totalItems: totalDishes
     };
 };
 
