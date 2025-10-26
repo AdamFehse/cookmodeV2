@@ -366,8 +366,13 @@ const ChefStations = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, 
             return React.createElement('div', {
                 key: chefName,
                 ref: (el) => {
-                    if (el && el.childNodes.length === 0 && wrapper) {
-                        el.appendChild(wrapper);
+                    if (el) {
+                        // Clear any existing content
+                        el.innerHTML = '';
+                        // Append the fresh wrapper
+                        if (wrapper) {
+                            el.appendChild(wrapper);
+                        }
                     }
                 }
             });
