@@ -44,8 +44,8 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
     const calculateChefProgress = window.calculateChefProgress || (() => ({}));
     const calculateKitchenProgress = window.calculateKitchenProgress || (() => ({}));
 
-    // Expanded chef selection
-    const [selectedChef, setSelectedChef] = useState(null);
+    // Expanded chef selection - only one chef can be open at a time
+    const [expandedChefName, setExpandedChefName] = useState(null);
     const [selectedRecipeSlug, setSelectedRecipeSlug] = useState(null);
 
     if (!chefSummaries.length) {
@@ -162,7 +162,7 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
             }
         }, chefSummaries.map((summary) => {
             const borderColor = resolveChefColor(summary.color || '') || '#6c63ff';
-            const isSelected = selectedChef === summary.name;
+            const isExpanded = expandedChefName === summary.name;
             const assignment = chefAssignments?.[summary.name];
             const assignedRecipes = assignment?.recipes || [];
 
@@ -182,13 +182,13 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                     borderTop: `4px solid ${borderColor}`,
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
-                    background: isSelected
+                    background: isExpanded
                         ? 'rgba(255, 152, 0, 0.08)'
                         : 'rgba(255, 255, 255, 0.08)',
-                    borderColor: isSelected
+                    borderColor: isExpanded
                         ? borderColor
                         : 'rgba(255, 152, 0, 0.3)',
-                    boxShadow: isSelected
+                    boxShadow: isExpanded
                         ? `0 0 12px rgba(255, 152, 0, 0.2)`
                         : 'none'
                 }
@@ -201,7 +201,8 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                         paddingBottom: '0.75rem',
                         marginBottom: '0.75rem'
                     },
-                    onClick: () => setSelectedChef(isSelected ? null : summary.name)
+                    onClick: () => setExpandedChefName(isExpanded ? null : summary.name),
+                    onMouseDown: (e) => e.stopPropagation()
                 }, [
                     React.createElement('div', {
                         key: 'title-row',
@@ -230,7 +231,7 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                                 fontSize: '1.2em',
                                 color: '#ff9800',
                                 transition: 'transform 0.2s ease',
-                                transform: isSelected ? 'rotate(180deg)' : 'rotate(0deg)'
+                                transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
                             }
                         }, '▼')
                     ]),
@@ -258,7 +259,7 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                     ])
                 ]),
 
-                isSelected && assignedRecipes.length > 0 && React.createElement('div', {
+                isExpanded && assignedRecipes.length > 0 && React.createElement('div', {
                     key: 'recipes',
                     style: { marginTop: '0.75rem' }
                 }, [
