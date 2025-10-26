@@ -28,6 +28,7 @@
 @import url('./utilities.css');
 
 /* Component-Specific Styles */
+@import url('./components/status-badge.css');
 @import url('./components/recipe-grid.css');
 @import url('./components/recipe-modal.css');
 @import url('./components/chef-cards.css');

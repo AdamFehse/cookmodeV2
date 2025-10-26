@@ -106,46 +106,11 @@ input[type="reset"].secondary:hover,
   background-color: rgba(255, 152, 0, 0.8) !important;
 }
 
-/* Status Button Group */
+/* Status Button Group - see components/status-badge.css for button styles */
 div[role="group"] {
   background-color: transparent !important;
   border: none !important;
   padding: 0 !important;
-}
-
-/* Status Button Variant - default inactive state */
-button.status-button {
-  background-color: transparent !important;
-  border-color: var(--status-bg) !important;
-  color: var(--status-bg) !important;
-  opacity: 1 !important;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-/* Status Button - inactive hover state */
-button.status-button:not([data-active="true"]):hover {
-  background-color: var(--status-bg) !important;
-  color: var(--status-text) !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-/* Status Button - active state (stays colored when selected) */
-button.status-button[data-active="true"] {
-  background-color: var(--status-bg) !important;
-  color: var(--status-text) !important;
-  border-color: var(--status-bg) !important;
-  opacity: 1 !important;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-button.status-button[data-active="true"]:hover {
-  background-color: var(--status-bg) !important;
-  color: var(--status-text) !important;
-  opacity: 1 !important;
-  transform: none !important;
 }
 
 /* Outline Button Variant */

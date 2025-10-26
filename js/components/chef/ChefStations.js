@@ -142,7 +142,7 @@ const ChefStations = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, 
                     // Update completion text
                     const completionDiv = card.querySelector('div[style*="font-size: 0.65rem; color: rgba(76, 175, 80"]');
                     if (completionDiv) {
-                        if (completion > 0 && !status) {
+                        if (completion > 0) {
                             completionDiv.textContent = completion + '% done';
                             completionDiv.style.display = 'block';
                         } else {
@@ -307,7 +307,7 @@ const ChefStations = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, 
                                                             ${recipeStatus ? `<span style="display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.4rem; background: ${statusColor.bg}; color: ${statusColor.text}; border-radius: 2px; text-transform: capitalize;">${recipeStatus}</span>` : ''}
                                                             ${orderCount > 1 ? `<span style="display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.4rem; background: var(--color-primary); color: var(--text-inverse); border-radius: 2px;">×${orderCount}</span>` : ''}
                                                         </div>
-                                                        ${recipeCompletion > 0 && !recipeStatus ? `<div style="font-size: 0.65rem; color: var(--status-complete); font-weight: 600;">${recipeCompletion}% done</div>` : ''}
+                                                        ${recipeCompletion > 0 ? `<div style="font-size: 0.65rem; color: var(--status-complete); font-weight: 600;">${recipeCompletion}% done</div>` : ''}
                                                     </div>
                                                 </div>
                                             `;

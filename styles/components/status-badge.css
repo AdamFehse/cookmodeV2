@@ -1,0 +1,173 @@
+/* ============================================
+   STATUS-BADGE.CSS - Unified Status Components
+   ============================================
+   Centralized styling for all status-related
+   components: badges, buttons, and indicators.
+   Uses CSS variables from theme.css for colors.
+   ============================================ */
+
+/* ============================================
+   STATUS BADGES (inline display)
+   ============================================ */
+
+.status-badge,
+.status-tag {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.65rem;
+  font-weight: var(--font-weight-bold);
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+/* Status Badge Variants */
+.status-badge.in-progress,
+.status-tag.in-progress {
+  background-color: var(--status-in-progress-bg);
+  color: var(--status-in-progress);
+  border: 1px solid var(--status-in-progress);
+}
+
+.status-badge.complete,
+.status-tag.complete {
+  background-color: var(--status-complete-bg);
+  color: var(--status-complete);
+  border: 1px solid var(--status-complete);
+}
+
+.status-badge.plated,
+.status-tag.plated {
+  background-color: var(--status-plated-bg);
+  color: var(--status-plated);
+  border: 1px solid var(--status-plated);
+}
+
+.status-badge.packed,
+.status-tag.packed {
+  background-color: var(--status-packed-bg);
+  color: var(--status-packed);
+  border: 1px solid var(--status-packed);
+}
+
+/* ============================================
+   STATUS BUTTONS (interactive control)
+   ============================================ */
+
+button.status-button {
+  background-color: transparent !important;
+  border: 1.5px solid var(--status-bg, var(--color-primary)) !important;
+  color: var(--status-bg, var(--color-primary)) !important;
+  padding: var(--btn-padding-y) var(--btn-padding-x) !important;
+  font-weight: var(--font-weight-semibold) !important;
+  font-size: var(--font-size-sm) !important;
+  transition: all var(--transition-standard) !important;
+  cursor: pointer;
+  opacity: 1 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Inactive Status Button - Hover fills with color */
+button.status-button:not([data-active="true"]):hover {
+  background-color: var(--status-bg, var(--color-primary)) !important;
+  color: var(--status-text, var(--text-inverse)) !important;
+  border-color: var(--status-bg, var(--color-primary)) !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Active Status Button - Always filled with color */
+button.status-button[data-active="true"] {
+  background-color: var(--status-bg, var(--color-primary)) !important;
+  color: var(--status-text, var(--text-inverse)) !important;
+  border-color: var(--status-bg, var(--color-primary)) !important;
+  opacity: 1 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Active Status Button - Hover (maintains filled state) */
+button.status-button[data-active="true"]:hover {
+  background-color: var(--status-bg, var(--color-primary)) !important;
+  color: var(--status-text, var(--text-inverse)) !important;
+  opacity: 0.9 !important;
+  transform: none !important;
+}
+
+/* Disabled Status Button */
+button.status-button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* ============================================
+   STATUS BUTTON GROUP (Radio-style group)
+   ============================================ */
+
+div[role="group"].status-button-group {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-md);
+}
+
+/* ============================================
+   DYNAMIC STATUS COLOR APPLICATION
+   ============================================
+   Used when status colors are set dynamically
+   via inline styles (--status-bg, --status-text)
+   */
+
+/* Status indicator circles/dots */
+.status-indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--status-bg, var(--color-primary));
+}
+
+.status-indicator.in-progress {
+  background-color: var(--status-in-progress);
+}
+
+.status-indicator.complete {
+  background-color: var(--status-complete);
+}
+
+.status-indicator.plated {
+  background-color: var(--status-plated);
+}
+
+.status-indicator.packed {
+  background-color: var(--status-packed);
+}
+
+/* ============================================
+   STATUS PROGRESS TEXT
+   ============================================ */
+
+.status-progress-text {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--status-complete);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+button.status-button:focus,
+button.status-button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.status-button {
+    transition: none !important;
+  }
+}

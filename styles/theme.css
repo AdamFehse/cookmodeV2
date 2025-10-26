@@ -30,16 +30,27 @@
   --color-error-bg: rgba(239, 68, 68, 0.1);
 
   /* ============================================
-     RECIPE STATUS COLORS
+     RECIPE STATUS COLORS (Unified)
      ============================================ */
+  /* In-Progress: Yellow/Amber */
   --status-in-progress: #fbbf24;
   --status-in-progress-bg: rgba(251, 191, 36, 0.15);
+  --status-in-progress-text: #000000;
+
+  /* Complete: Green/Emerald */
   --status-complete: #10b981;
   --status-complete-bg: rgba(16, 185, 129, 0.15);
+  --status-complete-text: #ffffff;
+
+  /* Plated: Amber/Orange */
   --status-plated: #f59e0b;
   --status-plated-bg: rgba(245, 158, 11, 0.15);
+  --status-plated-text: #000000;
+
+  /* Packed: Purple/Violet */
   --status-packed: #8b5cf6;
   --status-packed-bg: rgba(139, 92, 246, 0.15);
+  --status-packed-text: #ffffff;
 
   /* ============================================
      SURFACE COLORS (Semantic - backgrounds & cards)

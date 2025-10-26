@@ -335,3 +335,25 @@
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+/* ============================================
+   STATUS COLOR UTILITIES
+   ============================================ */
+
+/* Status text color utilities */
+.text-status-in-progress { color: var(--status-in-progress); }
+.text-status-complete { color: var(--status-complete); }
+.text-status-plated { color: var(--status-plated); }
+.text-status-packed { color: var(--status-packed); }
+
+/* Status background color utilities */
+.bg-status-in-progress { background-color: var(--status-in-progress-bg); }
+.bg-status-complete { background-color: var(--status-complete-bg); }
+.bg-status-plated { background-color: var(--status-plated-bg); }
+.bg-status-packed { background-color: var(--status-packed-bg); }
+
+/* Status border color utilities */
+.border-status-in-progress { border-color: var(--status-in-progress); }
+.border-status-complete { border-color: var(--status-complete); }
+.border-status-plated { border-color: var(--status-plated); }
+.border-status-packed { border-color: var(--status-packed); }
