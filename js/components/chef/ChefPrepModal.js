@@ -11,6 +11,31 @@
  * Replaces the separate Overview and 3-Day Cycle buttons
  */
 
+/**
+ * Helper to determine badge color and label based on recipe status and progress
+ * Prioritizes recipe status (set via modal) over calculated progress
+ */
+const getDishBadgeInfo = (slug, recipeStatus, calculateDishStatus, completedIngredients, completedSteps, recipe) => {
+    // If recipe has explicit status set in modal, use that
+    const explicitStatus = recipeStatus?.[slug];
+    if (explicitStatus) {
+        const statusMap = {
+            'in-progress': { label: 'In Progress', color: '#eab308' },  // Yellow
+            'complete': { label: 'Complete', color: '#10b981' },        // Green
+            'plated': { label: 'Plated', color: '#f59e0b' },            // Orange
+            'packed': { label: 'Packed', color: '#8b5cf6' }             // Purple
+        };
+        return statusMap[explicitStatus] || { label: 'Unknown', color: '#6b7280' };
+    }
+
+    // Otherwise calculate from progress
+    const dishStatus = calculateDishStatus(slug, recipe, completedIngredients, completedSteps);
+    return {
+        label: dishStatus.label,
+        color: dishStatus.color
+    };
+};
+
 const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, recipeData = {} }) => {
     const { useState, useMemo } = React;
     const resolveChefColor = window.resolveChefColor || ((color) => color);
@@ -254,11 +279,13 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                             gap: '0.5rem'
                         }
                     }, assignedRecipes.map(({ slug, recipe }) => {
-                        const dishStatus = calculateDishStatus(
+                        const badgeInfo = getDishBadgeInfo(
                             slug,
-                            recipe,
+                            recipeData.recipeStatus || {},
+                            calculateDishStatus,
                             recipeData.completedIngredients || {},
-                            recipeData.completedSteps || {}
+                            recipeData.completedSteps || {},
+                            recipe
                         );
                         const isRecipeOpen = selectedRecipeSlug === slug;
 
@@ -269,10 +296,10 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                                 padding: '0.6rem 0.8rem',
                                 fontSize: '0.9rem',
                                 fontWeight: 500,
-                                border: `2px solid ${dishStatus.color}`,
+                                border: `2px solid ${badgeInfo.color}`,
                                 borderRadius: '6px',
                                 backgroundColor: isRecipeOpen
-                                    ? `${dishStatus.color}20`
+                                    ? `${badgeInfo.color}20`
                                     : 'transparent',
                                 color: '#ffffff',
                                 cursor: 'pointer',
@@ -284,11 +311,11 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                             },
                             onClick: () => setSelectedRecipeSlug(slug),
                             onMouseEnter: (e) => {
-                                e.target.style.backgroundColor = `${dishStatus.color}30`;
+                                e.target.style.backgroundColor = `${badgeInfo.color}30`;
                             },
                             onMouseLeave: (e) => {
                                 e.target.style.backgroundColor = isRecipeOpen
-                                    ? `${dishStatus.color}20`
+                                    ? `${badgeInfo.color}20`
                                     : 'transparent';
                             }
                         }, [
@@ -302,12 +329,12 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                                     fontSize: '0.75rem',
                                     fontWeight: 700,
                                     padding: '0.25rem 0.5rem',
-                                    backgroundColor: dishStatus.color,
-                                    color: dishStatus.status === 'complete' ? '#000' : '#fff',
+                                    backgroundColor: badgeInfo.color,
+                                    color: badgeInfo.color === '#10b981' || badgeInfo.color === '#f59e0b' ? '#000' : '#fff',
                                     borderRadius: '3px',
                                     whiteSpace: 'nowrap'
                                 }
-                            }, dishStatus.label)
+                            }, badgeInfo.label)
                         ]);
                     }))
                 ])

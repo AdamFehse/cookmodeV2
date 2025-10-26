@@ -64,10 +64,10 @@ const RecipeModal = ({
     // Helper functions for status styling with vibrant colors
     const getStatusBadgeStyle = (status) => {
         const colors = {
-            gathered: { bg: '#3b82f6', text: '#ffffff' },  // Blue
-            complete: { bg: '#10b981', text: '#ffffff' },  // Green
-            plated: { bg: '#f59e0b', text: '#000000' },    // Orange
-            packed: { bg: '#8b5cf6', text: '#ffffff' }     // Purple
+            'in-progress': { bg: '#eab308', text: '#000000' },  // Yellow
+            complete: { bg: '#10b981', text: '#ffffff' },       // Green
+            plated: { bg: '#f59e0b', text: '#000000' },         // Orange
+            packed: { bg: '#8b5cf6', text: '#ffffff' }          // Purple
         };
 
         const color = colors[status] || { bg: '#6b7280', text: '#ffffff' };
@@ -85,16 +85,16 @@ const RecipeModal = ({
         if (!isActive) return {};
 
         const colors = {
-            gathered: '#3b82f6',  // Blue
-            complete: '#10b981',  // Green
-            plated: '#f59e0b',    // Orange
-            packed: '#8b5cf6'     // Purple
+            'in-progress': '#eab308',  // Yellow
+            complete: '#10b981',       // Green
+            plated: '#f59e0b',         // Orange
+            packed: '#8b5cf6'          // Purple
         };
 
         return {
             backgroundColor: colors[status],
             borderColor: colors[status],
-            color: '#ffffff'
+            color: status === 'in-progress' || status === 'plated' ? '#000000' : '#ffffff'
         };
     };
 
@@ -264,9 +264,10 @@ const RecipeModal = ({
                             role: 'group',
                             style: { display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }
                         },
-                            ['gathered', 'complete', 'plated', 'packed'].map((status) => {
+                            ['in-progress', 'complete', 'plated', 'packed'].map((status) => {
                                 const isActive = recipeStatus[selectedRecipe] === status;
                                 const buttonClass = isActive ? '' : 'outline secondary';
+                                const displayLabel = status === 'in-progress' ? 'In Progress' : status.charAt(0).toUpperCase() + status.slice(1);
                                 return React.createElement('button', {
                                     key: status,
                                     type: 'button',
@@ -274,7 +275,7 @@ const RecipeModal = ({
                                     style: getStatusButtonStyle(status, isActive),
                                     'aria-pressed': isActive,
                                     onClick: () => updateRecipeStatus && updateRecipeStatus(selectedRecipe, isActive ? null : status)
-                                }, status.charAt(0).toUpperCase() + status.slice(1));
+                                }, displayLabel);
                             })
                         )
                     ])
