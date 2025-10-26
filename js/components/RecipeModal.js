@@ -81,31 +81,6 @@ const RecipeModal = ({
         };
     };
 
-    const getStatusButtonStyle = (status, isActive) => {
-        const colors = {
-            'in-progress': { bg: 'var(--status-in-progress)', text: '#000000' },
-            complete: { bg: 'var(--status-complete)', text: '#ffffff' },
-            plated: { bg: 'var(--status-plated)', text: '#000000' },
-            packed: { bg: 'var(--status-packed)', text: '#ffffff' }
-        };
-
-        const color = colors[status];
-
-        if (isActive) {
-            return {
-                backgroundColor: color.bg,
-                borderColor: color.bg,
-                color: color.text
-            };
-        } else {
-            return {
-                backgroundColor: 'transparent',
-                borderColor: color.bg,
-                color: color.bg
-            };
-        }
-    };
-
     const displayName = recipe.name || slugToDisplayName(selectedRecipe);
     const trimmedChefName = (localChefName || '').trim();
     const colorOptions = getChefColorOptions(trimmedChefName, localChefColor || '');
@@ -275,20 +250,42 @@ const RecipeModal = ({
                             ['in-progress', 'complete', 'plated', 'packed'].map((status) => {
                                 const isActive = recipeStatus[selectedRecipe] === status;
                                 const displayLabel = status === 'in-progress' ? 'In Progress' : status.charAt(0).toUpperCase() + status.slice(1);
+                                const colors = {
+                                    'in-progress': { bg: 'var(--status-in-progress)', text: '#000000' },
+                                    complete: { bg: 'var(--status-complete)', text: '#ffffff' },
+                                    plated: { bg: 'var(--status-plated)', text: '#000000' },
+                                    packed: { bg: 'var(--status-packed)', text: '#ffffff' }
+                                };
+                                const color = colors[status];
+
                                 return React.createElement('button', {
                                     key: status,
                                     type: 'button',
                                     style: {
-                                        ...getStatusButtonStyle(status, isActive),
                                         padding: '0.5rem 1rem',
                                         borderWidth: '2px',
                                         borderStyle: 'solid',
+                                        borderColor: color.bg,
                                         borderRadius: 'var(--pico-border-radius)',
+                                        backgroundColor: isActive ? color.bg : 'transparent',
+                                        color: isActive ? color.text : color.bg,
                                         cursor: 'pointer',
                                         fontWeight: 'var(--font-weight-semibold)',
                                         transition: 'all var(--transition-standard)'
                                     },
                                     'aria-pressed': isActive,
+                                    onMouseEnter: (e) => {
+                                        if (!isActive) {
+                                            e.target.style.backgroundColor = color.bg;
+                                            e.target.style.color = color.text;
+                                        }
+                                    },
+                                    onMouseLeave: (e) => {
+                                        if (!isActive) {
+                                            e.target.style.backgroundColor = 'transparent';
+                                            e.target.style.color = color.bg;
+                                        }
+                                    },
                                     onClick: () => updateRecipeStatus && updateRecipeStatus(selectedRecipe, isActive ? null : status)
                                 }, displayLabel);
                             })
