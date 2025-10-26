@@ -111,13 +111,13 @@ const ChefStations = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, 
 
                     // Update card background
                     const statusColors = {
-                        'in-progress': { bg: '#eab308', text: '#000' },
-                        'complete': { bg: '#10b981', text: '#fff' },
-                        'plated': { bg: '#f59e0b', text: '#000' },
-                        'packed': { bg: '#8b5cf6', text: '#fff' }
+                        'in-progress': { bg: 'var(--status-in-progress)', text: '#000' },
+                        'complete': { bg: 'var(--status-complete)', text: '#fff' },
+                        'plated': { bg: 'var(--status-plated)', text: '#000' },
+                        'packed': { bg: 'var(--status-packed)', text: '#fff' }
                     };
                     const statusColor = statusColors[status] || { bg: '#6b7280', text: '#fff' };
-                    const overlayColor = status ? statusColor.bg + '20' : completion > 0 ? 'rgba(76, 175, 80, 0.15)' : 'rgba(255, 255, 255, 0.04)';
+                    const overlayColor = status ? 'var(--status-' + status + '-bg)' : completion > 0 ? 'var(--status-complete-bg)' : 'var(--surface-card)';
                     card.style.background = overlayColor;
 
                     // Update badge
@@ -282,13 +282,13 @@ const ChefStations = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, 
 
                                             // Status color mapping
                                             const statusColors = {
-                                                'in-progress': { bg: '#eab308', text: '#000' },
-                                                'complete': { bg: '#10b981', text: '#fff' },
-                                                'plated': { bg: '#f59e0b', text: '#000' },
-                                                'packed': { bg: '#8b5cf6', text: '#fff' }
+                                                'in-progress': { bg: 'var(--status-in-progress)', text: '#000' },
+                                                'complete': { bg: 'var(--status-complete)', text: '#fff' },
+                                                'plated': { bg: 'var(--status-plated)', text: '#000' },
+                                                'packed': { bg: 'var(--status-packed)', text: '#fff' }
                                             };
                                             const statusColor = statusColors[recipeStatus] || { bg: '#6b7280', text: '#fff' };
-                                            const overlayColor = recipeStatus ? statusColor.bg + '20' : recipeCompletion > 0 ? 'rgba(76, 175, 80, 0.15)' : 'rgba(255, 255, 255, 0.04)';
+                                            const overlayColor = recipeStatus ? 'var(--status-' + recipeStatus + '-bg)' : recipeCompletion > 0 ? 'var(--status-complete-bg)' : 'var(--surface-card)';
 
                                             return `
                                                 <div class="mini-recipe-card" data-slug="${slug}" style="cursor: pointer; border-radius: 6px; overflow: hidden; transition: all 0.2s ease; border: 1px solid rgba(255, 152, 0, 0.3); background: ${overlayColor}; position: relative;">

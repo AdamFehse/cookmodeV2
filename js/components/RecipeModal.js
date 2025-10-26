@@ -64,10 +64,10 @@ const RecipeModal = ({
     // Helper functions for status styling with vibrant colors
     const getStatusBadgeStyle = (status) => {
         const colors = {
-            'in-progress': { bg: '#eab308', text: '#000000' },  // Yellow
-            complete: { bg: '#10b981', text: '#ffffff' },       // Green
-            plated: { bg: '#f59e0b', text: '#000000' },         // Orange
-            packed: { bg: '#8b5cf6', text: '#ffffff' }          // Purple
+            'in-progress': { bg: 'var(--status-in-progress)', text: '#000000' },
+            complete: { bg: 'var(--status-complete)', text: '#ffffff' },
+            plated: { bg: 'var(--status-plated)', text: '#000000' },
+            packed: { bg: 'var(--status-packed)', text: '#ffffff' }
         };
 
         const color = colors[status] || { bg: '#6b7280', text: '#ffffff' };
@@ -85,10 +85,10 @@ const RecipeModal = ({
         if (!isActive) return {};
 
         const colors = {
-            'in-progress': '#eab308',  // Yellow
-            complete: '#10b981',       // Green
-            plated: '#f59e0b',         // Orange
-            packed: '#8b5cf6'          // Purple
+            'in-progress': 'var(--status-in-progress)',
+            complete: 'var(--status-complete)',
+            plated: 'var(--status-plated)',
+            packed: 'var(--status-packed)'
         };
 
         return {
