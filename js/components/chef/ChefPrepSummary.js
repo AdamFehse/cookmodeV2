@@ -107,7 +107,7 @@ const ChefPrepSummary = ({ chefSummaries = [], chefAssignments = {}, onSelectChe
         ]),
         React.createElement('div', {
             key: 'grid',
-            className: 'grid',
+            className: 'grid chef-summary-grid',
             style: {
                 gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
                 gap: '1rem'

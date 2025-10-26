@@ -141,9 +141,9 @@ const App = () => {
             isSupabaseConnected
         }),
 
-        // Chef prep stations (new unified interface)
-        chefSummaries.length > 0 && React.createElement(window.ChefPrepModal, {
-            key: 'chef-prep-modal',
+        // Chef Stations
+        chefSummaries.length > 0 && React.createElement(window.ChefStations, {
+            key: 'chef-stations',
             chefSummaries,
             chefAssignments,
             recipes,
