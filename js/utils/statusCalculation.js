@@ -25,22 +25,9 @@ const calculateDishStatus = (slug, recipe, completedIngredients, completedSteps,
         };
     }
 
-    // Count total items (ingredients + steps)
+    // Count total items (steps only, not ingredients)
     let totalItems = 0;
     let completedItems = 0;
-
-    // Count ingredients
-    if (recipe.components) {
-        Object.values(recipe.components).forEach(ingredientList => {
-            ingredientList.forEach((ingredient, idx) => {
-                totalItems++;
-                const ingredientKey = `${slug}-ingredient-${idx}`;
-                if (completedIngredients?.[ingredientKey]) {
-                    completedItems++;
-                }
-            });
-        });
-    }
 
     // Count steps
     const instructions = recipe.instructions || [];
