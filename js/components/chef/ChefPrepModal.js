@@ -1,19 +1,23 @@
 /**
- * ChefPrepModal - Per-chef preparation interface
+ * ChefPrepModal - Per-chef preparation interface with progress tracking
  *
  * Houses:
- * - Chef summary card with stats
- * - Recipe cards for assigned dishes
+ * - Kitchen-wide progress bar
+ * - Chef summary cards with individual progress bars
+ * - Recipe cards with status indicators and badges
  * - Recipe modals for detailed work
- * - Ingredient consolidation
+ * - Integrated progress tracking
  *
  * Replaces the separate Overview and 3-Day Cycle buttons
  */
 
 const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, recipeData = {} }) => {
-    const { useState, useMemo, useRef, useEffect } = React;
+    const { useState, useMemo } = React;
     const resolveChefColor = window.resolveChefColor || ((color) => color);
     const slugToDisplayName = window.slugToDisplayName || ((slug) => slug);
+    const calculateDishStatus = window.calculateDishStatus || (() => ({}));
+    const calculateChefProgress = window.calculateChefProgress || (() => ({}));
+    const calculateKitchenProgress = window.calculateKitchenProgress || (() => ({}));
 
     // Expanded chef selection
     const [selectedChef, setSelectedChef] = useState(null);
@@ -22,6 +26,37 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
     if (!chefSummaries.length) {
         return null;
     }
+
+    // Calculate kitchen-wide progress
+    const kitchenProgress = useMemo(() => {
+        return calculateKitchenProgress(
+            chefAssignments,
+            recipeData.completedIngredients || {},
+            recipeData.completedSteps || {}
+        );
+    }, [chefAssignments, recipeData.completedIngredients, recipeData.completedSteps]);
+
+    // Progress bar component
+    const ProgressBar = ({ percentage, color = '#ff9800', height = '6px' }) => {
+        return React.createElement('div', {
+            style: {
+                width: '100%',
+                height,
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: '3px',
+                overflow: 'hidden',
+                marginTop: '0.5rem'
+            }
+        }, React.createElement('div', {
+            style: {
+                width: `${percentage}%`,
+                height: '100%',
+                backgroundColor: color,
+                transition: 'width 0.3s ease',
+                borderRadius: '3px'
+            }
+        }));
+    };
 
     // Render the prep modal section
     return React.createElement('section', {
@@ -34,13 +69,61 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
         }, [
             React.createElement('h2', {
                 key: 'title',
-                style: { marginBottom: '0.25rem' }
+                style: { marginBottom: '0.5rem' }
             }, 'Chef Prep Stations'),
             React.createElement('p', {
                 key: 'subtitle',
                 className: 'muted',
-                style: { marginBottom: 0 }
+                style: { marginBottom: '1rem' }
             }, 'Click a chef to expand their prep station and access recipe work areas.')
+        ]),
+
+        // Kitchen-wide progress
+        React.createElement('article', {
+            key: 'kitchen-progress',
+            style: {
+                background: 'rgba(255, 152, 0, 0.06)',
+                border: '1px solid rgba(255, 152, 0, 0.3)',
+                borderRadius: '8px',
+                padding: '1rem',
+                marginBottom: '1.5rem'
+            }
+        }, [
+            React.createElement('header', {
+                key: 'header',
+                style: { borderBottom: '1px solid rgba(255, 152, 0, 0.2)', paddingBottom: '0.75rem', marginBottom: '0.75rem' }
+            }, [
+                React.createElement('h3', {
+                    key: 'title',
+                    style: { margin: 0, color: '#ffffff', marginBottom: '0.25rem' }
+                }, 'Kitchen Progress'),
+                React.createElement('small', {
+                    key: 'details',
+                    style: { color: 'var(--muted-color)' }
+                }, `${kitchenProgress.completedItems} of ${kitchenProgress.totalItems} items complete`)
+            ]),
+            React.createElement('div', {
+                key: 'bar',
+                style: { display: 'flex', alignItems: 'center', gap: '0.75rem' }
+            }, [
+                React.createElement('div', {
+                    key: 'progress',
+                    style: { flex: 1 }
+                }, React.createElement(ProgressBar, {
+                    percentage: kitchenProgress.percentage,
+                    color: '#ff9800',
+                    height: '8px'
+                })),
+                React.createElement('span', {
+                    key: 'percentage',
+                    style: {
+                        fontWeight: 600,
+                        color: '#ff9800',
+                        fontSize: '0.9rem',
+                        minWidth: '45px'
+                    }
+                }, `${kitchenProgress.percentage}%`)
+            ])
         ]),
 
         // Chef cards grid
@@ -48,7 +131,7 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
             key: 'chef-grid',
             className: 'grid',
             style: {
-                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
                 gap: '1rem',
                 marginBottom: '2rem'
             }
@@ -57,6 +140,15 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
             const isSelected = selectedChef === summary.name;
             const assignment = chefAssignments?.[summary.name];
             const assignedRecipes = assignment?.recipes || [];
+
+            // Calculate this chef's progress
+            const chefProgress = useMemo(() => {
+                return calculateChefProgress(
+                    assignedRecipes,
+                    recipeData.completedIngredients || {},
+                    recipeData.completedSteps || {}
+                );
+            }, [assignedRecipes, recipeData.completedIngredients, recipeData.completedSteps]);
 
             return React.createElement('article', {
                 key: summary.name,
@@ -69,55 +161,76 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                         ? 'rgba(255, 152, 0, 0.08)'
                         : 'rgba(255, 255, 255, 0.08)',
                     borderColor: isSelected
-                        ? `${borderColor}`
-                        : 'rgba(255, 152, 0, 0.3)'
+                        ? borderColor
+                        : 'rgba(255, 152, 0, 0.3)',
+                    boxShadow: isSelected
+                        ? `0 0 12px rgba(255, 152, 0, 0.2)`
+                        : 'none'
                 }
             }, [
                 React.createElement('header', {
                     key: 'header',
                     style: {
                         cursor: 'pointer',
-                        borderBottom: '1px solid rgba(255, 152, 0, 0.2)'
+                        borderBottom: '1px solid rgba(255, 152, 0, 0.2)',
+                        paddingBottom: '0.75rem',
+                        marginBottom: '0.75rem'
                     },
                     onClick: () => setSelectedChef(isSelected ? null : summary.name)
                 }, [
-                    React.createElement('h3', {
-                        key: 'name',
-                        style: {
-                            marginBottom: '0.25rem',
-                            marginTop: 0,
-                            color: '#ffffff'
-                        }
-                    }, summary.name),
-                    React.createElement('small', {
-                        key: 'stats',
-                        style: { color: 'var(--muted-color)' }
-                    }, `${summary.totalDishes} dish${summary.totalDishes === 1 ? '' : 'es'} • ${summary.totalOrders} order${summary.totalOrders === 1 ? '' : 's'}`),
-                    React.createElement('span', {
-                        key: 'expand',
-                        style: {
-                            float: 'right',
-                            fontSize: '1.2em',
-                            color: '#ff9800'
-                        }
-                    }, isSelected ? '▲' : '▼')
-                ]),
-
-                React.createElement('ul', {
-                    key: 'stats-list',
-                    style: {
-                        listStyle: 'none',
-                        padding: 0,
-                        margin: '0.75rem 0',
-                        color: '#e0e0e0'
-                    }
-                }, [
-                    React.createElement('li', {
-                        key: 'ingredients'
-                    }, `${summary.uniqueIngredients} ingredient${summary.uniqueIngredients === 1 ? '' : 's'}`),
-                    React.createElement('li', {
-                        key: 'steps'
-                    }, `${summary.outstandingSteps} step${summary.outstandingSteps === 1 ? '' : 's'} remaining`)
+                    React.createElement('div', {
+                        key: 'title-row',
+                        style: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }
+                    }, [
+                        React.createElement('div', {
+                            key: 'text',
+                            style: { flex: 1 }
+                        }, [
+                            React.createElement('h3', {
+                                key: 'name',
+                                style: {
+                                    marginBottom: '0.25rem',
+                                    marginTop: 0,
+                                    color: '#ffffff'
+                                }
+                            }, summary.name),
+                            React.createElement('small', {
+                                key: 'stats',
+                                style: { color: 'var(--muted-color)' }
+                            }, `${summary.totalDishes} dish${summary.totalDishes === 1 ? '' : 'es'} • ${summary.totalOrders} order${summary.totalOrders === 1 ? '' : 's'}`)
+                        ]),
+                        React.createElement('span', {
+                            key: 'expand',
+                            style: {
+                                fontSize: '1.2em',
+                                color: '#ff9800',
+                                transition: 'transform 0.2s ease',
+                                transform: isSelected ? 'rotate(180deg)' : 'rotate(0deg)'
+                            }
+                        }, '▼')
+                    ]),
+                    React.createElement('div', {
+                        key: 'progress-section',
+                        style: { display: 'flex', alignItems: 'center', gap: '0.5rem' }
+                    }, [
+                        React.createElement('div', {
+                            key: 'progress',
+                            style: { flex: 1 }
+                        }, React.createElement(ProgressBar, {
+                            percentage: chefProgress.percentage,
+                            color: borderColor,
+                            height: '5px'
+                        })),
+                        React.createElement('span', {
+                            key: 'percentage',
+                            style: {
+                                fontWeight: 600,
+                                color: borderColor,
+                                fontSize: '0.8rem',
+                                minWidth: '35px'
+                            }
+                        }, `${chefProgress.percentage}%`)
+                    ])
                 ]),
 
                 isSelected && assignedRecipes.length > 0 && React.createElement('div', {
@@ -128,27 +241,75 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                         key: 'label',
                         className: 'muted',
                         style: {
-                            marginBottom: '0.5rem',
+                            marginBottom: '0.75rem',
                             fontSize: '0.9rem',
                             fontWeight: 600
                         }
-                    }, 'Quick Access'),
+                    }, 'Assigned Dishes'),
                     React.createElement('div', {
                         key: 'recipe-buttons',
                         style: {
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '0.35rem'
+                            gap: '0.5rem'
                         }
-                    }, assignedRecipes.map(({ slug, recipe }) =>
-                        React.createElement('button', {
+                    }, assignedRecipes.map(({ slug, recipe }) => {
+                        const dishStatus = calculateDishStatus(
+                            slug,
+                            recipe,
+                            recipeData.completedIngredients || {},
+                            recipeData.completedSteps || {}
+                        );
+                        const isRecipeOpen = selectedRecipeSlug === slug;
+
+                        return React.createElement('button', {
                             key: slug,
                             type: 'button',
-                            className: 'outline secondary',
-                            style: { padding: '0.4rem 0.6rem', fontSize: '0.9rem' },
-                            onClick: () => setSelectedRecipeSlug(slug)
-                        }, recipe?.name || slugToDisplayName(slug))
-                    ))
+                            style: {
+                                padding: '0.6rem 0.8rem',
+                                fontSize: '0.9rem',
+                                fontWeight: 500,
+                                border: `2px solid ${dishStatus.color}`,
+                                borderRadius: '6px',
+                                backgroundColor: isRecipeOpen
+                                    ? `${dishStatus.color}20`
+                                    : 'transparent',
+                                color: '#ffffff',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                            },
+                            onClick: () => setSelectedRecipeSlug(slug),
+                            onMouseEnter: (e) => {
+                                e.target.style.backgroundColor = `${dishStatus.color}30`;
+                            },
+                            onMouseLeave: (e) => {
+                                e.target.style.backgroundColor = isRecipeOpen
+                                    ? `${dishStatus.color}20`
+                                    : 'transparent';
+                            }
+                        }, [
+                            React.createElement('span', {
+                                key: 'name',
+                                style: { flex: 1, textAlign: 'left' }
+                            }, recipe?.name || slugToDisplayName(slug)),
+                            React.createElement('span', {
+                                key: 'badge',
+                                style: {
+                                    fontSize: '0.75rem',
+                                    fontWeight: 700,
+                                    padding: '0.25rem 0.5rem',
+                                    backgroundColor: dishStatus.color,
+                                    color: dishStatus.status === 'complete' ? '#000' : '#fff',
+                                    borderRadius: '3px',
+                                    whiteSpace: 'nowrap'
+                                }
+                            }, dishStatus.label)
+                        ]);
+                    }))
                 ])
             ]);
         })),
