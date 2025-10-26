@@ -5,23 +5,11 @@ const RecipeGrid = ({
     orderCounts,
     setSelectedRecipe,
     filterText,
-    setFilterText,
     selectedCategory,
-    setSelectedCategory,
     selectedDish,
-    setSelectedDish,
     selectedIngredient,
-    setSelectedIngredient,
     selectedComponent,
-    setSelectedComponent,
-    categories,
-    dishes,
-    ingredients,
-    components,
-    handleResetFilters
 }) => {
-    const { useMemo } = React;
-    const DEFAULT_CHEF_COLOR = window.DEFAULT_CHEF_COLOR || '#a855f7';
     const resolveChefColor = window.resolveChefColor || ((color) => color);
     const slugToDisplayName = window.slugToDisplayName;
     const getIngredientName = window.getIngredientName || ((ing) => typeof ing === 'string' ? ing : ing.ingredient);

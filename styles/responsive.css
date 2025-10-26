@@ -58,21 +58,6 @@
     grid-template-columns: 1fr;
   }
 
-  .prep-modal-progress {
-    grid-template-columns: 1fr;
-  }
-
-  .prep-modal-overview {
-    grid-template-columns: 1fr;
-  }
-
-  .prep-modal {
-    max-width: 100vw !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    max-height: 100vh !important;
-    border-radius: 0 !important;
-  }
 }
 
 @media (min-width: 768px) {
@@ -84,13 +69,6 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  .prep-modal-progress {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .prep-modal-overview {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
 /* ============================================

@@ -11,9 +11,6 @@ const App = () => {
     const [selectedRecipe, setSelectedRecipe] = useState(null);
     const [lightboxImage, setLightboxImage] = useState(null);
     const [lightboxIndex, setLightboxIndex] = useState(0);
-    const [selectedChefForList, setSelectedChefForList] = useState(null);
-    const [showOverview, setShowOverview] = useState(false);
-    const [showCycleView, setShowCycleView] = useState(false);
 
     // Filter state
     const [filterText, setFilterText] = useState('');
@@ -144,55 +141,13 @@ const App = () => {
             isSupabaseConnected
         }),
 
-        // Chef prep summary
-        chefSummaries.length > 0 && React.createElement(window.ChefPrepSummary, {
-            key: 'chef-summary',
+        // Chef prep stations (new unified interface)
+        chefSummaries.length > 0 && React.createElement(window.ChefPrepModal, {
+            key: 'chef-prep-modal',
             chefSummaries,
             chefAssignments,
-            onSelectChef: (chefName) => setSelectedChefForList(chefName)
-        }),
-
-        React.createElement('section', {
-            key: 'overview-toggle',
-            className: 'container-fluid',
-            style: {
-                marginBottom: '1rem',
-                display: 'flex',
-                justifyContent: 'flex-end',
-                gap: '0.5rem',
-                flexWrap: 'wrap'
-            }
-        }, [
-            React.createElement('button', {
-                key: 'toggle-overview',
-                type: 'button',
-                className: 'outline',
-                onClick: () => setShowOverview((prev) => !prev)
-            }, showOverview ? 'Hide Kitchen Overview' : 'Show Kitchen Overview'),
-            React.createElement('button', {
-                key: 'toggle-cycle',
-                type: 'button',
-                className: 'outline',
-                onClick: () => setShowCycleView((prev) => !prev)
-            }, showCycleView ? 'Hide 3-Day Cycle' : 'Show 3-Day Cycle')
-        ]),
-
-        showOverview && React.createElement(window.GhostKitchenOverview, {
-            key: 'overview',
             recipes,
-            recipeStatus: recipeData.recipeStatus,
-            recipeChefNames: recipeData.recipeChefNames,
-            orderCounts: recipeData.orderCounts,
-            chefSummaries,
-            onSelectRecipe: setSelectedRecipe,
-            onSelectChef: (chefName) => setSelectedChefForList(chefName)
-        }),
-
-        showCycleView && React.createElement(window.ThreeDayCycleView, {
-            key: 'cycle-view',
-            cycleData: recipeData.threeDayPrep,
-            onSelectRecipe: setSelectedRecipe,
-            onSelectChef: (chefName) => setSelectedChefForList(chefName)
+            recipeData
         }),
 
         React.createElement(window.RecipeFilters, {
@@ -226,20 +181,10 @@ const App = () => {
                 orderCounts: recipeData.orderCounts,
                 setSelectedRecipe,
                 filterText,
-                setFilterText,
                 selectedCategory,
-                setSelectedCategory,
                 selectedDish,
-                setSelectedDish,
                 selectedIngredient,
-                setSelectedIngredient,
-                selectedComponent,
-                setSelectedComponent,
-                categories,
-                dishes,
-                ingredients,
-                components,
-                handleResetFilters
+                selectedComponent
             })
         ]),
 
@@ -269,14 +214,6 @@ const App = () => {
             lightboxIndex,
             setLightboxImage,
             setLightboxIndex
-        }),
-
-        // Chef Ingredients Modal
-        selectedChefForList && React.createElement(window.ChefIngredientsModal, {
-            key: 'chef-modal',
-            chefAssignments,
-            selectedChef: selectedChefForList,
-            onClose: () => setSelectedChefForList(null)
         })
     ]);
 };

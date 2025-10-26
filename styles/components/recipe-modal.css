@@ -121,9 +121,92 @@ dialog article.recipe-modal {
    ============================================ */
 
 .modal-main {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: var(--gap-lg);
+  align-items: stretch;
+}
+
+.modal-main > section {
+  height: 100%;
+}
+
+/* ============================================
+   CHECKLIST ITEMS
+   ============================================ */
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  cursor: pointer;
+  user-select: none;
+  color: #e0e0e0;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 152, 0, 0.1);
+  transition: all var(--transition-standard);
+  min-height: 44px;
+}
+
+.checklist-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 152, 0, 0.3);
+}
+
+.checklist-item.checked {
+  background-color: var(--color-success-bg);
+  border-color: var(--color-success);
+  opacity: 0.7;
+}
+
+.checklist-item.checked .checklist-text {
+  color: #666666;
+  text-decoration: line-through;
+}
+
+.checklist-checkbox {
+  flex-shrink: 0;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  margin: 0;
+  cursor: pointer;
+  accent-color: #ffb74d;
+}
+
+.checklist-text {
+  flex: 1;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.checklist-item-compact {
+  font-size: 0.85rem;
+  padding: 0.35rem 0.4rem;
+  min-height: auto;
+  gap: 0.35rem;
+}
+
+.checklist-item-compact .checklist-checkbox {
+  width: 14px;
+  height: 14px;
+}
+
+.checklist-item-step {
+  padding: var(--space-md);
+  border-left: 3px solid var(--surface-border);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.checklist-item-step:hover {
+  border-left-color: #ffb74d;
+}
+
+.checklist-item-step.checked {
+  border-left-color: var(--color-success);
 }
 
 /* ============================================
@@ -182,6 +265,9 @@ dialog article.recipe-modal {
   display: flex;
   flex-direction: column;
   gap: var(--gap-lg);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .ingredient-group {
@@ -271,6 +357,9 @@ dialog article.recipe-modal {
   display: flex;
   flex-direction: column;
   gap: var(--gap-lg);
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .instructions-list {
@@ -380,5 +469,16 @@ dialog article.recipe-modal {
 
   .modal-layout {
     grid-template-columns: 150px 1fr;
+  }
+
+  .modal-main {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .ingredients-content,
+  .instructions-content {
+    overflow: visible;
   }
 }

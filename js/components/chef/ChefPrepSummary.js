@@ -1,7 +1,7 @@
-const ChefPrepSummary = ({ chefSummaries = [], chefAssignments = {}, onSelectChef }) => {
-
+const ChefPrepSummary = ({ chefSummaries = [], chefAssignments = {}, onSelectChef, onSelectRecipe }) => {
     const { useMemo, useState } = React;
     const resolveChefColor = window.resolveChefColor || ((color) => color);
+    const slugToDisplayName = window.slugToDisplayName || ((slug) => slug);
 
     // Example priorities logic: flag dishes with >8 steps or >12 ingredients
     const priorities = chefSummaries
@@ -11,8 +11,14 @@ const ChefPrepSummary = ({ chefSummaries = [], chefAssignments = {}, onSelectChe
     // Track expanded chef cards
     const [expandedChef, setExpandedChef] = useState(null);
 
-    // Track prep modal
-    const [prepChef, setPrepChef] = useState(null);
+    const handleStartPrep = (chefName) => {
+        if (!onSelectRecipe) return;
+        const assignment = chefAssignments?.[chefName];
+        const nextRecipe = assignment?.recipes?.[0];
+        if (nextRecipe?.slug) {
+            onSelectRecipe(nextRecipe.slug);
+        }
+    };
 
     // Expandable chef cards
     const cards = useMemo(() => {
@@ -22,6 +28,8 @@ const ChefPrepSummary = ({ chefSummaries = [], chefAssignments = {}, onSelectChe
                 borderTop: `4px solid ${borderColor}`
             };
             const isExpanded = expandedChef === summary.name;
+            const assignment = chefAssignments?.[summary.name];
+            const assignedRecipes = assignment?.recipes || [];
 
             return React.createElement('article', { key: summary.name, className: 'chef-summary-article', style: headerStyle }, [
                 React.createElement('header', { key: 'header', style: { cursor: 'pointer' }, onClick: () => setExpandedChef(isExpanded ? null : summary.name) }, [
@@ -47,13 +55,19 @@ const ChefPrepSummary = ({ chefSummaries = [], chefAssignments = {}, onSelectChe
                         `${summary.outstandingSteps} step${summary.outstandingSteps === 1 ? '' : 's'} remaining`
                     )
                 ]),
-                isExpanded && React.createElement('div', { key: 'details', style: { marginBottom: '0.75rem' } }, [
-                    React.createElement('p', { key: 'breakdown', className: 'muted' }, 'Dish breakdown and ingredient checklist coming soon.'),
-                    React.createElement('textarea', {
-                        key: 'notes',
-                        placeholder: 'Quick notes for this chef...',
-                        style: { width: '100%', minHeight: '2.5em', marginBottom: '0.5em', background: 'rgba(30,30,50,0.7)', color: '#fff', border: '1px solid #ff9800', borderRadius: '6px', padding: '0.5em' }
-                    }),
+                isExpanded && assignedRecipes.length > 0 && React.createElement('div', { key: 'details', style: { marginBottom: '0.75rem' } }, [
+                    React.createElement('p', { key: 'label', className: 'muted', style: { marginBottom: '0.5rem' } }, 'Assigned dishes'),
+                    React.createElement('div', {
+                        key: 'dish-buttons',
+                        style: { display: 'flex', flexDirection: 'column', gap: '0.35rem' }
+                    }, assignedRecipes.map(({ slug, recipe }) =>
+                        React.createElement('button', {
+                            key: slug,
+                            type: 'button',
+                            className: 'outline secondary',
+                            onClick: () => onSelectRecipe && onSelectRecipe(slug)
+                        }, recipe?.name || slugToDisplayName(slug))
+                    ))
                 ]),
                 React.createElement('footer', { key: 'footer', style: { display: 'flex', gap: '0.5em' } }, [
                     React.createElement('button', {
@@ -64,19 +78,13 @@ const ChefPrepSummary = ({ chefSummaries = [], chefAssignments = {}, onSelectChe
                     React.createElement('button', {
                         type: 'button',
                         className: 'contrast',
-                        onClick: () => setPrepChef(summary.name)
+                        disabled: assignedRecipes.length === 0,
+                        onClick: () => handleStartPrep(summary.name)
                     }, 'Start Prep')
                 ])
             ]);
         });
-    }, [chefSummaries, expandedChef, onSelectChef]);
-
-    // Prep modal (full workflow)
-    const prepModal = prepChef && window.ChefPrepModal && React.createElement(window.ChefPrepModal, {
-        chefAssignments,
-        chefName: prepChef,
-        onClose: () => setPrepChef(null)
-    });
+    }, [chefSummaries, expandedChef, chefAssignments, onSelectChef, onSelectRecipe]);
 
     if (!cards.length) return null;
 
@@ -104,8 +112,7 @@ const ChefPrepSummary = ({ chefSummaries = [], chefAssignments = {}, onSelectChe
                 gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
                 gap: '1rem'
             }
-        }, cards),
-        prepModal
+        }, cards)
     ]);
 };
 

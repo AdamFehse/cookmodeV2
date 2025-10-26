@@ -299,7 +299,7 @@ const RecipeModal = ({
                         )
                     ),
 
-                    // Main content area - ingredients and instructions stacked vertically
+                // Main content area - responsive grid for ingredients & instructions
                     React.createElement('div', { key: 'main-content', className: 'modal-main' }, [
                         // Ingredients section
                         React.createElement('section', { key: 'ingredients', className: 'ingredients-section' }, [
@@ -331,19 +331,16 @@ const RecipeModal = ({
                                                 const isCompleted = completedIngredients[ingredientKey];
 
                                                 return React.createElement('li', {
-                                                    key: index,
-                                                    className: `ingredient-item ${isCompleted ? 'checked' : ''}`
+                                                    key: index
                                                 },
-                                                    React.createElement('label', { className: 'ingredient-label' }, [
-                                                        React.createElement('input', {
-                                                            key: 'checkbox',
-                                                            type: 'checkbox',
-                                                            checked: isCompleted || false,
-                                                            onChange: () => toggleIngredient && toggleIngredient(selectedRecipe, ingredientKey, component, index, ingredient),
-                                                            className: 'ingredient-checkbox'
-                                                        }),
-                                                        React.createElement('span', { key: 'text', className: 'ingredient-text' }, scaleAmount(ingredient, orderCount))
-                                                    ])
+                                                    window.ChecklistItem({
+                                                        id: ingredientKey,
+                                                        label: scaleAmount(ingredient, orderCount),
+                                                        checked: isCompleted || false,
+                                                        onChange: (checked) => toggleIngredient && toggleIngredient(selectedRecipe, ingredientKey, component, index, ingredient),
+                                                        variant: 'default',
+                                                        className: isCompleted ? 'checked' : ''
+                                                    })
                                                 );
                                             })
                                         )
@@ -364,19 +361,16 @@ const RecipeModal = ({
                                         const isCompleted = completedSteps[stepKey];
 
                                         return React.createElement('li', {
-                                            key: index,
-                                            className: `instruction-item ${isCompleted ? 'checked' : ''}`
+                                            key: index
                                         },
-                                            React.createElement('label', { className: 'instruction-label' }, [
-                                                React.createElement('input', {
-                                                    key: 'checkbox',
-                                                    type: 'checkbox',
-                                                    checked: isCompleted || false,
-                                                    onChange: () => toggleStep && toggleStep(selectedRecipe, stepKey, index, step),
-                                                    className: 'instruction-checkbox'
-                                                }),
-                                                React.createElement('span', { key: 'text', className: 'instruction-text' }, step)
-                                            ])
+                                            window.ChecklistItem({
+                                                id: stepKey,
+                                                label: step,
+                                                checked: isCompleted || false,
+                                                onChange: (checked) => toggleStep && toggleStep(selectedRecipe, stepKey, index, step),
+                                                variant: 'step',
+                                                className: isCompleted ? 'checked' : ''
+                                            })
                                         );
                                     })
                                 ),

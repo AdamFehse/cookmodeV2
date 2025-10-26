@@ -1,549 +1,522 @@
 export const RECIPES = {
-  "eggplant-puttanesca": {
-  "name": "Eggplant Puttanesca",
+  "spaghetti-and-eggplant-meatballs": {
+  "name": "Spaghetti and Eggplant Meatballs",
   "category": "Entree",
   "description":
-    "An easy pasta dish with a flavorful blend of spice from red pepper flakes, saltiness from kalamata olives, and a subtle sweetness from tomato sauce. Simple, hearty, and authentically Mediterranean.",
+    "Tender, savory eggplant and white bean 'meatballs' broiled and simmered in tomato sauce, served over perfectly al dente spaghetti for a hearty, satisfying vegetarian meal.",
   "components": {
+    "Meatballs": [
+      { "amount": 4, "unit": "oz", "ingredient": "eggplant", "prep": "cut into 1/2-inch-thick rounds (about 1/4 large eggplant)" },
+      { "amount": 0.75, "unit": "tbsp", "ingredient": "olive oil", "prep": "plus more for drizzling" },
+      { "amount": 0.25, "unit": "tsp", "ingredient": "garlic", "prep": "minced" },
+      { "amount": 0.38, "unit": "tsp", "ingredient": "fresh oregano", "prep": "minced" },
+      { "amount": 2, "unit": "oz", "ingredient": "white beans", "prep": "drained and rinsed (from a 15.5 oz can)" },
+      { "amount": 0.25, "unit": "large", "ingredient": "egg", "prep": "lightly beaten" },
+      { "amount": 0.13, "unit": "cup", "ingredient": "panko breadcrumbs", "prep": "" },
+      { "amount": 0.25, "unit": "oz", "ingredient": "Parmigiano-Reggiano", "prep": "grated (plus more for serving)" },
+      { "amount": 0.06, "unit": "tsp", "ingredient": "red pepper flakes", "prep": "plus more for serving" },
+      { "amount": null, "unit": "", "ingredient": "kosher salt", "prep": "to taste" }
+    ],
+    "Sauce & Pasta": [
+      { "amount": 0.88, "unit": "cup", "ingredient": "tomato sauce", "prep": "divided (3/4 for simmering, 1/8 for pasta)" },
+      { "amount": 3, "unit": "oz", "ingredient": "spaghetti", "prep": "cooked al dente" },
+      { "amount": 2, "unit": "oz", "ingredient": "pasta water", "prep": "reserved from cooking, for emulsifying sauce" }
+    ],
+    "For Serving": [
+      { "amount": null, "unit": "", "ingredient": "Parmigiano-Reggiano", "prep": "grated, for topping" },
+      { "amount": null, "unit": "", "ingredient": "red pepper flakes", "prep": "to taste" },
+      { "amount": null, "unit": "", "ingredient": "olive oil", "prep": "drizzle over top" }
+    ]
+  },
+  "instructions": [
+    "Preheat broiler with a rack about 6 inches from the heat source. Arrange eggplant rounds in a single layer on a rimmed baking sheet. Broil until blackened on top, 5–7 minutes. Flip and broil until blackened on the second side, 3–4 minutes more.",
+    "Transfer eggplant to a bowl with olive oil, garlic, and oregano. Toss to combine, then cover and let steam until softened, about 5 minutes.",
+    "Add the eggplant mixture to a food processor with white beans, egg, breadcrumbs, cheese, red pepper flakes, and 1/4 tsp salt. Pulse 10–12 times until a chunky paste forms (do not overmix).",
+    "Form the mixture into 4 meatballs (about 1 1/4 inches each). Arrange on a lightly oiled baking sheet and drizzle with more oil to coat evenly.",
+    "Broil meatballs until browned and firm on top, 5–7 minutes. Set aside.",
+    "Meanwhile, heat 3/4 cup of tomato sauce in a small skillet over medium-high heat. Gently transfer meatballs to sauce and simmer for 10 minutes on medium-low heat, turning carefully to coat.",
+    "Cook spaghetti in salted boiling water until al dente, about 2 minutes less than package directions. Drain, reserving 1/4 cup pasta water.",
+    "Return pasta to pot and add remaining 2 tbsp tomato sauce and 2 tbsp pasta water. Toss to coat, adding more water as needed until sauce clings evenly.",
+    "Serve spaghetti topped with meatballs and sauce. Garnish with extra cheese, red pepper flakes, and a drizzle of olive oil."
+  ],
+  "notes":
+    "For a vegan version, substitute the egg with a flax egg and the cheese with nutritional yeast or vegan parmesan. Use gluten-free breadcrumbs and pasta if desired. Meatballs are delicate—handle gently when transferring to sauce.",
+  "images": [
+    "https://www.marthastewart.com/thmb/2YeXDUCO8m35lw_WTyUbmlagRj8=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/MS-1545758-Spaghetti-and-Eggplant-Meatballs-Step-1-12481-6ef358e5e5814dd89255ab76b3e5d9a0.jpeg",
+    "https://www.marthastewart.com/thmb/VfbCdIdmKhpEOW5ukxlVsPrnXpU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/MS-1545758-Spaghetti-and-Eggplant-Meatballs-Step-2-12483-8863f22bee8348f6b23411ba28bacc12.jpeg",
+    "https://www.marthastewart.com/thmb/pSLJ4wpnolRFomf45EqcMDyeoQk=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/MS-1545758-Spaghetti-and-Eggplant-Meatballs-Step-4A-12492-cc97370ab85b4832a0f8c76357612927.jpeg",
+    "https://www.marthastewart.com/thmb/iItUGYXrE5eUhVVq8XR-6SApz88=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/MS-1545758-Spaghetti-and-Eggplant-Meatballs-Step-4B-12493-4b608fb79cd94beaab2c20ec5bb45e19.jpeg",
+    "https://www.marthastewart.com/thmb/CGAzUMzVBG0M1Xm2QKONsJg7T10=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/MS-1545758-Spaghetti-and-Eggplant-Meatballs-Step-5-12498-7b247325f33948889bb523b848a1388e.jpeg",
+    "https://www.marthastewart.com/thmb/hTWY7Jj0pJNK1a9Vm0_XBayG26k=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/MS-1545758-Spaghetti-and-Eggplant-Meatballs-Step-7-12505-f928ca7652c54b9895ca72611bfda66c.jpeg"
+  ]
+},
+"tofu-with-black-bean-sauce": {
+  "name": "Tofu with Black Bean Sauce – 豉汁豆腐",
+  "category": "Entree",
+  "description":
+    "A flavorful Cantonese-style tofu stir-fry featuring fermented black beans, garlic, and scallions. The sauce is rich, savory, and umami-packed, perfectly coating pan-fried tofu for a satisfying vegan dish that needs no meat.",
+  "components": {
+    "Main": [
+      { "amount": 4, "unit": "oz", "ingredient": "firm tofu", "prep": "cut into 1/4-inch thick squares, patted dry" },
+      { "amount": 0.75, "unit": "tbsp", "ingredient": "oil", "prep": "divided, for frying and stir-fry" },
+      { "amount": 0.5, "unit": "clove", "ingredient": "garlic", "prep": "minced" },
+      { "amount": 0.5, "unit": "tbsp", "ingredient": "fermented black beans", "prep": "rinsed" },
+      { "amount": 0.5, "unit": "scallion", "ingredient": "scallion", "prep": "cut into large pieces, whites and greens separated" },
+      { "amount": 0.75, "unit": "", "ingredient": "red chili", "prep": "deseeded and chopped, optional" }
+    ],
     "Sauce": [
-      { "amount": 1, "unit": "tbsp", "ingredient": "olive oil", "prep": "or 1/4 cup water for water sauté" },
-      { "amount": 1, "unit": "medium", "ingredient": "onion", "prep": "chopped" },
-      { "amount": 2, "unit": "medium", "ingredient": "eggplant", "prep": "cut into 1/2–3/4 inch cubes" },
-      { "amount": 25, "unit": "oz", "ingredient": "pasta sauce", "prep": "jarred or homemade marinara" },
-      { "amount": 0.5, "unit": "cup", "ingredient": "olives", "prep": "pitted (kalamata, green, or Greek)" },
-      { "amount": 2, "unit": "tbsp", "ingredient": "capers" },
-      { "amount": 0.5, "unit": "tsp", "ingredient": "red pepper flakes", "prep": "or up to 1 tsp to taste" }
+      { "amount": 0.25, "unit": "tbsp", "ingredient": "Shaoxing wine" },
+      { "amount": 0.13, "unit": "tbsp", "ingredient": "light soy sauce" },
+      { "amount": 0.13, "unit": "tsp", "ingredient": "sesame oil" },
+      { "amount": 0.06, "unit": "tsp", "ingredient": "white pepper", "prep": "ground" },
+      { "amount": 0.06, "unit": "tsp", "ingredient": "sugar" },
+      { "amount": 0.25, "unit": "tsp", "ingredient": "cornstarch", "prep": "dissolved in 2 tbsp water" }
+    ]
+  },
+  "instructions": [
+    "Cut tofu into 1/4-inch thick squares and pat dry with paper towels. Set aside.",
+    "Heat a wok or cast iron skillet over high heat until it begins to smoke. Reduce heat to medium and add a small amount of oil to coat the pan.",
+    "Pan-fry tofu on both sides until lightly golden brown. Remove and transfer to a plate.",
+    "Add remaining oil to the wok, followed by garlic, black beans, white parts of the scallions, and chopped chilies. Stir-fry for 1 minute without burning the garlic.",
+    "Add tofu back to the wok, then add Shaoxing wine, soy sauce, sesame oil, white pepper, sugar, and green parts of the scallions. Stir gently to coat without breaking tofu.",
+    "When the mixture is bubbling, stir the cornstarch-water mixture and pour it into the wok. Stir quickly and gently until the sauce thickens and coats the tofu evenly.",
+    "Serve immediately with steamed rice."
+  ],
+  "notes":
+    "Adjust chili quantity to taste. For gluten-free, use dry sherry instead of Shaoxing wine and tamari instead of soy sauce. Works well with vegetables like bell pepper or eggplant for variation.",
+  "images": ["https://thewoksoflife.com/wp-content/uploads/2017/09/tofu-black-bean-sauce-2.jpg"]
+},
+"vegan-pulled-pork-sandwich": {
+  "name": "Vegan Pulled Pork Sandwich",
+  "category": "Entree",
+  "description":
+    "A hearty 10-ingredient vegan 'pulled pork' sandwich made with lentils, smoky-sweet spices, and tangy BBQ sauce. High in protein and flavor, it’s the perfect plant-based comfort food.",
+  "components": {
+    "Lentils": [
+      { "amount": 4, "unit": "oz", "ingredient": "water" },
+      { "amount": 2, "unit": "oz", "ingredient": "green lentils", "prep": "well rinsed" }
     ],
-    "Pasta": [
-      { "amount": 16, "unit": "oz", "ingredient": "pasta", "prep": "cooked according to package directions" }
+    "Seasonings & Vegetables": [
+      { "amount": 0.5, "unit": "tbsp", "ingredient": "oil", "prep": "olive, avocado, or grapeseed" },
+      { "amount": 0.13, "unit": "medium", "ingredient": "onion", "prep": "white or yellow, minced" },
+      { "amount": 0.38, "unit": "cup", "ingredient": "carrot", "prep": "finely shredded or grated" },
+      { "amount": 0.5, "unit": "tbsp", "ingredient": "coconut sugar", "prep": "or organic brown sugar" },
+      { "amount": 0.38, "unit": "tsp", "ingredient": "smoked paprika" },
+      { "amount": 0.25, "unit": "tsp", "ingredient": "garlic powder" },
+      { "amount": 0.25, "unit": "pinch", "ingredient": "sea salt", "prep": "plus more to taste" },
+      { "amount": 0.25, "unit": "pinch", "ingredient": "black pepper", "prep": "plus more to taste" },
+      { "amount": 0.19, "unit": "cup", "ingredient": "vegan BBQ sauce", "prep": "plus more for serving, gluten-free if needed" },
+      { "amount": 0.5, "unit": "tbsp", "ingredient": "water", "prep": "for thinning" }
     ],
     "For Serving": [
-      { "amount": null, "unit": "", "ingredient": "Almond Parmesan", "prep": "sprinkled on top" },
-      { "amount": null, "unit": "", "ingredient": "crusty bread", "prep": "for serving" }
+      { "amount": 1, "unit": "medium", "ingredient": "hamburger bun", "prep": "gluten-free or whole-wheat, toasted" },
+      { "amount": null, "unit": "", "ingredient": "purple cabbage", "prep": "finely chopped, optional" },
+      { "amount": null, "unit": "", "ingredient": "carrot", "prep": "finely chopped, optional" },
+      { "amount": null, "unit": "", "ingredient": "green onion", "prep": "finely sliced, optional" }
     ]
   },
   "instructions": [
-    "Heat olive oil in a large skillet or sauté pan over medium heat. Add onion and eggplant and cook until tender, about 8–10 minutes.",
-    "Add the pasta sauce, olives, capers, and red pepper flakes. Stir, cover, reduce heat to low, and simmer for 15–20 minutes, until the eggplant is soft and sauce thickens.",
-    "Meanwhile, cook pasta according to package directions. Drain and set aside.",
-    "Serve the eggplant sauce over the pasta, topped with Almond Parmesan and paired with crusty bread."
+    "Add water and rinsed lentils to a small saucepan and heat over medium-high. Bring to a low boil, then reduce to a simmer and cook uncovered for about 18 minutes, or until tender. Drain excess liquid and set aside.",
+    "When lentils are almost done, heat a large skillet over medium heat. Add oil and onion, season with salt and pepper, and sauté 4–5 minutes until softened and lightly browned.",
+    "Add cooked lentils, carrots, coconut sugar, paprika, garlic powder, salt, pepper, BBQ sauce, and 2 tbsp water. Stir to combine.",
+    "Cook over medium-low heat, stirring occasionally, until thickened and heated through, about 5–10 minutes.",
+    "Taste and adjust seasoning: add paprika for smokiness, salt for saltiness, coconut sugar for sweetness, or BBQ sauce for depth of flavor.",
+    "Optional: Pulse half of the mixture in a food processor for a more cohesive 'pulled' texture, then mix back together.",
+    "Serve the mixture on toasted buns with toppings of your choice such as shredded cabbage, carrots, and sliced green onions. Add extra BBQ sauce if desired.",
+    "Best served fresh. Store leftover mixture up to 3 days in the refrigerator and reheat with a splash of water if dry."
   ],
   "notes":
-    "For a lower-fat version, use water sauté instead of oil. Adjust spice level with red pepper flakes to taste. Pairs beautifully with a green salad or garlic bread.",
-  "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2025/07/eggplant-puttanesca-4.jpg"
-  ]
+    "For a gluten-free version, use tamari-friendly BBQ sauce and gluten-free buns. Adjust spice and sweetness to taste. The lentil mixture also works well in tacos or lettuce wraps.",
+  "images": []
 },
-"korean-style-gochujang-eggplant-bowl": {
-  "name": "Korean-Style Gochujang Eggplant Bowl",
+"bbq-jackfruit-sandwich": {
+  "name": "BBQ Jackfruit Sandwich",
   "category": "Entree",
   "description":
-    "A flavorful, umami-rich Korean-inspired bowl featuring roasted eggplant coated in a spicy, tangy, and slightly sweet gochujang sauce, served over fluffy jasmine rice with fresh herbs and crunchy peanuts.",
+    "Smoky, tangy, and slightly spicy BBQ jackfruit sandwiches made with homemade chipotle BBQ sauce and quick slaw. Tender shredded jackfruit simmers in rich sauce and is piled high on toasted buns for the perfect vegan crowd-pleaser.",
   "components": {
-    "Main": [
-      { "amount": 1, "unit": "lb", "ingredient": "eggplant", "prep": "cut into 1/2-inch rounds" },
-      { "amount": 1, "unit": "cup", "ingredient": "rice", "prep": "white jasmine, cooked" },
-      { "amount": 2, "unit": "spring onion", "ingredient": "spring onion", "prep": "sliced, white and green parts separated" },
-      { "amount": 1, "unit": "tsp", "ingredient": "oil", "prep": "high smoke point (e.g., rice bran)" },
-      { "amount": null, "unit": "", "ingredient": "fresh coriander", "prep": "chopped" },
-      { "amount": null, "unit": "", "ingredient": "peanuts", "prep": "toasted and chopped, for garnish" }
-    ],
-    "Sauce": [
-      { "amount": 2, "unit": "tsp", "ingredient": "cornstarch", "prep": "mixed with 2 tsp water to make slurry" },
-      { "amount": 2, "unit": "tbsp", "ingredient": "soy sauce", "prep": "or tamari for gluten-free" },
-      { "amount": 4, "unit": "tsp", "ingredient": "rice wine vinegar" },
-      { "amount": 1, "unit": "tbsp", "ingredient": "maple syrup", "prep": "or sugar" },
-      { "amount": 1, "unit": "tsp", "ingredient": "ginger", "prep": "finely grated" },
-      { "amount": 1, "unit": "clove", "ingredient": "garlic", "prep": "finely grated" },
-      { "amount": 2, "unit": "tsp", "ingredient": "toasted sesame oil" },
-      { "amount": 2.5, "unit": "tsp", "ingredient": "gochujang paste", "prep": "Korean chili paste, adjust to taste" },
-      { "amount": 2, "unit": "tbsp", "ingredient": "water", "prep": "to thin sauce" }
-    ]
-  },
-  "instructions": [
-    "Preheat the oven to 200°C (390°F). Line or prepare a baking tray (preferably steel, not nonstick).",
-    "Cut eggplants into 1/2-inch rounds and arrange them on the tray. Optionally brush with a small amount of oil. Bake for 25–30 minutes, flipping halfway, until soft and lightly browned on both sides.",
-    "While the eggplant bakes, cook the rice (1 cup rice to 1¼ cups water, no salt) and slice the spring onions. Separate the white/light green parts from the dark green tops for garnish.",
-    "In a bowl, mix cornstarch with 2 tsp of water to make a slurry. Add soy sauce, vinegar, maple syrup, ginger, garlic, sesame oil, gochujang, and 2 tbsp water. Stir well and adjust spice level to taste.",
-    "When the eggplant is done, cut slices into bite-sized wedges.",
-    "Heat a wok over medium heat. Add a small amount of oil and the white and light green spring onion slices. Stir-fry briefly until softened and lightly charred.",
-    "Stir the sauce mixture again and pour it into the wok. Allow it to bubble and thicken for a few seconds, then add the eggplant chunks and toss to coat. Heat through, then remove from heat.",
-    "Divide rice between two bowls. Top with saucy eggplant, garnish with dark green spring onion tops, fresh coriander, and chopped peanuts."
-  ],
-  "notes":
-    "For a crispier version, dust the eggplant with cornstarch and pan-fry instead of baking. Use a gluten-free gochujang brand if needed. Adjust spice level to taste.",
-  "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2025/07/gochujang-eggplant-plate-800x1200-1.jpg"
-  ]
-},
-"jackfruit-krab-cakes-with-tangy-remoulade": {
-  "name": "Jackfruit Krab-Cakes with Tangy Remoulade",
-  "category": "Entree",
-  "description":
-    "Nicely spiced jackfruit 'crab' cakes made with quinoa, Old Bay, and seaweed flakes for a light seafood flavor. Served with a creamy, tangy jalapeño remoulade for a satisfying vegan twist on a coastal classic.",
-  "components": {
-    "Krab Cakes": [
-      { "amount": 400, "unit": "g", "ingredient": "jackfruit", "prep": "in brine or water, rinsed and drained (225g drained weight)" },
-      { "amount": 2, "unit": "spring onion", "ingredient": "spring onion", "prep": "finely chopped, including some green" },
-      { "amount": 2, "unit": "clove", "ingredient": "garlic", "prep": "grated" },
-      { "amount": 2, "unit": "tsp", "ingredient": "Old Bay seasoning" },
-      { "amount": 2, "unit": "stalk", "ingredient": "celery", "prep": "finely chopped" },
-      { "amount": 100, "unit": "g", "ingredient": "panko breadcrumbs", "prep": "" },
-      { "amount": 125, "unit": "g", "ingredient": "quinoa", "prep": "cooked" },
-      { "amount": 1, "unit": "egg", "ingredient": "chia egg", "prep": "or egg replacer, beaten" },
+    "BBQ Sauce": [
+      { "amount": 2, "unit": "whole", "ingredient": "chipotle pepper", "prep": "from a can of chipotles in adobo sauce" },
+      { "amount": 2, "unit": "tbsp", "ingredient": "adobo sauce" },
+      { "amount": 0.5, "unit": "cup", "ingredient": "ketchup" },
+      { "amount": 0.25, "unit": "cup", "ingredient": "apple cider vinegar" },
+      { "amount": 2, "unit": "clove", "ingredient": "garlic" },
       { "amount": 1, "unit": "tsp", "ingredient": "Dijon mustard" },
-      { "amount": 0.5, "unit": "tsp", "ingredient": "white pepper" },
-      { "amount": 1, "unit": "tbsp", "ingredient": "seaweed flakes", "prep": "optional, adds seafood flavor" },
-      { "amount": null, "unit": "", "ingredient": "oil", "prep": "for frying" }
-    ],
-    "Remoulade": [
-      { "amount": 10, "unit": "slice", "ingredient": "jalapeño", "prep": "pickled, chopped" },
-      { "amount": 2, "unit": "tbsp", "ingredient": "parsley", "prep": "chopped" },
-      { "amount": 2, "unit": "spring onion", "ingredient": "spring onion", "prep": "chopped" },
-      { "amount": 3, "unit": "tbsp", "ingredient": "mayonnaise", "prep": "of choice" },
-      { "amount": 4, "unit": "tbsp", "ingredient": "plain yogurt", "prep": "of choice" },
-      { "amount": 2, "unit": "tbsp", "ingredient": "cider vinegar" },
-      { "amount": 1, "unit": "tsp", "ingredient": "Dijon mustard" },
-      { "amount": null, "unit": "", "ingredient": "salt", "prep": "to taste" }
-    ],
-    "For Serving": [
-      { "amount": null, "unit": "", "ingredient": "lemon wedges", "prep": "for serving" },
-      { "amount": null, "unit": "", "ingredient": "salad greens", "prep": "mixed, with bitter or sharp leaves like rocket" },
-      { "amount": null, "unit": "", "ingredient": "avocado", "prep": "sliced" },
-      { "amount": null, "unit": "", "ingredient": "cucumber", "prep": "sliced" },
-      { "amount": null, "unit": "", "ingredient": "burger buns", "prep": "optional" }
-    ]
-  },
-  "instructions": [
-    "Line a baking tray with parchment paper and set aside.",
-    "In a food processor, pulse jackfruit and cooked quinoa a few times to break it up, or chop finely by hand.",
-    "Transfer to a mixing bowl and add spring onion, garlic, Old Bay seasoning, celery, panko, chia egg, Dijon mustard, white pepper, and seaweed flakes. Mix well until cohesive. Avoid overprocessing into a paste.",
-    "Divide the mixture into 6 portions and shape into patties. Place on the tray and chill in the freezer for 30 minutes or in the fridge for 45 minutes.",
-    "Meanwhile, prepare the remoulade by combining jalapeños, parsley, spring onions, mayonnaise, yogurt, cider vinegar, Dijon mustard, and salt in a small bowl. Mix well and adjust seasoning to taste.",
-    "Once chilled, press the cakes gently into extra panko breadcrumbs to coat. Brush lightly with milk if needed.",
-    "Heat oil in a sauté pan over medium heat for 2 minutes. Fry the cakes for about 4 minutes per side, or until golden brown and crisp.",
-    "Transfer to paper towels to drain excess oil. Serve warm with jalapeño remoulade, lemon wedges, and salad or on buns."
-  ],
-  "notes":
-    "Use jackfruit in brine or water, not syrup. Seaweed flakes enhance the seafood-like flavor. For a gluten-free version, use tamari and gluten-free breadcrumbs. Leftovers can be reheated in a hot oven.",
-  "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2025/07/Capture-e1759170493820.jpg"
-  ]
-},
-"grilled-portobello-steaks-with-smoky-bbq-glaze": {
-  "name": "Grilled Portobello Steaks with Smoky BBQ Glaze",
-  "category": "Entree",
-  "description":
-    "Hearty, savory, and smoky portobello mushroom steaks marinated in olive oil, balsamic vinegar, and steak seasoning, then grilled to perfection. A satisfying and simple plant-based alternative to traditional steak.",
-  "components": {
-    "Marinade": [
-      { "amount": 2, "unit": "large", "ingredient": "portobello mushrooms", "prep": "cleaned, stems removed" },
-      { "amount": 2, "unit": "clove", "ingredient": "garlic", "prep": "minced" },
-      { "amount": 0.25, "unit": "cup", "ingredient": "olive oil", "prep": "extra-virgin" },
-      { "amount": 3, "unit": "tbsp", "ingredient": "balsamic vinegar" },
-      { "amount": 1, "unit": "tsp", "ingredient": "steak seasoning" },
-      { "amount": 1, "unit": "tsp", "ingredient": "liquid smoke", "prep": "optional" }
-    ],
-    "For Serving": [
-      { "amount": null, "unit": "", "ingredient": "truffle mashed potatoes", "prep": "for serving" },
-      { "amount": null, "unit": "", "ingredient": "roasted asparagus and carrots", "prep": "for serving" }
-    ]
-  },
-  "instructions": [
-    "Clean the portobello mushrooms using a kitchen towel or your hands to wipe away dirt. Remove the stems and mince the garlic cloves.",
-    "Add the mushroom caps to a large reusable storage bag or container with the minced garlic, olive oil, balsamic vinegar, steak seasoning, and liquid smoke (if using). Seal and shake gently to coat evenly.",
-    "Set aside to marinate at room temperature for 30 minutes, shaking or turning the bag every 10 minutes to ensure even coverage.",
-    "Preheat your grill to high or heat a grill pan over medium-high heat. Place the mushrooms smooth side up and grill for 5 minutes.",
-    "Flip and grill for another 5 minutes, then flip once more to release any excess liquid. If the mushroom sticks to the grill, wait an additional 2–3 minutes before flipping—it will release when ready.",
-    "Serve hot with truffle mashed potatoes and roasted asparagus or carrots for a complete meal."
-  ],
-  "notes":
-    "Wipe mushrooms clean rather than rinsing to prevent sogginess. Marinate for at least 30 minutes for the best flavor. For extra smokiness, include a touch of liquid smoke in the marinade.",
-  "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2025/07/Portobello-Mushroom-Steak-Featured-Image-768x768-1.jpg"
-  ]
-},
-"smoky-corn-poblano-soup": {
-  "name": "Smoky Corn & Poblano Soup",
-  "category": "Soup",
-  "description":
-    "A rich and creamy roasted poblano corn chowder with layers of smoky, sweet, and savory flavor. Finished with a splash of lime for brightness, this comforting soup highlights roasted chiles, corn, and Yukon Gold potatoes in a velvety base.",
-  "components": {
-    "Main": [
-      { "amount": 5, "unit": "large", "ingredient": "poblano chiles", "prep": "roasted, peeled, seeded, and chopped (1 1/2 cups)" },
-      { "amount": 3, "unit": "tbsp", "ingredient": "butter" },
-      { "amount": 2, "unit": "medium", "ingredient": "onion", "prep": "diced (about 2 1/2 cups)" },
-      { "amount": 2, "unit": "rib", "ingredient": "celery", "prep": "diced (about 3/4 cup)" },
-      { "amount": 1, "unit": "clove", "ingredient": "garlic", "prep": "minced (about 1 tsp)" },
-      { "amount": 2, "unit": "medium", "ingredient": "Yukon Gold potato", "prep": "peeled, cut into 1-inch chunks (10–12 oz)" },
-      { "amount": 4, "unit": "cup", "ingredient": "corn kernels", "prep": "fresh or frozen (from about 4 ears)" },
-      { "amount": 5, "unit": "cup", "ingredient": "vegetable stock", "prep": "or chicken stock" },
-      { "amount": 1, "unit": "tsp", "ingredient": "kosher salt" },
-      { "amount": 2, "unit": "leaf", "ingredient": "bay leaf" },
-      { "amount": 1, "unit": "tsp", "ingredient": "ground cumin" },
-      { "amount": 0.5, "unit": "tsp", "ingredient": "dried oregano" },
-      { "amount": 1, "unit": "cup", "ingredient": "heavy cream" },
-      { "amount": 0.5, "unit": "tsp", "ingredient": "black pepper", "prep": "to taste" }
-    ],
-    "For Serving": [
-      { "amount": 2, "unit": "", "ingredient": "lime", "prep": "one juiced, one sliced for garnish" }
-    ]
-  },
-  "instructions": [
-    "Roast the poblanos directly over a gas flame, on a grill, or under the broiler until blackened on all sides. Place in a bowl, cover, and let steam. When cool, peel, seed, and chop the chiles. Set aside.",
-    "Melt butter in a large heavy-bottomed pot over medium-high heat. Add diced onions and celery, stir to coat, and cook for 8–10 minutes until softened and lightly browned.",
-    "Add garlic and cook for 1 more minute. Then add potatoes, vegetable stock, bay leaves, cumin, oregano, and salt. Bring to a simmer, reduce heat, and cook for 8–10 minutes until potatoes are tender.",
-    "Add corn kernels and cook for 4–5 minutes, until just cooked through. Stir in the chopped roasted poblanos.",
-    "Remove bay leaves and stir in the heavy cream. Season with black pepper to taste. For a thicker texture, purée about one-third of the soup with an immersion or stand blender, then return to the pot and mix well.",
-    "Serve hot with a squeeze of lime juice and garnish with lime slices."
-  ],
-  "notes":
-    "Do not add lime juice while simmering cream-based soups, as it may cause curdling. Adjust the number of poblanos based on their heat. For a vegan option, substitute coconut cream for heavy cream. Any mild green chile can replace poblanos.",
-  "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2025/07/SMOKY-CORN-POBLANO.jpg"
-  ]
-},
-"red-curry-lentil-soup": {
-  "name": "Red Curry Lentil Soup",
-  "category": "Soup",
-  "description":
-    "A creamy, comforting, and mildly spiced vegan red lentil curry soup simmered with coconut milk, tomatoes, and aromatic spices. Hearty enough to serve as a full meal with rice or naan.",
-  "components": {
-    "Main": [
-      { "amount": 1, "unit": "large", "ingredient": "onion", "prep": "diced" },
-      { "amount": 2, "unit": "", "ingredient": "carrot", "prep": "diced" },
-      { "amount": 1, "unit": "stem", "ingredient": "celery", "prep": "diced" },
-      { "amount": 4, "unit": "clove", "ingredient": "garlic", "prep": "minced" },
-      { "amount": 1, "unit": "tbsp", "ingredient": "curry powder" },
+      { "amount": 0.5, "unit": "tsp", "ingredient": "smoked paprika" },
       { "amount": 0.5, "unit": "tsp", "ingredient": "ground cumin" },
-      { "amount": 2, "unit": "large", "ingredient": "tomato", "prep": "diced (or 1 can chopped tomatoes)" },
-      { "amount": 1, "unit": "cup", "ingredient": "red lentils", "prep": "dry, rinsed" },
-      { "amount": 3, "unit": "cup", "ingredient": "vegetable stock" },
-      { "amount": 400, "unit": "ml", "ingredient": "coconut milk", "prep": "divided" },
-      { "amount": 1, "unit": "tbsp", "ingredient": "parsley", "prep": "fresh, finely chopped" },
-      { "amount": null, "unit": "", "ingredient": "salt", "prep": "to taste" },
-      { "amount": null, "unit": "", "ingredient": "black pepper", "prep": "to taste" }
+      { "amount": null, "unit": "", "ingredient": "black pepper", "prep": "freshly ground, to taste" }
+    ],
+    "Jackfruit": [
+      { "amount": 20, "unit": "oz", "ingredient": "young green jackfruit", "prep": "in brine, drained and shredded" },
+      { "amount": 1, "unit": "tbsp", "ingredient": "olive oil", "prep": "extra-virgin" },
+      { "amount": 1, "unit": "small", "ingredient": "onion", "prep": "yellow, thinly sliced" },
+      { "amount": 0.25, "unit": "tsp", "ingredient": "sea salt" },
+      { "amount": 0.5, "unit": "cup", "ingredient": "water" }
+    ],
+    "Quick Slaw": [
+      { "amount": 2, "unit": "cup", "ingredient": "cabbage", "prep": "shredded" },
+      { "amount": 0.25, "unit": "cup", "ingredient": "cilantro", "prep": "fresh, chopped" },
+      { "amount": 0.5, "unit": "tbsp", "ingredient": "lime juice", "prep": "freshly squeezed" },
+      { "amount": 0.5, "unit": "tsp", "ingredient": "olive oil", "prep": "extra-virgin" },
+      { "amount": null, "unit": "", "ingredient": "sea salt", "prep": "to taste" },
+      { "amount": null, "unit": "", "ingredient": "black pepper", "prep": "freshly ground, to taste" }
     ],
     "For Serving": [
-      { "amount": 2, "unit": "tbsp", "ingredient": "fresh parsley", "prep": "chopped, for garnish" },
-      { "amount": 2, "unit": "cup", "ingredient": "rice", "prep": "cooked (basmati or jasmine)" }
+      { "amount": 6, "unit": "bun", "ingredient": "hamburger bun", "prep": "or 8 slider buns, toasted" },
+      { "amount": null, "unit": "", "ingredient": "BBQ sauce", "prep": "remaining sauce for serving" },
+      { "amount": null, "unit": "", "ingredient": "pickles", "prep": "optional, for topping" },
+      { "amount": null, "unit": "", "ingredient": "mustard", "prep": "optional" },
+      { "amount": null, "unit": "", "ingredient": "serrano pepper", "prep": "optional, sliced" }
     ]
   },
   "instructions": [
-    "Dice the onion, carrots, and celery.",
-    "Heat a spoon of oil in a large pot over medium heat. Add the diced vegetables and sauté until softened and golden.",
-    "Add minced garlic, then move the vegetables to one side of the pot. Add curry powder and cumin, toasting the spices gently until fragrant and darker in color. Mix them back into the vegetables.",
-    "Add diced tomatoes (or canned) and simmer for about 5 minutes, until softened.",
-    "Add rinsed red lentils, vegetable stock, 200 ml (half) of the coconut milk, and chopped parsley. Stir well, cover, and simmer over low heat for 20–30 minutes, until lentils are soft.",
-    "Remove half of the soup and blend until smooth, then return to the pot (or use an immersion blender for partial blending).",
-    "Add the remaining 200 ml of coconut milk, stir, and season with salt and pepper to taste.",
-    "Serve hot with cooked rice or garlic naan, garnished with fresh parsley."
+    "Make the BBQ sauce: In a food processor, blend the chipotle peppers, adobo sauce, ketchup, apple cider vinegar, garlic, Dijon mustard, smoked paprika, cumin, and a few grinds of black pepper until smooth. Set aside.",
+    "Prepare the jackfruit: Drain and rinse jackfruit. Shred pieces with your hands or forks, discarding any tough core pieces.",
+    "Heat olive oil in a large skillet over medium heat. Add sliced onion and salt. Cook, stirring occasionally, until soft and golden, 8–10 minutes.",
+    "Add shredded jackfruit to the skillet and cook for 5 minutes, stirring occasionally. Add a splash of water if needed to prevent sticking.",
+    "Stir in 1/2 cup water and half of the prepared BBQ sauce. Reduce heat to low, cover, and simmer for 20 minutes. Uncover and stir in half of the remaining BBQ sauce, reserving the rest for serving.",
+    "Make the slaw: In a medium bowl, toss cabbage, cilantro, lime juice, olive oil, and pinches of salt and pepper. Adjust seasoning to taste.",
+    "Assemble sandwiches: Serve jackfruit mixture on toasted buns with slaw, extra BBQ sauce, and desired toppings like pickles, mustard, or sliced serrano peppers.",
+    "Serve immediately. Store leftover jackfruit and slaw separately in the refrigerator for up to 3 days. Reheat jackfruit before serving."
   ],
   "notes":
-    "Use canned tomatoes if fresh are unavailable. For extra spice, add chili flakes when toasting the curry powder. Adjust consistency by blending more or less of the soup. Keeps well for meal prep and reheats beautifully.",
+    "For a milder BBQ flavor, use fewer chipotle peppers or omit the adobo sauce. For extra smokiness, add a dash of liquid smoke. Jackfruit mixture can also be used in tacos or wraps. Make ahead for easy entertaining.",
   "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2025/07/Red-Lentil-Curry-Soup-02-735x1103-1.jpg"
+    "https://cdn.loveandlemons.com/wp-content/uploads/2018/08/jackfruit-pulled-pork-recipe.jpg"
   ]
 },
-"spiced-plum-blueberry-crumble": {
-  "name": "Spiced Plum and Blueberry Crumble",
+"lentil-sweet-potato-shepherds-pie": {
+  "name": "Lentil & Sweet Potato Shepherd’s Pie",
+  "category": "Entree",
+  "description":
+    "A colorful, plant-based take on classic shepherd’s pie featuring hearty lentils, caramelized vegetables, and a fluffy sweet potato topping. Just 10 ingredients and packed with comforting, savory flavor.",
+  "components": {
+    "Sweet Potato Topping": [
+      { "amount": 0.33, "unit": "large", "ingredient": "sweet potato", "prep": "washed, peeled, and chopped into large chunks" },
+      { "amount": 0.22, "unit": "tbsp", "ingredient": "coconut oil", "prep": "or vegan butter" },
+      { "amount": 0.03, "unit": "tsp", "ingredient": "sea salt" },
+      { "amount": 0.17, "unit": "tbsp", "ingredient": "maple syrup", "prep": "optional, to taste" }
+    ],
+    "Lentil Filling": [
+      { "amount": 0.11, "unit": "tbsp", "ingredient": "oil", "prep": "coconut or avocado (or sub water/broth)" },
+      { "amount": 0.11, "unit": "medium", "ingredient": "onion", "prep": "diced" },
+      { "amount": 0.22, "unit": "clove", "ingredient": "garlic", "prep": "minced" },
+      { "amount": 0.17, "unit": "cup", "ingredient": "brown or green lentils", "prep": "rinsed and drained" },
+      { "amount": 0.44, "unit": "cup", "ingredient": "vegetable stock", "prep": "DIY or store-bought" },
+      { "amount": 0.22, "unit": "tsp", "ingredient": "fresh thyme" },
+      { "amount": 0.11, "unit": "bag", "ingredient": "mixed vegetables", "prep": "frozen peas, carrots, green beans, and corn (10 oz bag)" }
+    ],
+    "Optional Mushrooms": [
+      { "amount": 0.22, "unit": "whole", "ingredient": "portobello mushroom", "prep": "stems removed, sliced 1/4-inch thick" },
+      { "amount": 0.44, "unit": "tbsp", "ingredient": "balsamic vinegar" },
+      { "amount": 0.11, "unit": "tbsp", "ingredient": "oil", "prep": "melted coconut or avocado (or sub water)" },
+      { "amount": null, "unit": "", "ingredient": "sea salt", "prep": "pinch" },
+      { "amount": null, "unit": "", "ingredient": "black pepper", "prep": "pinch" },
+      { "amount": 0.11, "unit": "clove", "ingredient": "garlic", "prep": "minced" }
+    ]
+  },
+  "instructions": [
+    "Add sweet potatoes to a large pot and cover with water. Bring to a boil, then reduce to medium-high and cook 15–20 minutes, or until very tender. Drain and mash until smooth. Mix in coconut oil and salt to taste, adding maple syrup if desired. Cover and set aside.",
+    "Preheat oven to 425°F (220°C) and lightly grease a 9×13-inch baking dish.",
+    "If using mushrooms, marinate sliced portobellos in balsamic vinegar, oil, salt, pepper, and garlic for 5 minutes.",
+    "In a large pot over medium heat, warm oil, then add onion and garlic. Sauté 4–5 minutes until lightly browned. Season with salt and pepper.",
+    "Add lentils, vegetable broth, and thyme. Bring to a boil, then reduce heat and simmer 20–30 minutes until lentils are tender.",
+    "If using mushrooms, heat a skillet over medium heat. Add the marinated mushrooms and cook 2–3 minutes per side until browned. Set aside.",
+    "In the last 10 minutes of lentil cooking, add frozen mixed vegetables. Stir and cover to heat through. Drain excess liquid if needed. Adjust seasoning to taste.",
+    "Transfer the lentil mixture to the prepared baking dish. Layer mushrooms (if using) and top with mashed sweet potatoes. Smooth evenly and sprinkle with salt, pepper, and thyme if desired.",
+    "Bake 20 minutes, or until the top is lightly browned and edges are bubbling. Let cool briefly before serving.",
+    "Store leftovers covered in the refrigerator for up to 5 days or freeze up to 1 month. Reheat in the oven or microwave until warmed through."
+  ],
+  "notes":
+    "Make ahead for easy weeknight dinners. For a lower-fat version, omit oil and use broth for sautéing. Optional portobello mushrooms add rich umami flavor. Serve with a side salad or steamed greens.",
+  "images": [
+    "https://minimalistbaker.com/wp-content/uploads/2017/10/AMAZING-Sweet-Potato-Lentil-Shepherds-Pie-10-ingredients-quick-easy-methods-SO-satisfying-vegan-sweetpotato-lentil-plantbased-shepherdspie-thanksgiving-recipe-glutenfree-7.jpg",
+    "https://minimalistbaker.com/wp-content/uploads/2017/10/AMAZING-Sweet-Potato-Lentil-Shepherds-Pie-10-ingredients-quick-easy-methods-SO-satisfying-vegan-sweetpotato-lentil-plantbased-shepherdspie-thanksgiving-recipe-glutenfree-8.jpg",
+    "https://minimalistbaker.com/wp-content/uploads/2017/10/AMAZING-Sweet-Potato-Lentil-Shepherds-Pie-10-ingredients-quick-easy-methods-SO-satisfying-vegan-sweetpotato-lentil-plantbased-shepherdspie-thanksgiving-recipe-glutenfree-11.jpg",
+    "https://minimalistbaker.com/wp-content/uploads/2017/10/AMAZING-Sweet-Potato-Lentil-Shepherds-Pie-10-ingredients-quick-easy-methods-SO-satisfying-vegan-sweetpotato-lentil-plantbased-shepherdspie-thanksgiving-recipe-glutenfree.jpg"
+  ]
+},
+"green-beans-almondine": {
+  "name": "Green Beans Almondine",
+  "category": "Side",
+  "description":
+    "A simple and elegant side dish featuring tender green beans sautéed with shallots, garlic, and toasted almonds, finished with a bright squeeze of lemon juice for balance and freshness.",
+  "components": {
+    "Main": [
+      { "amount": 12, "unit": "oz", "ingredient": "green beans", "prep": "trimmed (preferably haricot verts)" },
+      { "amount": 2, "unit": "tbsp", "ingredient": "sliced almonds", "prep": "toasted until golden" },
+      { "amount": 1, "unit": "tbsp", "ingredient": "olive oil", "prep": "extra-virgin" },
+      { "amount": 1, "unit": "whole", "ingredient": "shallot", "prep": "thinly sliced" },
+      { "amount": 0.5, "unit": "tsp", "ingredient": "sea salt", "prep": "plus more to taste" },
+      { "amount": 1, "unit": "clove", "ingredient": "garlic", "prep": "grated" },
+      { "amount": 0.5, "unit": "tbsp", "ingredient": "lemon juice", "prep": "fresh" },
+      { "amount": null, "unit": "", "ingredient": "black pepper", "prep": "freshly ground, to taste" }
+    ]
+  },
+  "instructions": [
+    "Bring a large pot of salted water to a boil and prepare a large bowl of ice water.",
+    "Add the green beans to the boiling water and blanch for 2 minutes. Drain and transfer immediately to the ice water to stop the cooking process. Drain again and pat dry with a towel.",
+    "Heat a cast-iron skillet over medium heat. Add sliced almonds to the dry pan and toast for 2–3 minutes, stirring often, until golden and fragrant. Remove and set aside.",
+    "Reduce heat slightly, add olive oil to the skillet, then add shallot and salt. Sauté for 2 minutes until softened.",
+    "Add green beans and continue to sauté for 2–4 minutes until warmed through and tender.",
+    "Remove from heat, add grated garlic and lemon juice, and toss to combine. Season with salt and pepper to taste.",
+    "Transfer to a serving dish and top with the toasted almonds. Serve warm."
+  ],
+  "notes":
+    "For a richer version, finish with a small pat of vegan butter or a sprinkle of nutritional yeast. Can be made ahead and reheated just before serving. Adjust lemon juice to taste for brightness.",
+  "images": [
+    "https://cdn.loveandlemons.com/wp-content/uploads/2021/11/green-beans-almondine-with-garlic.jpg",
+    "https://cdn.loveandlemons.com/wp-content/uploads/2021/11/green-bean-almondine.jpg",
+    "https://cdn.loveandlemons.com/wp-content/uploads/2021/11/green-beans-almondine.jpg",
+  ]
+},
+"easy-stir-fried-bok-choy": {
+  "name": "Easy Stir-Fried Bok Choy",
+  "category": "Side",
+  "description":
+    "A quick and easy stir-fry featuring tender baby bok choy in a savory garlic-shallot sauce with soy and sesame. Ready in just 10 minutes, it’s the perfect light side dish for any Asian-inspired meal.",
+  "components": {
+    "Main": [
+      { "amount": 0.17, "unit": "tbsp", "ingredient": "vegetable oil" },
+      { "amount": 0.83, "unit": "clove", "ingredient": "garlic", "prep": "minced" },
+      { "amount": 0.33, "unit": "large", "ingredient": "shallot", "prep": "minced" },
+      { "amount": 0.33, "unit": "lb", "ingredient": "baby bok choy", "prep": "halved or quartered" },
+      { "amount": 0.33, "unit": "tbsp", "ingredient": "soy sauce" },
+      { "amount": 0.17, "unit": "tsp", "ingredient": "sesame oil" },
+      { "amount": 0.17, "unit": "tsp", "ingredient": "crushed red pepper", "prep": "optional, for garnish" }
+    ]
+  },
+  "instructions": [
+    "Heat vegetable oil in a large wok or skillet over medium-high heat, swirling to coat the pan evenly.",
+    "Add minced garlic and shallots and sauté, stirring constantly, for 1–2 minutes until fragrant and slightly golden.",
+    "Add bok choy, soy sauce, and sesame oil. Toss to coat evenly, then cover and steam for 1–2 minutes.",
+    "Uncover and toss again. Re-cover and cook for 3–5 minutes, or until bok choy is tender and cooked to desired doneness.",
+    "Sprinkle with crushed red pepper flakes if using, and serve immediately."
+  ],
+  "notes":
+    "For a lighter version, use water instead of oil to sauté. You can substitute tamari for a gluten-free option or add a splash of rice vinegar for brightness. Serve alongside tofu, rice, or noodles.",
+  "images": [
+    "https://theforkedspoon.com/wp-content/uploads/2019/01/bok-choy-recipe.jpg"
+  ]
+},
+"baked-potato-wedges": {
+  "name": "Baked Potato Wedges",
+  "category": "Side",
+  "description":
+    "Crispy, golden-brown baked potato wedges seasoned with garlic, smoked paprika, and onion powder. Finished with fresh parsley and Parmesan for a simple yet irresistible side or snack.",
+  "components": {
+    "Main": [
+      { "amount": 2, "unit": "lb", "ingredient": "russet potatoes", "prep": "4 medium, cut into wedges" },
+      { "amount": 2, "unit": "tbsp", "ingredient": "olive oil", "prep": "extra-virgin" },
+      { "amount": 1.5, "unit": "tsp", "ingredient": "garlic powder" },
+      { "amount": 1, "unit": "tsp", "ingredient": "sea salt", "prep": "plus more to taste" },
+      { "amount": 0.75, "unit": "tsp", "ingredient": "onion powder" },
+      { "amount": 0.75, "unit": "tsp", "ingredient": "smoked paprika" },
+      { "amount": null, "unit": "", "ingredient": "black pepper", "prep": "freshly ground, to taste" },
+      { "amount": null, "unit": "", "ingredient": "parsley", "prep": "fresh, chopped, for sprinkling (optional)" },
+      { "amount": null, "unit": "", "ingredient": "Parmesan cheese", "prep": "grated, for sprinkling (optional)" }
+    ]
+  },
+  "instructions": [
+    "Preheat the oven to 425°F (220°C) and line two baking sheets with parchment paper.",
+    "In a large bowl, toss the potato wedges with olive oil, garlic powder, salt, onion powder, smoked paprika, and several grinds of black pepper until evenly coated.",
+    "Spread the wedges in a single layer across the prepared baking sheets.",
+    "Roast for 40–45 minutes, flipping halfway through and rotating pans at the 20-minute mark, until wedges are tender inside and golden brown on the edges.",
+    "Remove from oven, sprinkle with chopped parsley and Parmesan cheese if using, and season with additional salt to taste before serving."
+  ],
+  "notes":
+    "For extra crispiness, soak potato wedges in cold water for 10–15 minutes before drying and seasoning. Great served with ketchup, aioli, or a spicy dipping sauce.",
+  "images": [
+    "https://cdn.loveandlemons.com/wp-content/uploads/2021/10/potato-wedges-recipe.jpg",
+    "https://cdn.loveandlemons.com/wp-content/uploads/2021/10/potato-wedges-oven.jpg"
+  ]
+},
+"maple-roasted-beets-and-carrots": {
+  "name": "Maple Roasted Beets and Carrots",
+  "category": "Side",
+  "description":
+    "A colorful, naturally sweet roasted vegetable side featuring tender beets and carrots tossed in olive oil, butter, and pure maple syrup. Simple, elegant, and ready in under 40 minutes.",
+  "components": {
+    "Main": [
+      { "amount": 1.25, "unit": "large", "ingredient": "carrot", "prep": "peeled and sliced" },
+      { "amount": 1, "unit": "medium", "ingredient": "beet", "prep": "peeled and diced" },
+      { "amount": 0.5, "unit": "tbsp", "ingredient": "olive oil" },
+      { "amount": null, "unit": "", "ingredient": "salt", "prep": "to taste" },
+      { "amount": null, "unit": "", "ingredient": "black pepper", "prep": "to taste" },
+      { "amount": 0.5, "unit": "tbsp", "ingredient": "butter" },
+      { "amount": 0.75, "unit": "tbsp", "ingredient": "maple syrup", "prep": "pure" }
+    ]
+  },
+  "instructions": [
+    "Preheat oven to 425°F (220°C) and position a rack in the center.",
+    "Cut beets and carrots into pieces of similar size and spread them on a large baking sheet.",
+    "Drizzle with olive oil, sprinkle with salt and pepper, and toss to coat evenly. Spread into a single layer.",
+    "Roast for about 15 minutes, or until vegetables are tender-crisp (timing depends on piece size).",
+    "Remove the baking sheet from the oven. Add butter and maple syrup directly to the pan. Let the butter melt, then toss vegetables until coated.",
+    "Return to oven for another 5 minutes, until caramelized and glossy.",
+    "Serve immediately while warm."
+  ],
+  "notes":
+    "For extra flavor, sprinkle with chopped fresh thyme or rosemary before roasting. This dish pairs beautifully with roasted tofu, lentils, or grain bowls.",
+  "images": [
+    "https://www.saltandlavender.com/wp-content/uploads/2017/10/roasted-beets-and-carrots-5-768x1094.jpg",
+    "https://www.saltandlavender.com/wp-content/uploads/2017/10/roasted-beets-and-carrots-4-768x1152.jpg"
+  ]
+},
+"vegan-chocolate-chip-cookie": {
+  "name": "Vegan Chocolate Chip Cookie",
   "category": "Dessert",
   "description":
-    "Juicy plums and blueberries baked with warm spices like cinnamon, ginger, and vanilla beneath a golden oat-almond crumble. This fuss-free vegan dessert is rich, fragrant, and comforting — best enjoyed warm with ice cream or yogurt.",
+    "A soft, chewy vegan chocolate chip cookie made with simple pantry ingredients—crispy on the edges, gooey in the center, and irresistibly rich without dairy or eggs.",
   "components": {
-    "Filling": [
-      { "amount": 2, "unit": "cup", "ingredient": "plums", "prep": "pitted and cut in half or quarters (about 280 g)" },
-      { "amount": 2, "unit": "cup", "ingredient": "blueberries", "prep": "fresh or frozen (about 300 g)" },
-      { "amount": 0.25, "unit": "cup", "ingredient": "coconut sugar" },
-      { "amount": 0.25, "unit": "tsp", "ingredient": "vanilla powder", "prep": "or 1/2 tsp vanilla extract" },
-      { "amount": 1, "unit": "tbsp", "ingredient": "tapioca starch", "prep": "(about 10 g)" },
-      { "amount": null, "unit": "", "ingredient": "Himalayan salt", "prep": "pinch" },
-      { "amount": 1, "unit": "tsp", "ingredient": "lemon juice" },
-      { "amount": 0.5, "unit": "tsp", "ingredient": "cinnamon" },
-      { "amount": null, "unit": "", "ingredient": "ground ginger", "prep": "pinch" }
-    ],
-    "Topping": [
-      { "amount": 2, "unit": "tbsp", "ingredient": "almond flour", "prep": "(about 20 g)" },
-      { "amount": 1, "unit": "cup", "ingredient": "rolled oats", "prep": "old-fashioned (about 100 g)" },
-      { "amount": 0.5, "unit": "tsp", "ingredient": "vanilla powder", "prep": "or 1 tsp vanilla extract" },
-      { "amount": 0.5, "unit": "tsp", "ingredient": "cinnamon" },
-      { "amount": null, "unit": "", "ingredient": "Himalayan salt", "prep": "two pinches" },
-      { "amount": 2, "unit": "tbsp", "ingredient": "maple syrup", "prep": "(about 30 ml)" },
-      { "amount": 3, "unit": "tbsp", "ingredient": "coconut oil", "prep": "melted (about 45 ml)" },
-      { "amount": 0.5, "unit": "tbsp", "ingredient": "lemon juice", "prep": "(about 8 ml)" }
-    ],
-    "Optional Toppings": [
-      { "amount": null, "unit": "", "ingredient": "vegan vanilla ice cream" },
-      { "amount": null, "unit": "", "ingredient": "vegan Greek yogurt" },
-      { "amount": null, "unit": "", "ingredient": "fresh berries" }
+    "Dough": [
+      { "amount": 0.08, "unit": "cup", "ingredient": "flour", "prep": "white, oat, or spelt" },
+      { "amount": 0.04, "unit": "tsp", "ingredient": "baking soda" },
+      { "amount": 0.02, "unit": "tsp", "ingredient": "salt" },
+      { "amount": 0.02, "unit": "cup", "ingredient": "sugar", "prep": "unrefined if desired" },
+      { "amount": 0.02, "unit": "cup", "ingredient": "brown sugar", "prep": "or coconut sugar" },
+      { "amount": 0.03, "unit": "cup", "ingredient": "chocolate chips" },
+      { "amount": 0.17, "unit": "tbsp", "ingredient": "milk of choice", "prep": "plus more if needed" },
+      { "amount": 0.17, "unit": "tbsp", "ingredient": "oil", "prep": "or melted vegan butter" },
+      { "amount": 0.02, "unit": "tsp", "ingredient": "vanilla extract", "prep": "pure" }
     ]
   },
   "instructions": [
-    "Preheat oven to 355°F (180°C).",
-    "In a large bowl, combine plums, blueberries, coconut sugar, vanilla, tapioca starch, salt, lemon juice, cinnamon, and ginger. Toss to coat evenly.",
-    "In another bowl, prepare the topping by mixing almond flour, oats, vanilla, cinnamon, salt, maple syrup, melted coconut oil, and lemon juice. Use clean hands to combine until moist and crumbly.",
-    "Transfer the fruit mixture to an 8-inch (20-cm) square baking pan and spread evenly. Sprinkle the crumble topping evenly over the fruit.",
-    "Bake for 30–35 minutes, or until the topping is golden brown and the fruit is bubbling.",
-    "Let cool slightly and serve warm with vegan vanilla ice cream, Greek yogurt, or fresh berries."
+    "In a small bowl, whisk together the flour, baking soda, salt, white sugar, and brown sugar.",
+    "Add milk, oil, and vanilla extract. Stir until a cookie dough forms—it will seem dry at first, but continue mixing until it comes together. Add a splash more milk if needed.",
+    "Fold in chocolate chips. Form into a single cookie dough ball and refrigerate for at least 2 hours (or freeze until firm).",
+    "Preheat oven to 325°F (165°C). Place the chilled dough ball on a parchment-lined baking tray.",
+    "Bake for 11 minutes on the center rack. The cookie will look underdone—let it cool on the baking tray for 10 minutes to firm up.",
+    "Enjoy warm, or store leftovers in an airtight container for up to 3 days."
   ],
   "notes":
-    "Use rolled oats instead of quick oats for better texture. To make gluten-free, ensure oats are certified GF. You can substitute almond flour with another flour of choice. Works well with other soft fruits like peaches or apricots. Store leftovers refrigerated for up to 5 days or freeze up to 3 months.",
+    "For crispier edges, flatten the dough slightly before baking. Use oat flour for a gluten-free option. You can freeze extra dough balls and bake directly from frozen when needed.",
   "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2025/09/Gluten-Free-Blueberry-Plum-Crumble2-Bake-it-Vegan-Maja-Brekalo-scaled-1-e1758058729394.jpeg"
+    "https://chocolatecoveredkatie.com/wp-content/uploads/2022/01/The-Best-Vegan-Chocolate-Chip-Cookies-Recipe.png"
   ]
 },
-"banana-walnut-muffins-with-oat-crumble": {
-  "name": "Banana Walnut Muffins with Oat Crumble",
-  "category": "Breakfast",
+"best-vegan-chocolate-cake": {
+  "name": "The Best Vegan Chocolate Cake",
+  "category": "Dessert",
   "description":
-    "Super moist and flavorful vegan banana nut muffins topped with a golden oat crumble. Made in one bowl with simple ingredients, ready in just 30 minutes — perfect for breakfast, snacks, or dessert.",
+    "Serves 16.A quick and easy one-bowl vegan chocolate cake that’s unbelievably rich, moist, and full of deep chocolate flavor. It’s so good, even non-vegans call it the best chocolate cake ever.",
   "components": {
-    "Muffins": [
-      { "amount": 0.18, "unit": "tbsp", "ingredient": "flaxseed meal", "prep": "to make flax egg" },
-      { "amount": 0.45, "unit": "tbsp", "ingredient": "water", "prep": "to make flax egg" },
-      { "amount": 0.36, "unit": "medium", "ingredient": "banana", "prep": "ripe, mashed" },
-      { "amount": 0.05, "unit": "cup", "ingredient": "brown sugar", "prep": "packed" },
-      { "amount": 0.02, "unit": "cup", "ingredient": "vegan butter", "prep": "melted (or use coconut oil)" },
-      { "amount": 0.09, "unit": "tsp", "ingredient": "vanilla extract" },
-      { "amount": 0.18, "unit": "tsp", "ingredient": "baking soda" },
-      { "amount": 0.05, "unit": "tsp", "ingredient": "sea salt" },
-      { "amount": 0.14, "unit": "cup", "ingredient": "whole wheat pastry flour", "prep": "or unbleached all-purpose" },
-      { "amount": 0.05, "unit": "cup", "ingredient": "rolled oats" },
-      { "amount": 0.02, "unit": "cup", "ingredient": "walnuts", "prep": "chopped (optional)" }
+    "Chocolate Cake": [
+      { "amount": 1, "unit": "cup", "ingredient": "unsweetened soy milk", "prep": "or almond milk" },
+      { "amount": 1, "unit": "tbsp", "ingredient": "apple cider vinegar" },
+      { "amount": 2, "unit": "cup", "ingredient": "all-purpose flour" },
+      { "amount": 1.75, "unit": "cup", "ingredient": "granulated sugar" },
+      { "amount": 0.75, "unit": "cup", "ingredient": "cocoa powder" },
+      { "amount": 2, "unit": "tsp", "ingredient": "baking powder" },
+      { "amount": 1.5, "unit": "tsp", "ingredient": "baking soda" },
+      { "amount": 1, "unit": "tsp", "ingredient": "salt" },
+      { "amount": 0.5, "unit": "cup", "ingredient": "canola oil", "prep": "or melted coconut oil" },
+      { "amount": 0.67, "unit": "cup", "ingredient": "unsweetened applesauce" },
+      { "amount": 1, "unit": "tbsp", "ingredient": "vanilla extract", "prep": "pure" },
+      { "amount": 1, "unit": "cup", "ingredient": "boiling water" }
     ],
-    "Crumble Top": [
-      { "amount": 0.02, "unit": "cup", "ingredient": "raw sugar" },
-      { "amount": 0.45, "unit": "tbsp", "ingredient": "all-purpose flour", "prep": "unbleached" },
-      { "amount": 0.18, "unit": "tbsp", "ingredient": "vegan butter", "prep": "such as Earth Balance" }
+    "Chocolate Buttercream Frosting": [
+      { "amount": 1, "unit": "cup", "ingredient": "cocoa powder" },
+      { "amount": 1.5, "unit": "cup", "ingredient": "vegan butter", "prep": "softened sticks, not tub" },
+      { "amount": 4.5, "unit": "cup", "ingredient": "powdered sugar" },
+      { "amount": 2, "unit": "tsp", "ingredient": "vanilla extract", "prep": "pure" },
+      { "amount": 0.38, "unit": "cup", "ingredient": "unsweetened soy milk", "prep": "or almond milk, adjust as needed" }
     ]
   },
   "instructions": [
-    "Preheat oven to 375°F (190°C) and lightly grease a standard muffin tin (makes about 10–11 muffins).",
-    "In a large bowl, prepare flax eggs by mixing flaxseed meal and water. Let sit for 5 minutes to thicken.",
-    "Add mashed bananas to the flax egg, leaving a bit of texture. Stir in brown sugar, baking soda, salt, and whisk for one minute.",
-    "Add vanilla and melted vegan butter, then mix to combine.",
-    "Add flour and oats and stir until just combined. Fold in chopped walnuts, if using.",
-    "Divide batter evenly among muffin cups, filling about ¾ full.",
-    "Prepare the crumble top: In a small bowl, combine raw sugar, flour, and vegan butter. Mash with a fork until crumbly like wet sand.",
-    "Generously top each muffin with crumble mixture. You may have leftovers — save for future use.",
-    "Bake for 17–22 minutes, until golden brown and a toothpick inserted comes out clean.",
-    "Cool for a few minutes before removing from the tin. Serve warm or at room temperature."
+    "Preheat oven to 350°F (175°C). Grease two 8-inch or 9-inch cake pans and line with parchment paper for easy removal.",
+    "In a small bowl, mix plant milk and apple cider vinegar. Stir and set aside to curdle into vegan buttermilk.",
+    "In a large mixing bowl, whisk together flour, sugar, cocoa powder, baking powder, baking soda, and salt until evenly combined.",
+    "Add the oil, applesauce, vanilla, and milk-vinegar mixture. Mix on medium speed until smooth.",
+    "Reduce speed to low and slowly pour in the boiling water, continuing to mix until the batter is fully combined. It will be thin—this is normal.",
+    "Divide the batter evenly between pans. Bake for 30–35 minutes or until a toothpick inserted in the center comes out clean.",
+    "Cool the cakes in the pans for 10 minutes, then carefully transfer to a wire rack to cool completely before frosting.",
+    "For the frosting: Whisk cocoa powder to remove clumps. Add softened vegan butter and beat until smooth and creamy.",
+    "Add half of the powdered sugar and half of the milk, mixing until combined. Add the remaining sugar, milk, and vanilla extract. Beat on high until fluffy and spreadable.",
+    "Frost cooled cakes using an offset spatula or butter knife. Layer and decorate as desired."
   ],
   "notes":
-    "Store in a covered container at room temperature for up to 3 days or freeze for up to 1 month. For gluten-free muffins, use a 1:1 GF flour blend. Add cinnamon or nutmeg for extra warmth.",
+    "For cupcakes, bake 18–22 minutes. Add espresso powder for a deeper chocolate flavor. Frosting consistency can be adjusted with more milk (for softness) or sugar (for firmness). Store at room temperature for 1–2 days or refrigerate up to 5 days.",
   "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2024/07/vegan-banana-muffins-2.jpg"
+    "https://www.noracooks.com/wp-content/uploads/2018/07/IMG_8878.jpg"
   ]
 },
-"truffle-whipped-mashed-potatoes": {
-  "name": "Truffle-Whipped Mashed Potatoes",
-  "category": "Side Dish",
+"vegan-minestrone": {
+  "name": "1-Pot Vegan Minestrone (Gluten-Free)",
+  "category": "Soup",
   "description":
-    "Fluffy, creamy vegan mashed potatoes infused with rich white truffle oil for an indulgent, savory twist. Perfect as a luxurious side dish or smothered in your favorite vegan gravy.",
+    "A hearty, colorful, 1-pot vegan and gluten-free minestrone made with wholesome vegetables, beans, and gluten-free pasta. Simple, nourishing, and ready in just 30 minutes.",
+  "components": {
+    "Soup": [
+      { "amount": 0.33, "unit": "tbsp", "ingredient": "water", "prep": "or sub oil" },
+      { "amount": 0.08, "unit": "medium", "ingredient": "onion", "prep": "white or yellow, diced" },
+      { "amount": 0.5, "unit": "clove", "ingredient": "garlic", "prep": "minced" },
+      { "amount": 0.33, "unit": "large", "ingredient": "carrot", "prep": "peeled and sliced into thin rounds" },
+      { "amount": 0.25, "unit": "cup", "ingredient": "green beans", "prep": "trimmed and chopped" },
+      { "amount": 0.04, "unit": "tsp", "ingredient": "sea salt", "prep": "plus more to taste" },
+      { "amount": 0.04, "unit": "tsp", "ingredient": "black pepper", "prep": "plus more to taste" },
+      { "amount": 0.17, "unit": "small", "ingredient": "zucchini", "prep": "sliced into 1/4-inch rounds" },
+      { "amount": 0.17, "unit": "can (15 oz)", "ingredient": "diced fire-roasted tomatoes" },
+      { "amount": 1, "unit": "cup", "ingredient": "vegetable broth", "prep": "DIY or store-bought" },
+      { "amount": 0.33, "unit": "tsp", "ingredient": "dried basil", "prep": "or sub 1 Tbsp fresh per 2 tsp dried" },
+      { "amount": 0.33, "unit": "tsp", "ingredient": "dried oregano", "prep": "or sub 1 Tbsp fresh per 2 tsp dried" },
+      { "amount": 0.17, "unit": "tbsp", "ingredient": "nutritional yeast" },
+      { "amount": 0.17, "unit": "pinch", "ingredient": "red pepper flakes", "prep": "optional" },
+      { "amount": 0.17, "unit": "tbsp", "ingredient": "coconut sugar", "prep": "or other sweetener, to taste" },
+      { "amount": 0.17, "unit": "can (15 oz)", "ingredient": "white beans", "prep": "or chickpeas, rinsed and drained" },
+      { "amount": 0.33, "unit": "cup", "ingredient": "gluten-free pasta", "prep": "fusilli or similar" },
+      { "amount": 0.17, "unit": "cup", "ingredient": "kale", "prep": "or spinach, roughly chopped" }
+    ]
+  },
+  "instructions": [
+    "Heat a large pot or Dutch oven over medium heat. Once hot, add water, onion, and garlic. Stir and cook for 3 minutes until fragrant.",
+    "Add carrots and green beans. Season with salt and pepper. Cook 3–4 minutes until slightly softened and lightly browned.",
+    "Add zucchini, tomatoes, broth, basil, oregano, nutritional yeast, red pepper flakes (optional), coconut sugar, and beans. Stir to combine.",
+    "Bring to a strong simmer over medium-high heat, then reduce to medium-low. Add pasta and stir. Cook for about 10 minutes, stirring occasionally, until pasta is tender.",
+    "Reduce heat to low and simmer another 4–5 minutes. Adjust seasoning as needed with salt, herbs, or coconut sugar for balance.",
+    "Stir in kale or spinach and cook 3–4 minutes more until wilted. Remove from heat and let rest a few minutes before serving.",
+    "Serve warm, topped with fresh herbs or vegan parmesan if desired."
+  ],
+  "notes":
+    "This soup keeps 3–4 days refrigerated or up to 1 month frozen. Reheat gently to avoid overcooking the pasta. Great with crusty bread or a drizzle of olive oil.",
+  "images": [
+    "https://minimalistbaker.com/wp-content/uploads/2017/08/PERFECT-1-Pot-Vegan-Minestrone-Vegetables-beans-pasta-SO-delicious-and-healthy-minestrone-soup-recipe-vegan-glutenfree-minimalistbaker-5.jpg"
+  ]
+},
+"thai-coconut-red-lentil-soup": {
+  "name": "Thai Coconut Red Lentil Soup",
+  "category": "Soup",
+  "description":
+    "A fragrant, soul-satisfying red lentil soup infused with Thai red curry, coconut milk, and lime. Creamy, lightly spicy, and full of depth despite its simple ingredients.",
   "components": {
     "Main": [
-      { "amount": 0.5, "unit": "lb", "ingredient": "golden potatoes", "prep": "peeled and cut into 2-inch pieces" },
-      { "amount": 0.04, "unit": "cup", "ingredient": "vegan butter" },
-      { "amount": 0.08, "unit": "cup", "ingredient": "non-dairy milk", "prep": "unflavored, unsweetened (up to 0.17 cup as needed)" },
-      { "amount": 0.17, "unit": "clove", "ingredient": "garlic", "prep": "minced" },
-      { "amount": 0.17, "unit": "tbsp", "ingredient": "white truffle oil" },
+      { "amount": 0.33, "unit": "tbsp", "ingredient": "vegetable oil", "prep": "or olive oil" },
+      { "amount": 0.17, "unit": "cup", "ingredient": "onion", "prep": "chopped" },
+      { "amount": 0.17, "unit": "cup", "ingredient": "carrot", "prep": "chopped" },
+      { "amount": 0.5, "unit": "clove", "ingredient": "garlic", "prep": "finely chopped" },
+      { "amount": 0.5, "unit": "tbsp", "ingredient": "tomato paste" },
+      { "amount": 0.55, "unit": "tbsp", "ingredient": "Thai red curry paste", "prep": "check label for vegan" },
+      { "amount": 0.08, "unit": "tsp", "ingredient": "ground turmeric" },
+      { "amount": 0.04, "unit": "tsp", "ingredient": "cayenne pepper" },
       { "amount": 0.17, "unit": "tsp", "ingredient": "salt", "prep": "plus more to taste" },
-      { "amount": null, "unit": "", "ingredient": "black pepper", "prep": "to taste" }
-    ],
-    "For Serving": [
-      { "amount": null, "unit": "", "ingredient": "chives", "prep": "chopped, optional" },
-      { "amount": null, "unit": "", "ingredient": "vegan gravy", "prep": "optional" }
+      { "amount": 0.17, "unit": "cup", "ingredient": "red lentils" },
+      { "amount": 0.58, "unit": "cup", "ingredient": "vegetable broth", "prep": "or water" },
+      { "amount": 0.07, "unit": "cup", "ingredient": "coconut milk", "prep": "full-fat, unsweetened" },
+      { "amount": 0.5, "unit": "tbsp", "ingredient": "lime juice", "prep": "fresh" },
+      { "amount": 0.17, "unit": "cup", "ingredient": "cilantro leaves", "prep": "fresh, for garnish" }
     ]
   },
   "instructions": [
-    "Place the peeled and chopped potatoes into a large pot and cover with water.",
-    "Bring to a boil over high heat and cook for 12–14 minutes, just until fork-tender. Do not overcook.",
-    "Drain the potatoes in a colander and return them to the pot.",
-    "Add vegan butter, 0.08 cup of non-dairy milk, minced garlic, truffle oil, and salt.",
-    "Mash the potatoes to your desired consistency using a potato masher. Add up to an additional 0.09 cup of milk as needed for creaminess.",
-    "Taste and adjust seasoning with more salt and black pepper as desired.",
-    "Serve warm, topped with chopped chives and vegan gravy if desired."
+    "Heat oil in a medium pot over medium heat. Add onion and carrot, and cook for about 5 minutes, until softened.",
+    "Stir in garlic, tomato paste, curry paste, turmeric, and cayenne. Cook for 1 minute, stirring until fragrant.",
+    "Add red lentils, salt, and vegetable broth. Bring to a simmer, then reduce to medium-low and cook partially covered for about 20 minutes, until lentils are soft and thickened.",
+    "Remove from heat and stir in coconut milk and lime juice. Adjust seasoning with additional salt if needed.",
+    "Serve hot, garnished with fresh cilantro leaves."
   ],
   "notes":
-    "For extra smooth texture, use a potato ricer instead of a masher. Start with less truffle oil and adjust to taste — its flavor can be intense. These pair beautifully with roasted vegetables or vegan mushroom gravy.",
+    "For a smoother texture, use an immersion blender to partially puree the soup. Adjust curry paste for spice preference. Pairs beautifully with cooked jasmine rice or rice noodles.",
   "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2025/09/truffled-mashed-potatoes-1-of-1.jpg"
-  ]
-},
-"grilled-asparagus-with-lemon-zest": {
-  "name": "Grilled Asparagus with Lemon Zest",
-  "category": "Side Dish",
-  "description":
-    "A simple, bright, and flavorful summer side dish. Tender grilled asparagus drizzled with olive oil and finished with garlic powder and fresh lemon zest — easy, healthy, and bursting with flavor.",
-  "components": {
-    "Main": [
-      { "amount": 2, "unit": "bunch", "ingredient": "asparagus", "prep": "trimmed" },
-      { "amount": 1, "unit": "tbsp", "ingredient": "olive oil" },
-      { "amount": 0.25, "unit": "tsp", "ingredient": "salt" },
-      { "amount": 0.25, "unit": "tsp", "ingredient": "garlic powder" },
-      { "amount": 1, "unit": "tsp", "ingredient": "lemon zest", "prep": "freshly grated" }
-    ]
-  },
-  "instructions": [
-    "Preheat grill to medium-high heat (about 375–400°F).",
-    "Place trimmed asparagus on a baking sheet. Drizzle with olive oil, sprinkle with salt and garlic powder, and toss to coat evenly.",
-    "Lay asparagus horizontally across the grill grates to prevent them from falling through.",
-    "Grill for 3–4 minutes per side, until tender and lightly charred.",
-    "Remove from grill and sprinkle immediately with fresh lemon zest. Serve warm."
-  ],
-  "notes":
-    "For extra brightness, squeeze a bit of fresh lemon juice over the asparagus before serving. Can also be roasted in the oven at 425°F for 10–12 minutes if a grill isn’t available.",
-  "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2025/07/Grilled-Asparagus-with-Lemon-Zest-web-3.jpg"
-  ]
-},
-"maple-sriracha-toasted-sesame-tofu-puffs": {
-  "name": "Maple-Sriracha & Toasted Sesame Tofu Puffs",
-  "category": "Main Course",
-  "description":
-    "Crispy tofu cubes tossed in a sticky, sweet, and spicy maple-sriracha glaze with toasted sesame, spring onion, and fresh coriander. A quick, flavor-packed vegan dinner that pairs beautifully with steamed rice.",
-  "components": {
-    "Tofu": [
-      { "amount": 70, "unit": "g", "ingredient": "tofu", "prep": "firm, sliced into cubes" },
-      { "amount": 0.5, "unit": "tbsp", "ingredient": "cornflour", "prep": "for coating" },
-      { "amount": 0.5, "unit": "tbsp", "ingredient": "vegetable oil", "prep": "for frying" },
-      { "amount": 0.25, "unit": "spring onion", "ingredient": "spring onion", "prep": "thinly sliced" },
-      { "amount": 0.25, "unit": "tbsp", "ingredient": "sesame seeds", "prep": "toasted" },
-      { "amount": null, "unit": "", "ingredient": "fresh coriander", "prep": "for garnish" }
-    ],
-    "Sauce": [
-      { "amount": 0.5, "unit": "tbsp", "ingredient": "toasted sesame oil" },
-      { "amount": 0.75, "unit": "tbsp", "ingredient": "maple syrup" },
-      { "amount": 0.25, "unit": "tbsp", "ingredient": "soy sauce" },
-      { "amount": 0.25, "unit": "tbsp", "ingredient": "sriracha" },
-      { "amount": 0.13, "unit": "", "ingredient": "lime", "prep": "juice only" },
-      { "amount": 0.25, "unit": "clove", "ingredient": "garlic", "prep": "minced" },
-      { "amount": 0.5, "unit": "tsp", "ingredient": "cornflour", "prep": "to thicken sauce" }
-    ],
-    "For Serving": [
-      { "amount": null, "unit": "", "ingredient": "white rice", "prep": "steamed" }
-    ]
-  },
-  "instructions": [
-    "Slice the tofu into cubes and toss with cornflour until evenly coated.",
-    "Heat vegetable oil in a frying pan over medium-high heat. Add tofu cubes and cook until crispy and golden on all sides.",
-    "While tofu cooks, prepare the sauce: whisk together sesame oil, maple syrup, soy sauce, sriracha, lime juice, and minced garlic.",
-    "In a small bowl, combine 1 tablespoon of the sauce with the cornflour to create a smooth paste. Return this mixture to the sauce and whisk until smooth.",
-    "Once tofu is crisp, reduce heat to low and pour in the sauce. Stir constantly until it thickens and coats the tofu evenly.",
-    "Serve immediately topped with sliced spring onion, toasted sesame seeds, and fresh coriander. Enjoy with steamed white rice."
-  ],
-  "notes":
-    "Adjust heat level by varying the amount of sriracha. Use tamari for a gluten-free version. The sauce also works well with cauliflower or tempeh. For extra crispiness, bake or air fry the tofu before tossing in the sauce.",
-  "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2025/07/20250929_1629_Maple-Sriracha-Tofu-Bites_remix_01k6bwtk8bfsj8m9rba9jjkr4p-e1759357104153.png"
-  ]
-},
-"sesame-cucumber-salad": {
-  "name": "Sesame-Cucumber Salad",
-  "category": "Salad",
-  "description":
-    "A crisp and refreshing cucumber salad tossed with toasted sesame oil, seasoned rice vinegar, and a hint of chili. Optional basil adds a fragrant twist to this quick and flavorful side dish.",
-  "components": {
-    "Main": [
-      { "amount": 2, "unit": "medium", "ingredient": "cucumber", "prep": "peeled, quartered lengthwise, and sliced (about 1 lb total)" },
-      { "amount": 0.5, "unit": "tsp", "ingredient": "salt" },
-      { "amount": 2, "unit": "tsp", "ingredient": "toasted sesame oil", "prep": "dark" },
-      { "amount": 2, "unit": "tbsp", "ingredient": "seasoned rice vinegar" },
-      { "amount": 6, "unit": "leaf", "ingredient": "basil", "prep": "thinly sliced (Thai or Vietnamese preferred, optional)" },
-      { "amount": 0.5, "unit": "tsp", "ingredient": "red chili flakes" },
-      { "amount": 2, "unit": "tsp", "ingredient": "toasted sesame seeds", "prep": "optional" }
-    ]
-  },
-  "instructions": [
-    "Peel the cucumbers and cut them into quarters lengthwise. If the seeds are bitter, scrape them out and discard. Slice crosswise into 1/2-inch thick pieces.",
-    "Place the cucumber pieces into a serving bowl and sprinkle with salt.",
-    "Add sesame oil, seasoned rice vinegar, basil (if using), and chili flakes. Toss gently to coat evenly.",
-    "Sprinkle with toasted sesame seeds before serving."
-  ],
-  "notes":
-    "For extra flavor, chill the salad for 10 minutes before serving. Substitute Thai basil with mint or cilantro for a fresh variation. Works well alongside Asian-inspired mains or grilled dishes.",
-  "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2025/07/opt__aboutcom__coeus__resources__content_migration__simply_recipes__uploads__2011__05__sesame-cucumber-salad-horiz-a-1800-1-72a6ab348f0e4a2aa913ecae1dbe9057.webp"
-  ]
-},
-"mango-avocado-salsa": {
-  "name": "Mango-Avocado Salsa",
-  "category": "Condiment",
-  "description":
-    "A vibrant and refreshing summer salsa made with sweet mango, creamy avocado, crisp cucumber, and spicy jalapeño. Balanced with bright citrus and fresh cilantro, it’s perfect as a dip or topping for tacos, salads, and grilled mains.",
-  "components": {
-    "Main": [
-      { "amount": 2, "unit": "cup", "ingredient": "mango", "prep": "ripe, peeled and diced (~320 g)" },
-      { "amount": 0.5, "unit": "cup", "ingredient": "red onion", "prep": "diced (~70 g)" },
-      { "amount": 0.5, "unit": "cup", "ingredient": "cucumber", "prep": "Persian or English, diced (~70 g)" },
-      { "amount": 6, "unit": "oz", "ingredient": "cherry tomatoes", "prep": "quartered (~170 g)" },
-      { "amount": 2.5, "unit": "", "ingredient": "jalapeño", "prep": "finely chopped (adjust to heat preference)" },
-      { "amount": 3, "unit": "tbsp", "ingredient": "orange juice", "prep": "freshly squeezed (45 mL)" },
-      { "amount": 3, "unit": "tbsp", "ingredient": "lime juice", "prep": "freshly squeezed (about 1½ limes)" },
-      { "amount": 0.5, "unit": "cup", "ingredient": "cilantro", "prep": "finely chopped (~8 g)" },
-      { "amount": null, "unit": "", "ingredient": "sea salt", "prep": "to taste" },
-      { "amount": null, "unit": "", "ingredient": "black pepper", "prep": "freshly cracked, to taste" },
-      { "amount": 1, "unit": "large", "ingredient": "avocado", "prep": "ripe, diced" }
-    ]
-  },
-  "instructions": [
-    "In a medium to large bowl, combine diced mango, red onion, cucumber, cherry tomatoes, jalapeños, orange juice, lime juice, and cilantro. Mix well to combine.",
-    "Season to taste with sea salt and black pepper.",
-    "Let the salsa rest at room temperature or in the fridge for 20–30 minutes to allow the flavors to deepen.",
-    "Before serving, gently fold in the diced avocado, taking care not to mash it. Adjust seasonings as needed."
-  ],
-  "notes":
-    "Use 3 medium ataulfo or honey mangos for best flavor. If using larger tomatoes, chop to match the cucumber size. For milder heat, use 1 jalapeño with membranes and seeds removed; for spicier flavor, use 2–3 and keep seeds. Serve with tortilla chips or as a topping for tacos and grilled dishes.",
-  "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2025/07/mango-salsa-hero-4.jpg"
-  ]
-},
-"truffle-infused-artichokes": {
-  "name": "Truffle-Infused Artichokes",
-  "category": "Entree",
-  "description":
-    "A refined artichoke dish infused with the earthy richness of black truffle. Tender artichokes simmered in a classic French barigoule broth are paired with a silky truffle-artichoke purée and garnished with fresh truffle and herbs for an elegant presentation.",
-  "components": {
-    "Artichoke Barigoule": [
-      { "amount": 3, "unit": "large", "ingredient": "artichoke" },
-      { "amount": 12, "unit": "small", "ingredient": "baby artichoke" },
-      { "amount": 4, "unit": "", "ingredient": "lemon" },
-      { "amount": 1, "unit": "cup", "ingredient": "white wine" },
-      { "amount": 7, "unit": "cup", "ingredient": "water" },
-      { "amount": 0.5, "unit": "medium", "ingredient": "onion" },
-      { "amount": 6, "unit": "clove", "ingredient": "garlic" },
-      { "amount": 1, "unit": "sprig", "ingredient": "thyme" },
-      { "amount": 1, "unit": "leaf", "ingredient": "bay leaf" },
-      { "amount": 0.5, "unit": "tbsp", "ingredient": "salt" }
-    ],
-    "Artichoke & Black Truffle Purée": [
-      { "amount": 6, "unit": "small", "ingredient": "artichoke", "prep": "cooked from barigoule" },
-      { "amount": 0.33, "unit": "cup", "ingredient": "cream", "prep": "heated" },
-      { "amount": 2, "unit": "tbsp", "ingredient": "black truffle", "prep": "grated or finely chopped" },
-      { "amount": 1, "unit": "splash", "ingredient": "truffle oil", "prep": "optional" },
-      { "amount": 1, "unit": "tbsp", "ingredient": "butter" },
-      { "amount": 0.5, "unit": "tsp", "ingredient": "salt", "prep": "plus black pepper to taste" }
-    ],
-    "Garnish": [
-      { "amount": 1, "unit": "small", "ingredient": "black truffle", "prep": "fresh, thinly sliced" },
-      { "amount": 2, "unit": "tbsp", "ingredient": "tarragon leaves", "prep": "fresh" },
-      { "amount": 2, "unit": "tbsp", "ingredient": "amaranth leaves", "prep": "fresh" },
-      { "amount": null, "unit": "", "ingredient": "olive oil", "prep": "for drizzling" }
-    ]
-  },
-  "instructions": [
-    "Prepare the artichokes: Remove the tough outer leaves of both large and small artichokes. Trim the tops and peel away the fibrous green skin from the stems, keeping stems intact where possible. Rub each trimmed artichoke with half a lemon to prevent browning.",
-    "In a large pot, combine water, white wine, and the juice of one lemon. As you trim each artichoke, add it to the pot. The large artichokes should be reduced to just the bottoms, while small artichokes can be halved with some inner leaves intact.",
-    "Add onion, garlic, thyme, bay leaf, and salt to the pot. Cover the surface of the liquid with a parchment cartouche (a circular paper lid with a small vent hole in the center) to keep artichokes submerged.",
-    "Bring to a gentle simmer and cook slowly until artichokes are tender when pierced with a cake tester. Remove from heat and allow to cool to room temperature in the cooking liquid.",
-    "Prepare the truffle-artichoke purée: Combine six cooked baby artichokes with heated cream, black truffle, and optional truffle oil in a blender. Purée until smooth, then blend in butter, salt, and pepper. Keep warm.",
-    "To finish: Slice the large artichoke bottoms into 1/8-inch pieces. In a pan, heat a little of the cooking liquid with butter and olive oil. Add sliced artichokes and quartered baby artichokes, heating gently until warm and seasoned.",
-    "To plate: Spread a layer of truffle-artichoke purée on the plate. Arrange warm artichoke slices and quarters over the top. Garnish with shaved fresh truffle, tarragon, and amaranth leaves. Drizzle lightly with olive oil and serve immediately."
-  ],
-  "notes":
-    "Use winter Australian black truffles for the most aromatic flavor. If unavailable, substitute with Italian or French truffles. The barigoule method ensures tenderness and prevents oxidation. The purée can be made ahead and gently reheated before serving.",
-  "images": [
-    "https://tastefulkitchen.com/wp-content/uploads/2025/07/truffleartichoke.jpg"
+    "https://familystylefood.com/wp-content/uploads/2020/03/thai-curry-bowl.jpg"
   ]
 }
 };
