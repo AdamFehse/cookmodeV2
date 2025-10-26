@@ -154,11 +154,6 @@ const ChefStations = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, 
         style: { marginBottom: '2rem' },
         ref: containerRef
     }, [
-        React.createElement('h2', {
-            key: 'title',
-            style: { marginBottom: '1rem' }
-        }, 'Chef Stations'),
-
         // Kitchen progress bar
         React.createElement('div', {
             key: 'kitchen-progress',
@@ -213,6 +208,11 @@ const ChefStations = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, 
                 style: { color: 'var(--muted-color)', marginTop: '0.5rem', display: 'block' }
             }, `${kitchenProgress.completedItems} of ${kitchenProgress.totalItems} items complete`)
         ]),
+
+        React.createElement('h2', {
+            key: 'title',
+            style: { marginBottom: '1rem', marginTop: '1.5rem', fontSize: '1.2rem' }
+        }, 'Chef Stations'),
 
         React.createElement('div', {
             key: 'stations',
