@@ -261,17 +261,18 @@ const RecipeModal = ({
                                 return React.createElement('button', {
                                     key: status,
                                     type: 'button',
+                                    className: 'status-button',
                                     style: {
-                                        padding: '0.5rem 1rem',
-                                        borderWidth: '2px',
-                                        borderStyle: 'solid',
-                                        borderColor: color.bg,
-                                        borderRadius: 'var(--pico-border-radius)',
-                                        backgroundColor: isActive ? color.bg : 'transparent',
-                                        color: isActive ? color.text : color.bg,
-                                        cursor: 'pointer',
-                                        fontWeight: 'var(--font-weight-semibold)',
-                                        transition: 'all var(--transition-standard)'
+                                        padding: '0.5rem 1rem !important',
+                                        borderWidth: '2px !important',
+                                        borderStyle: 'solid !important',
+                                        borderColor: color.bg + ' !important',
+                                        borderRadius: 'var(--pico-border-radius) !important',
+                                        backgroundColor: (isActive ? color.bg : 'transparent') + ' !important',
+                                        color: (isActive ? color.text : color.bg) + ' !important',
+                                        cursor: 'pointer !important',
+                                        fontWeight: 'var(--font-weight-semibold) !important',
+                                        transition: 'all var(--transition-standard) !important'
                                     },
                                     'aria-pressed': isActive,
                                     onMouseEnter: (e) => {
