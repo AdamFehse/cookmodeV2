@@ -147,7 +147,7 @@ const App = () => {
             chefSummaries,
             chefAssignments,
             recipes,
-            recipeData
+            recipeData: { ...recipeData, setSelectedRecipe }
         }),
 
         React.createElement(window.RecipeFilters, {
