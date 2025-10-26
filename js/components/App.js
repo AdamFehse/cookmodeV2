@@ -142,7 +142,7 @@ const App = () => {
         }),
 
         // Chef Stations
-        chefSummaries.length > 0 && React.createElement(window.ChefStations, {
+        React.createElement(window.ChefStations, {
             key: 'chef-stations',
             chefSummaries,
             chefAssignments,

@@ -9,10 +9,6 @@ const ChefStations = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, 
     const slugToDisplayName = window.slugToDisplayName || ((slug) => slug);
     const calculateKitchenProgress = window.calculateKitchenProgress || (() => ({ percentage: 0, completedItems: 0, totalItems: 0 }));
 
-    if (!chefSummaries.length) {
-        return null;
-    }
-
     // Calculate kitchen-wide progress
     const kitchenProgress = calculateKitchenProgress(
         recipes,
