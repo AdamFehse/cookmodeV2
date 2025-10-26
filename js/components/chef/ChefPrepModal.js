@@ -161,9 +161,10 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                 marginBottom: '2rem'
             }
         }, chefSummaries.map((summary) => {
+            const chefName = summary.name;
             const borderColor = resolveChefColor(summary.color || '') || '#6c63ff';
-            const isExpanded = expandedChefName === summary.name;
-            const assignment = chefAssignments?.[summary.name];
+            const isExpanded = expandedChefName && expandedChefName === chefName;
+            const assignment = chefAssignments?.[chefName];
             const assignedRecipes = assignment?.recipes || [];
 
             // Calculate this chef's progress
@@ -175,24 +176,10 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                 );
             }, [assignedRecipes, recipeData.completedIngredients, recipeData.completedSteps]);
 
-            return React.createElement('article', {
-                key: summary.name,
-                className: 'chef-summary-article',
-                style: {
-                    borderTop: `4px solid ${borderColor}`,
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    background: isExpanded
-                        ? 'rgba(255, 152, 0, 0.08)'
-                        : 'rgba(255, 255, 255, 0.08)',
-                    borderColor: isExpanded
-                        ? borderColor
-                        : 'rgba(255, 152, 0, 0.3)',
-                    boxShadow: isExpanded
-                        ? `0 0 12px rgba(255, 152, 0, 0.2)`
-                        : 'none'
-                }
-            }, [
+            const cardChildren = [];
+
+            // Always add header
+            cardChildren.push(
                 React.createElement('header', {
                     key: 'header',
                     style: {
@@ -201,7 +188,7 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                         paddingBottom: '0.75rem',
                         marginBottom: '0.75rem'
                     },
-                    onClick: () => setExpandedChefName(isExpanded ? null : summary.name),
+                    onClick: () => setExpandedChefName(isExpanded ? null : chefName),
                     onMouseDown: (e) => e.stopPropagation()
                 }, [
                     React.createElement('div', {
@@ -257,89 +244,113 @@ const ChefPrepModal = ({ chefSummaries = [], chefAssignments = {}, recipes = {},
                             }
                         }, `${chefProgress.percentage}%`)
                     ])
-                ]),
-
-                isExpanded && assignedRecipes.length > 0 && React.createElement('div', {
-                    key: 'recipes',
-                    style: { marginTop: '0.75rem' }
-                }, [
-                    React.createElement('p', {
-                        key: 'label',
-                        className: 'muted',
-                        style: {
-                            marginBottom: '0.75rem',
-                            fontSize: '0.9rem',
-                            fontWeight: 600
-                        }
-                    }, 'Assigned Dishes'),
-                    React.createElement('div', {
-                        key: 'recipe-buttons',
-                        style: {
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '0.5rem'
-                        }
-                    }, assignedRecipes.map(({ slug, recipe }) => {
-                        const badgeInfo = getDishBadgeInfo(
-                            slug,
-                            recipeData.recipeStatus || {},
-                            calculateDishStatus,
-                            recipeData.completedIngredients || {},
-                            recipeData.completedSteps || {},
-                            recipe
-                        );
-                        const isRecipeOpen = selectedRecipeSlug === slug;
-
-                        return React.createElement('button', {
-                            key: slug,
-                            type: 'button',
-                            style: {
-                                padding: '0.6rem 0.8rem',
-                                fontSize: '0.9rem',
-                                fontWeight: 500,
-                                border: `2px solid ${badgeInfo.color}`,
-                                borderRadius: '6px',
-                                backgroundColor: isRecipeOpen
-                                    ? `${badgeInfo.color}20`
-                                    : 'transparent',
-                                color: '#ffffff',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                gap: '0.5rem'
-                            },
-                            onClick: () => setSelectedRecipeSlug(slug),
-                            onMouseEnter: (e) => {
-                                e.target.style.backgroundColor = `${badgeInfo.color}30`;
-                            },
-                            onMouseLeave: (e) => {
-                                e.target.style.backgroundColor = isRecipeOpen
-                                    ? `${badgeInfo.color}20`
-                                    : 'transparent';
-                            }
-                        }, [
-                            React.createElement('span', {
-                                key: 'name',
-                                style: { flex: 1, textAlign: 'left' }
-                            }, recipe?.name || slugToDisplayName(slug)),
-                            React.createElement('span', {
-                                key: 'badge',
-                                style: {
-                                    fontSize: '0.75rem',
-                                    fontWeight: 700,
-                                    padding: '0.25rem 0.5rem',
-                                    backgroundColor: badgeInfo.color,
-                                    color: badgeInfo.color === '#10b981' || badgeInfo.color === '#f59e0b' ? '#000' : '#fff',
-                                    borderRadius: '3px',
-                                    whiteSpace: 'nowrap'
-                                }
-                            }, badgeInfo.label)
-                        ]);
-                    }))
                 ])
-            ]);
+            );
+
+            // Only add recipes section if this chef is expanded
+            if (isExpanded && assignedRecipes.length > 0) {
+                cardChildren.push(
+                    React.createElement('div', {
+                        key: 'recipes',
+                        style: { marginTop: '0.75rem' }
+                    }, [
+                        React.createElement('p', {
+                            key: 'label',
+                            className: 'muted',
+                            style: {
+                                marginBottom: '0.75rem',
+                                fontSize: '0.9rem',
+                                fontWeight: 600
+                            }
+                        }, 'Assigned Dishes'),
+                        React.createElement('div', {
+                            key: 'recipe-buttons',
+                            style: {
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '0.5rem'
+                            }
+                        }, assignedRecipes.map(({ slug, recipe }) => {
+                            const badgeInfo = getDishBadgeInfo(
+                                slug,
+                                recipeData.recipeStatus || {},
+                                calculateDishStatus,
+                                recipeData.completedIngredients || {},
+                                recipeData.completedSteps || {},
+                                recipe
+                            );
+                            const isRecipeOpen = selectedRecipeSlug === slug;
+
+                            return React.createElement('button', {
+                                key: slug,
+                                type: 'button',
+                                style: {
+                                    padding: '0.6rem 0.8rem',
+                                    fontSize: '0.9rem',
+                                    fontWeight: 500,
+                                    border: `2px solid ${badgeInfo.color}`,
+                                    borderRadius: '6px',
+                                    backgroundColor: isRecipeOpen
+                                        ? `${badgeInfo.color}20`
+                                        : 'transparent',
+                                    color: '#ffffff',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    gap: '0.5rem'
+                                },
+                                onClick: () => setSelectedRecipeSlug(slug),
+                                onMouseEnter: (e) => {
+                                    e.target.style.backgroundColor = `${badgeInfo.color}30`;
+                                },
+                                onMouseLeave: (e) => {
+                                    e.target.style.backgroundColor = isRecipeOpen
+                                        ? `${badgeInfo.color}20`
+                                        : 'transparent';
+                                }
+                            }, [
+                                React.createElement('span', {
+                                    key: 'name',
+                                    style: { flex: 1, textAlign: 'left' }
+                                }, recipe?.name || slugToDisplayName(slug)),
+                                React.createElement('span', {
+                                    key: 'badge',
+                                    style: {
+                                        fontSize: '0.75rem',
+                                        fontWeight: 700,
+                                        padding: '0.25rem 0.5rem',
+                                        backgroundColor: badgeInfo.color,
+                                        color: badgeInfo.color === '#10b981' || badgeInfo.color === '#f59e0b' ? '#000' : '#fff',
+                                        borderRadius: '3px',
+                                        whiteSpace: 'nowrap'
+                                    }
+                                }, badgeInfo.label)
+                            ]);
+                        }))
+                    ])
+                );
+            }
+
+            return React.createElement('article', {
+                key: chefName,
+                className: 'chef-summary-article',
+                style: {
+                    borderTop: `4px solid ${borderColor}`,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    background: isExpanded
+                        ? 'rgba(255, 152, 0, 0.08)'
+                        : 'rgba(255, 255, 255, 0.08)',
+                    borderColor: isExpanded
+                        ? borderColor
+                        : 'rgba(255, 152, 0, 0.3)',
+                    boxShadow: isExpanded
+                        ? `0 0 12px rgba(255, 152, 0, 0.2)`
+                        : 'none'
+                }
+            }, cardChildren);
         })),
 
         // When a recipe is selected, show the recipe modal
