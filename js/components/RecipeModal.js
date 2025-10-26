@@ -262,6 +262,9 @@ const RecipeModal = ({
                                     key: status,
                                     type: 'button',
                                     className: 'status-button',
+                                    'data-status-color': color.bg,
+                                    'data-status-text': color.text,
+                                    'data-active': isActive,
                                     style: {
                                         padding: '0.5rem 1rem',
                                         borderWidth: '2px',
@@ -275,18 +278,6 @@ const RecipeModal = ({
                                         transition: 'all var(--transition-standard)'
                                     },
                                     'aria-pressed': isActive,
-                                    onMouseEnter: (e) => {
-                                        if (!isActive) {
-                                            e.target.style.backgroundColor = color.bg;
-                                            e.target.style.color = color.text;
-                                        }
-                                    },
-                                    onMouseLeave: (e) => {
-                                        if (!isActive) {
-                                            e.target.style.backgroundColor = 'transparent';
-                                            e.target.style.color = color.bg;
-                                        }
-                                    },
                                     onClick: () => updateRecipeStatus && updateRecipeStatus(selectedRecipe, isActive ? null : status)
                                 }, displayLabel);
                             })

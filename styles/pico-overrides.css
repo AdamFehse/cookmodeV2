@@ -129,6 +129,18 @@ button.status-button {
   box-shadow: none !important;
 }
 
+button.status-button:not([data-active="true"]):hover {
+  background-color: currentColor !important;
+  color: #ffffff !important;
+  opacity: 0.8 !important;
+  transform: none !important;
+}
+
+button.status-button[data-active="true"]:hover {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 /* Outline Button Variant */
 button.outline,
 input[type="button"].outline,
