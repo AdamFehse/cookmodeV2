@@ -8,49 +8,55 @@
 
 :root {
   /* ============================================
-     PRIMARY BRAND COLORS
+     PRIMARY BRAND COLORS - SynthWave '84
      ============================================ */
-  --color-primary: #ff9800;
-  --color-primary-light: #ffb74d;
-  --color-primary-muted: rgba(255, 152, 0, 0.3);
-  --color-primary-subtle: rgba(255, 152, 0, 0.1);
-  --color-primary-dark: #f57c00;
+  --color-primary: #00d9ff;
+  --color-primary-light: #00ffff;
+  --color-primary-muted: rgba(0, 217, 255, 0.3);
+  --color-primary-subtle: rgba(0, 217, 255, 0.1);
+  --color-primary-dark: #00a8cc;
+  
+  /* Secondary accent - hot pink */
+  --color-accent: #ff006e;
+  --color-accent-light: #ff3385;
+  --color-accent-muted: rgba(255, 0, 110, 0.3);
+  --color-accent-subtle: rgba(255, 0, 110, 0.1);
 
   /* ============================================
-     STATUS & SEMANTIC COLORS
+     STATUS & SEMANTIC COLORS - SynthWave palette
      ============================================ */
-  --color-success: #10b981;
-  --color-success-bg: rgba(16, 185, 129, 0.1);
-  --color-success-border: #10b981;
+  --color-success: #00ff88;
+  --color-success-bg: rgba(0, 255, 136, 0.1);
+  --color-success-border: #00ff88;
 
-  --color-warning: var(--color-primary);
-  --color-warning-bg: var(--color-primary-subtle);
+  --color-warning: #ffae00;
+  --color-warning-bg: rgba(255, 174, 0, 0.1);
 
-  --color-error: #ef4444;
-  --color-error-bg: rgba(239, 68, 68, 0.1);
+  --color-error: #ff5555;
+  --color-error-bg: rgba(255, 85, 85, 0.1);
 
   /* ============================================
-     RECIPE STATUS COLORS (Unified)
+     RECIPE STATUS COLORS (Cyberpunk theme)
      ============================================ */
-  /* In-Progress: Yellow/Amber */
-  --status-in-progress: #fbbf24;
-  --status-in-progress-bg: rgba(251, 191, 36, 0.15);
+  /* In-Progress: Bright Cyan */
+  --status-in-progress: #00d9ff;
+  --status-in-progress-bg: rgba(0, 217, 255, 0.15);
   --status-in-progress-text: #000000;
 
-  /* Complete: Green/Emerald */
-  --status-complete: #10b981;
-  --status-complete-bg: rgba(16, 185, 129, 0.15);
-  --status-complete-text: #ffffff;
+  /* Complete: Neon Green */
+  --status-complete: #00ff88;
+  --status-complete-bg: rgba(0, 255, 136, 0.15);
+  --status-complete-text: #000000;
 
-  /* Plated: Amber/Orange */
-  --status-plated: #f59e0b;
-  --status-plated-bg: rgba(245, 158, 11, 0.15);
-  --status-plated-text: #000000;
+  /* Plated: Hot Pink */
+  --status-plated: #ff006e;
+  --status-plated-bg: rgba(255, 0, 110, 0.15);
+  --status-plated-text: #ffffff;
 
-  /* Packed: Purple/Violet */
-  --status-packed: #8b5cf6;
-  --status-packed-bg: rgba(139, 92, 246, 0.15);
-  --status-packed-text: #ffffff;
+  /* Packed: Purple/Magenta */
+  --status-packed: #ff55ff;
+  --status-packed-bg: rgba(255, 85, 255, 0.15);
+  --status-packed-text: #000000;
 
   /* ============================================
      SURFACE COLORS (Semantic - backgrounds & cards)
@@ -64,21 +70,21 @@
   --surface-form-focus: rgba(50, 50, 80, 0.95);
 
   /* ============================================
-     BORDER COLORS
+     BORDER COLORS - Cyan glows
      ============================================ */
-  --surface-border: rgba(255, 152, 0, 0.2);
-  --surface-border-hover: rgba(255, 152, 0, 0.4);
-  --surface-border-strong: rgba(255, 152, 0, 0.6);
-  --surface-border-muted: rgba(255, 255, 255, 0.05);
+  --surface-border: rgba(0, 217, 255, 0.2);
+  --surface-border-hover: rgba(0, 217, 255, 0.4);
+  --surface-border-strong: rgba(0, 217, 255, 0.6);
+  --surface-border-muted: rgba(255, 0, 110, 0.1);
 
   /* ============================================
      TEXT COLORS
      ============================================ */
-  --text-primary: #ffffff;
-  --text-secondary: #e0e0e0;
-  --text-muted: #aaaaaa;
-  --text-inverse: #000000;
-  --text-accent: var(--color-primary);
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --text-muted: #808080;
+  --text-inverse: #0a0e12;
+  --text-accent: #00d9ff;
 
   /* ============================================
      SPACING SCALE (8px base unit)
@@ -200,33 +206,33 @@
 }
 
 /* ============================================
-   LIGHT MODE OVERRIDES
+   LIGHT MODE OVERRIDES (SynthWave variant)
    ============================================ */
 @media (prefers-color-scheme: light) {
   :root {
     /* Surface colors for light mode */
-    --surface-bg: #f5f5f5;
-    --surface-overlay: rgba(0, 0, 0, 0.3);
-    --surface-card: rgba(0, 0, 0, 0.05);
-    --surface-card-hover: rgba(0, 0, 0, 0.08);
-    --surface-elevated: rgba(0, 0, 0, 0.08);
-    --surface-form: rgba(255, 255, 255, 0.9);
-    --surface-form-focus: #ffffff;
+    --surface-bg: #1a1a2e;
+    --surface-overlay: rgba(0, 0, 0, 0.5);
+    --surface-card: rgba(0, 217, 255, 0.08);
+    --surface-card-hover: rgba(0, 217, 255, 0.12);
+    --surface-elevated: rgba(0, 217, 255, 0.1);
+    --surface-form: rgba(10, 14, 18, 0.95);
+    --surface-form-focus: rgba(15, 15, 26, 1);
 
     /* Border colors for light mode */
-    --surface-border: rgba(255, 152, 0, 0.15);
-    --surface-border-hover: rgba(255, 152, 0, 0.3);
-    --surface-border-strong: rgba(255, 152, 0, 0.5);
-    --surface-border-muted: rgba(0, 0, 0, 0.08);
+    --surface-border: rgba(0, 217, 255, 0.25);
+    --surface-border-hover: rgba(0, 217, 255, 0.4);
+    --surface-border-strong: rgba(0, 217, 255, 0.6);
+    --surface-border-muted: rgba(255, 0, 110, 0.15);
 
     /* Text colors for light mode */
-    --text-primary: #1a1a1a;
-    --text-secondary: #424242;
-    --text-muted: #757575;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-muted: #808080;
     --text-inverse: #ffffff;
 
     /* Card and interactive elements */
-    --surface-card: rgba(0, 0, 0, 0.05);
+    --surface-card: rgba(0, 217, 255, 0.08);
   }
 }
 

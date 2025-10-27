@@ -14,6 +14,7 @@
     <!-- Custom styles -->
     <link rel="stylesheet" href="./styles/background.css" />
     <link rel="stylesheet" href="./styles/main.css" />
+    <link rel="stylesheet" href="./styles/app-v2.css" />
 
     <script
       crossorigin
@@ -69,12 +70,20 @@
     <script type="text/babel" src="./js/components/chef/useChefData.js"></script>
     <script type="text/babel" src="./js/components/chef/ChefStations.js"></script>
 
+    <!-- NEW V2 COMPONENTS (Refactored) -->
+    <script type="text/babel" src="./js/components/AccessibleSlider.js"></script>
+    <script type="text/babel" src="./js/components/RecipeCard.js"></script>
+    <script type="text/babel" src="./js/components/RecipeGridV2.js"></script>
+    <script type="text/babel" src="./js/components/RecipeModalV2.js"></script>
+    <script type="text/babel" src="./js/components/chef/ChefStationsV2.js"></script>
+    <script type="text/babel" src="./js/components/AppV2.js"></script>
+
     <!-- App entry point -->
     <script type="text/babel" src="./js/components/App.js"></script>
 
     <script type="text/babel">
       ReactDOM.render(
-        React.createElement(App),
+        React.createElement(AppV2),
         document.getElementById("root")
       );
     </script>
