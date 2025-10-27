@@ -106,26 +106,21 @@ const RecipeGridV2 = ({
             }
             const progress = totalSteps > 0 ? Math.round((completedStepsCount / totalSteps) * 100) : 0;
 
-            return React.createElement('div', {
+            return React.createElement(window.RecipeCard, {
                 key: slug,
+                slug,
+                recipe,
+                size: 'grid',
+                status,
+                chefName: chefData?.name,
+                chefColor: chefData?.color,
+                orderCount,
+                progress,
                 onClick: () => setSelectedRecipe(slug),
-                style: { cursor: 'pointer' }
-            },
-                window.RecipeCard?.({
-                    slug,
-                    recipe,
-                    size: 'grid',
-                    status,
-                    chefName: chefData?.name,
-                    chefColor: chefData?.color,
-                    orderCount,
-                    progress,
-                    onClick: () => setSelectedRecipe(slug),
-                    clickable: true,
-                    showBadges: true,
-                    showImage: true
-                })
-            );
+                clickable: true,
+                showBadges: true,
+                showImage: true
+            });
         }) : [
             React.createElement('p', {
                 key: 'no-results',

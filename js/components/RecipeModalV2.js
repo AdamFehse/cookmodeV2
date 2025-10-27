@@ -271,7 +271,7 @@ const RecipeModalV2 = ({
 
                     // Order count with accessible slider
                     React.createElement('div', { key: 'orders-section' },
-                        window.AccessibleSlider?.({
+                        React.createElement(window.AccessibleSlider, {
                             value: orderCount,
                             min: 1,
                             max: 50,
@@ -401,7 +401,7 @@ const RecipeModalV2 = ({
                                     const isCompleted = completedIngredients[ingredientKey];
 
                                     return React.createElement('li', { key: index },
-                                        window.ChecklistItem?.({
+                                        React.createElement(window.ChecklistItem, {
                                             id: ingredientKey,
                                             label: scaleAmount(ingredient, orderCount),
                                             checked: isCompleted || false,
@@ -485,7 +485,7 @@ const RecipeModalV2 = ({
                             const isCompleted = completedSteps[stepKey];
 
                             return React.createElement('li', { key: index },
-                                window.ChecklistItem?.({
+                                React.createElement(window.ChecklistItem, {
                                     id: stepKey,
                                     label: step,
                                     checked: isCompleted || false,

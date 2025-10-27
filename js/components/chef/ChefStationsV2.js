@@ -340,7 +340,8 @@ const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}
                         onClick: () => recipeData.setSelectedRecipe?.(slug),
                         style: { cursor: 'pointer' }
                     }, [
-                        window.RecipeCard?.({
+                        React.createElement(window.RecipeCard, {
+                            key: 'card',
                             slug,
                             recipe,
                             size: 'compact',
