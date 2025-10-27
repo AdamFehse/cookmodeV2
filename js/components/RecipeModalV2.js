@@ -190,7 +190,7 @@ const RecipeModalV2 = ({
                     key: 'close',
                     type: 'button',
                     className: 'modal-close',
-                    aria-label: 'Close recipe',
+                    'aria-label': 'Close recipe',
                     onClick: handleClose
                 }, '✕')
             ]),

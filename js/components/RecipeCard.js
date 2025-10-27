@@ -158,11 +158,19 @@ const RecipeCard = React.memo(({
     // Compact size (used in chef prep areas)
     if (size === 'compact') {
         const statusColor = status ? getStatusBadgeStyle(status) : null;
-        const backgroundColor = status
-            ? `rgba(${parseInt(status === 'in-progress' ? '0, 217, 255' : status === 'complete' ? '0, 255, 136' : status === 'plated' ? '255, 0, 110' : '255, 85, 255'), 0.1)`
-            : progress > 0
-                ? 'rgba(0, 255, 136, 0.08)'
-                : 'rgba(255, 255, 255, 0.04)';
+        let backgroundColor = 'rgba(255, 255, 255, 0.04)';
+        if (status) {
+            const rgbMap = {
+                'in-progress': '0, 217, 255',
+                'complete': '0, 255, 136',
+                'plated': '255, 0, 110',
+                'packed': '255, 85, 255'
+            };
+            const rgb = rgbMap[status] || '100, 100, 100';
+            backgroundColor = `rgba(${rgb}, 0.1)`;
+        } else if (progress > 0) {
+            backgroundColor = 'rgba(0, 255, 136, 0.08)';
+        }
 
         return React.createElement('div', {
             className: 'recipe-card recipe-card--compact',
