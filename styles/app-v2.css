@@ -161,6 +161,238 @@ dialog.recipe-modal-v2::backdrop {
     backdrop-filter: blur(4px);
 }
 
+/* Chef Ingredients Modal */
+dialog.chef-ingredients-modal {
+    max-width: min(92vw, 960px);
+    max-height: 90vh;
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-xl);
+    background: var(--surface-bg);
+    color: var(--text-primary);
+    padding: 0;
+    box-shadow: 0 0 40px rgba(0, 217, 255, 0.28), 0 0 60px rgba(255, 0, 110, 0.18);
+}
+
+dialog.chef-ingredients-modal::backdrop {
+    background: rgba(4, 6, 20, 0.78);
+    backdrop-filter: blur(5px);
+}
+
+.chef-ingredients-modal__card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    background: transparent;
+}
+
+.chef-ingredients-modal__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    border-bottom: 1px solid var(--surface-border);
+}
+
+.chef-ingredients-modal__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.chef-ingredients-modal__meta h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.4px;
+}
+
+.chef-ingredients-modal__meta p {
+    margin: 0;
+}
+
+.chef-ingredients-modal__chef-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    padding: 0.25rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    background: rgba(255, 255, 255, 0.08);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+}
+
+.chef-ingredients-modal__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    flex: 1;
+    overflow-y: auto;
+}
+
+.chef-ingredients-modal__summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.chef-ingredients-modal__stats {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-sm);
+}
+
+.chef-ingredients-modal__stats li {
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-lg);
+    background: rgba(0, 217, 255, 0.08);
+    border: 1px solid rgba(0, 217, 255, 0.24);
+    box-shadow: 0 6px 18px rgba(0, 217, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.chef-ingredients-modal__stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.chef-ingredients-modal__recipes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.chef-ingredients-modal__recipes h4 {
+    margin: 0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+}
+
+.chef-ingredients-modal__recipes ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.chef-ingredients-modal__recipes li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    font-size: 0.85rem;
+}
+
+.chef-ingredients-modal__recipe-orders {
+    font-weight: 600;
+    color: var(--color-accent);
+}
+
+.chef-ingredients-modal__list {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.chef-ingredients-modal__list h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+}
+
+.chef-ingredients-modal__ingredients {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.85rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.chef-ingredients-modal__ingredient {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--radius-lg);
+    background: rgba(8, 12, 24, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 8px 18px rgba(4, 10, 25, 0.35);
+}
+
+.chef-ingredients-modal__ingredient-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    word-break: break-word;
+}
+
+.chef-ingredients-modal__ingredient-amount {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.chef-ingredients-modal__ingredient-unit {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.chef-ingredients-modal__empty {
+    margin: 0;
+    padding: 1rem;
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed var(--surface-border);
+    text-align: center;
+}
+
+@media (min-width: 900px) {
+    .chef-ingredients-modal__body {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .chef-ingredients-modal__summary {
+        flex: 0 0 260px;
+        position: sticky;
+        top: 0;
+    }
+
+    .chef-ingredients-modal__list {
+        flex: 1;
+    }
+}
+
 .recipe-modal-content {
     display: flex;
     flex-direction: column;

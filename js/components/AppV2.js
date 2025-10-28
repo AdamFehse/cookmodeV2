@@ -110,7 +110,7 @@ const AppV2 = () => {
                 isSupabaseConnected
             }),
             React.createElement('section', { key: 'loading' }, [
-                React.createElement('article', null, [
+                React.createElement('article', { key: 'article' }, [
                     React.createElement('p', { key: 'text' }, 'Loading kitchen data...')
                 ])
             ])
@@ -126,7 +126,7 @@ const AppV2 = () => {
                 isSupabaseConnected
             }),
             React.createElement('section', { key: 'error' }, [
-                React.createElement('article', null, [
+                React.createElement('article', { key: 'article' }, [
                     React.createElement('h2', { key: 'title' }, 'Error Loading Data'),
                     React.createElement('p', { key: 'message' }, recipeData.loadError),
                     React.createElement('button', {

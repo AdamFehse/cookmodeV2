@@ -19,6 +19,9 @@ const RecipeModalV2 = ({
     updateChefName,
     openLightbox
 }) => {
+    // Early return before any hooks
+    if (!selectedRecipe) return null;
+
     const { useRef, useEffect, useState, useMemo } = React;
     const dialogRef = useRef(null);
     const chefNameTimeoutRef = useRef(null);
@@ -31,8 +34,8 @@ const RecipeModalV2 = ({
     const getChefColorLabel = window.getChefColorLabel || (() => 'Custom');
     const getChefColorOptions = window.getChefColorOptions || (() => []);
 
-    const recipe = selectedRecipe ? recipes[selectedRecipe] : null;
-    const currentChefData = selectedRecipe ? (recipeChefNames[selectedRecipe] || { name: '', color: '' }) : { name: '', color: '' };
+    const recipe = recipes[selectedRecipe];
+    const currentChefData = recipeChefNames[selectedRecipe] || { name: '', color: '' };
 
     const [localChefName, setLocalChefName] = useState(currentChefData.name || '');
     const [localChefColor, setLocalChefColor] = useState(currentChefData.color || '');
@@ -44,7 +47,7 @@ const RecipeModalV2 = ({
     });
 
     useEffect(() => {
-        if (selectedRecipe && dialogRef.current) {
+        if (dialogRef.current) {
             dialogRef.current.showModal();
         }
     }, [selectedRecipe]);
@@ -62,7 +65,7 @@ const RecipeModalV2 = ({
         }
     }, [selectedRecipe, currentChefData.name, currentChefData.color]);
 
-    if (!selectedRecipe || !recipe) return null;
+    if (!recipe) return null;
 
     const handleChefNameChange = (newName) => {
         const trimmedName = newName.trim();
@@ -164,7 +167,7 @@ const RecipeModalV2 = ({
             });
         }
         return { total, completed, percentage: total > 0 ? Math.round((completed / total) * 100) : 0 };
-    }, [recipe.components, completedIngredients]);
+    }, [selectedRecipe, recipe.components, completedIngredients]);
 
     const stepStats = useMemo(() => {
         const total = recipe.instructions?.length || 0;
@@ -174,7 +177,7 @@ const RecipeModalV2 = ({
             if (completedSteps[stepKey]) completed++;
         });
         return { total, completed, percentage: total > 0 ? Math.round((completed / total) * 100) : 0 };
-    }, [recipe.instructions, completedSteps]);
+    }, [selectedRecipe, recipe.instructions, completedSteps]);
 
     return React.createElement('dialog', {
         ref: dialogRef,
