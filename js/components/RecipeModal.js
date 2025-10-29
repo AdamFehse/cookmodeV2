@@ -48,13 +48,10 @@ const RecipeModal = ({
         setOrderInput(orderCounts[selectedRecipe] ?? 1);
     }, [selectedRecipe]);
 
-    if (!selectedRecipe || !recipe) return null;
-
-    const displayName = recipe.name || slugToDisplayName(selectedRecipe);
-    const currentStatus = recipeStatus[selectedRecipe];
-
-    // Calculate stats
+    // Calculate stats (must be before early return)
     const stats = useMemo(() => {
+        if (!selectedRecipe || !recipe) return { ingredientTotal: 0, ingredientCompleted: 0, stepTotal: 0, stepCompleted: 0 };
+
         let ingredientTotal = 0, ingredientCompleted = 0;
         let stepTotal = recipe?.instructions?.length || 0, stepCompleted = 0;
 
@@ -75,6 +72,11 @@ const RecipeModal = ({
 
         return { ingredientTotal, ingredientCompleted, stepTotal, stepCompleted };
     }, [selectedRecipe, recipe, completedIngredients, completedSteps]);
+
+    if (!selectedRecipe || !recipe) return null;
+
+    const displayName = recipe.name || slugToDisplayName(selectedRecipe);
+    const currentStatus = recipeStatus[selectedRecipe];
 
     // Handlers
     const handleChefNameChange = (newName) => {

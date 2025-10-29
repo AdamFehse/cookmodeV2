@@ -3,6 +3,51 @@
  * Size prop controls layout: "grid" (default), "full", "compact"
  * Used in RecipeGrid, modals, and chef prep areas
  */
+
+// Helper to get status badge style
+const getStatusBadgeStyle = (stat) => {
+    const colors = {
+        'in-progress': { bg: 'var(--status-in-progress)', text: '#000000' },
+        'complete': { bg: 'var(--status-complete)', text: '#000000' },
+        'plated': { bg: 'var(--status-plated)', text: '#000000' },
+        'packed': { bg: 'var(--status-packed)', text: '#ffffff' }
+    };
+    return colors[stat] || { bg: '#6b7280', text: '#ffffff' };
+};
+
+// Render badges with size-specific styling
+const renderBadges = (size, { status, chefName, chefColor, orderCount = 1 }) => {
+    const resolveChefColor = window.resolveChefColor || ((color) => color);
+    const sizeStyles = size === 'grid' ? {
+        padding: '0.25rem 0.5rem',
+        borderRadius: 'var(--radius-sm)',
+        fontSize: '0.75rem'
+    } : size === 'full' ? {
+        padding: '0.4rem 0.75rem',
+        borderRadius: 'var(--radius-md)',
+        fontSize: '0.8rem'
+    } : {
+        fontSize: '0.65rem',
+        padding: '0.2rem 0.4rem',
+        borderRadius: 'var(--radius-xs)'
+    };
+
+    return [
+        status && React.createElement('span', {
+            key: 'status',
+            style: { ...getStatusBadgeStyle(status), ...sizeStyles, fontWeight: '600', textTransform: 'uppercase' }
+        }, status),
+        chefName && React.createElement('span', {
+            key: 'chef',
+            style: { backgroundColor: resolveChefColor(chefColor), color: '#ffffff', ...sizeStyles, fontWeight: '600' }
+        }, chefName),
+        orderCount > 1 && React.createElement('span', {
+            key: 'orders',
+            style: { backgroundColor: 'var(--color-primary)', color: 'var(--text-inverse)', ...sizeStyles, fontWeight: '700' }
+        }, size === 'full' ? `${orderCount}× orders` : `×${orderCount}`)
+    ];
+};
+
 const RecipeCard = React.memo(({
     slug,
     recipe = {},
@@ -17,21 +62,8 @@ const RecipeCard = React.memo(({
     showBadges = true,
     showImage = true
 }) => {
-    const resolveChefColor = window.resolveChefColor || ((color) => color);
     const slugToDisplayName = window.slugToDisplayName || ((s) => s);
-
     const displayName = recipe.name || slugToDisplayName(slug);
-
-    // Helper to get status badge style
-    const getStatusBadgeStyle = (stat) => {
-        const colors = {
-            'in-progress': { bg: 'var(--status-in-progress)', text: '#000000' },
-            'complete': { bg: 'var(--status-complete)', text: '#000000' },
-            'plated': { bg: 'var(--status-plated)', text: '#000000' },
-            'packed': { bg: 'var(--status-packed)', text: '#ffffff' }
-        };
-        return colors[stat] || { bg: '#6b7280', text: '#ffffff' };
-    };
 
     // Grid size (used in recipe list)
     if (size === 'grid') {
@@ -59,41 +91,7 @@ const RecipeCard = React.memo(({
                 showBadges && (status || chefName || orderCount > 1) && React.createElement('div', {
                     key: 'badges',
                     style: { display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.75rem' }
-                }, [
-                    status && React.createElement('span', {
-                        key: 'status',
-                        style: {
-                            ...getStatusBadgeStyle(status),
-                            padding: '0.25rem 0.5rem',
-                            borderRadius: 'var(--radius-sm)',
-                            fontSize: '0.75rem',
-                            fontWeight: '600',
-                            textTransform: 'uppercase'
-                        }
-                    }, status),
-                    chefName && React.createElement('span', {
-                        key: 'chef',
-                        style: {
-                            backgroundColor: resolveChefColor(chefColor),
-                            color: '#ffffff',
-                            padding: '0.25rem 0.5rem',
-                            borderRadius: 'var(--radius-sm)',
-                            fontSize: '0.75rem',
-                            fontWeight: '600'
-                        }
-                    }, chefName),
-                    orderCount > 1 && React.createElement('span', {
-                        key: 'orders',
-                        style: {
-                            backgroundColor: 'var(--color-primary)',
-                            color: 'var(--text-inverse)',
-                            padding: '0.25rem 0.5rem',
-                            borderRadius: 'var(--radius-sm)',
-                            fontSize: '0.75rem',
-                            fontWeight: '700'
-                        }
-                    }, `×${orderCount}`)
-                ])
+                }, renderBadges('grid', { status, chefName, chefColor, orderCount }))
             ])
         ]);
     }
@@ -116,61 +114,21 @@ const RecipeCard = React.memo(({
                 showBadges && (status || chefName || orderCount > 1) && React.createElement('div', {
                     key: 'badges',
                     style: { display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }
-                }, [
-                    status && React.createElement('span', {
-                        key: 'status',
-                        style: {
-                            ...getStatusBadgeStyle(status),
-                            padding: '0.4rem 0.75rem',
-                            borderRadius: 'var(--radius-md)',
-                            fontSize: '0.8rem',
-                            fontWeight: '600',
-                            textTransform: 'uppercase'
-                        }
-                    }, status),
-                    chefName && React.createElement('span', {
-                        key: 'chef',
-                        style: {
-                            backgroundColor: resolveChefColor(chefColor),
-                            color: '#ffffff',
-                            padding: '0.4rem 0.75rem',
-                            borderRadius: 'var(--radius-md)',
-                            fontSize: '0.8rem',
-                            fontWeight: '600'
-                        }
-                    }, chefName),
-                    orderCount > 1 && React.createElement('span', {
-                        key: 'orders',
-                        style: {
-                            backgroundColor: 'var(--color-primary)',
-                            color: 'var(--text-inverse)',
-                            padding: '0.4rem 0.75rem',
-                            borderRadius: 'var(--radius-md)',
-                            fontSize: '0.8rem',
-                            fontWeight: '700'
-                        }
-                    }, `${orderCount}× orders`)
-                ])
+                }, renderBadges('full', { status, chefName, chefColor, orderCount }))
             ])
         ]);
     }
 
     // Compact size (used in chef prep areas)
     if (size === 'compact') {
-        const statusColor = status ? getStatusBadgeStyle(status) : null;
-        let backgroundColor = 'rgba(255, 255, 255, 0.04)';
-        if (status) {
-            const rgbMap = {
-                'in-progress': '0, 217, 255',
-                'complete': '0, 255, 136',
-                'plated': '255, 0, 110',
-                'packed': '255, 85, 255'
-            };
-            const rgb = rgbMap[status] || '100, 100, 100';
-            backgroundColor = `rgba(${rgb}, 0.1)`;
-        } else if (progress > 0) {
-            backgroundColor = 'rgba(0, 255, 136, 0.08)';
-        }
+        const rgbMap = {
+            'in-progress': '0, 217, 255',
+            'complete': '0, 255, 136',
+            'plated': '255, 0, 110',
+            'packed': '255, 85, 255'
+        };
+        const rgb = status ? (rgbMap[status] || '100, 100, 100') : null;
+        const backgroundColor = status ? `rgba(${rgb}, 0.1)` : (progress > 0 ? 'rgba(0, 255, 136, 0.08)' : 'rgba(255, 255, 255, 0.04)');
 
         return React.createElement('div', {
             className: 'recipe-card recipe-card--compact',
@@ -211,32 +169,7 @@ const RecipeCard = React.memo(({
                 showBadges && (status || orderCount > 1) && React.createElement('div', {
                     key: 'badges',
                     style: { display: 'flex', gap: '0.25rem', marginTop: '0.5rem', flexWrap: 'wrap' }
-                }, [
-                    status && React.createElement('span', {
-                        key: 'status',
-                        style: {
-                            ...statusColor,
-                            display: 'inline-block',
-                            fontSize: '0.65rem',
-                            fontWeight: '700',
-                            padding: '0.2rem 0.4rem',
-                            borderRadius: 'var(--radius-xs)',
-                            textTransform: 'capitalize'
-                        }
-                    }, status),
-                    orderCount > 1 && React.createElement('span', {
-                        key: 'orders',
-                        style: {
-                            display: 'inline-block',
-                            fontSize: '0.65rem',
-                            fontWeight: '700',
-                            padding: '0.2rem 0.4rem',
-                            background: 'var(--color-primary)',
-                            color: 'var(--text-inverse)',
-                            borderRadius: 'var(--radius-xs)'
-                        }
-                    }, `×${orderCount}`)
-                ]),
+                }, renderBadges('compact', { status, chefName, chefColor, orderCount })),
                 progress > 0 && React.createElement('div', {
                     key: 'progress',
                     style: {

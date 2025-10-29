@@ -1,124 +1,47 @@
 /**
  * ChefStationsV2 - Refactored chef stations with compact cards
  * Kitchen progress bar + individual chef progress bars
- * Uses RecipeCard component for consistency
+ * Uses React state for progress tracking, no DOM manipulation
  */
 const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, recipeData = {} }) => {
-    const { useRef, useEffect } = React;
+    const { useState, useEffect, useMemo } = React;
     const slugToDisplayName = window.slugToDisplayName || ((slug) => slug);
     const calculateKitchenProgress = window.calculateKitchenProgress || (() => ({ percentage: 0, completedItems: 0, totalItems: 0 }));
 
-    // Calculate kitchen-wide progress
-    const kitchenProgress = calculateKitchenProgress(
-        recipes,
-        recipeData.completedSteps || {}
-    );
-
-    // Calculate progress per chef
+    // Calculate progress for a single chef
     const getChefProgress = (chefName) => {
         const assignment = chefAssignments[chefName];
         const recipeList = assignment?.recipes || [];
-        let totalSteps = 0;
-        let completedSteps = 0;
+        let totalSteps = 0, completedSteps = 0;
 
-        recipeList.forEach(({ slug }) => {
-            const recipe = assignment.recipes.find(r => r.slug === slug)?.recipe;
+        recipeList.forEach(({ recipe }) => {
             if (recipe?.instructions) {
-                const instructions = recipe.instructions || [];
-                totalSteps += instructions.length;
-
-                instructions.forEach((_, index) => {
-                    const generateStepKey = window.generateStepKey || (() => `${slug}-step-${index}`);
-                    const key = generateStepKey(slug, index);
-                    if (recipeData.completedSteps?.[key]) {
-                        completedSteps += 1;
-                    }
+                totalSteps += recipe.instructions.length;
+                recipe.instructions.forEach((_, index) => {
+                    const key = `${recipe.slug}-step-${index}`;
+                    if (recipeData.completedSteps?.[key]) completedSteps++;
                 });
             }
         });
-
-        const percentage = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
-        return { percentage, completedSteps, totalSteps };
+        return { percentage: totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0, completedSteps, totalSteps };
     };
 
-    const containerRef = useRef(null);
-    useEffect(() => {
-        if (!containerRef.current) return;
+    // Memoize progress calculations
+    const kitchenProgress = useMemo(() =>
+        calculateKitchenProgress(recipes, recipeData.completedSteps || {}),
+        [recipes, recipeData.completedSteps]
+    );
 
-        // Update kitchen progress bar
-        const kitchenBar = containerRef.current.querySelector('[data-kitchen-progress]');
-        if (kitchenBar) {
-            const fillBar = kitchenBar.querySelector('[data-fill]');
-            if (fillBar) {
-                fillBar.style.width = `${kitchenProgress.percentage}%`;
-            }
-            const percentage = kitchenBar.querySelector('[data-kitchen-percentage]');
-            if (percentage) {
-                percentage.textContent = `${kitchenProgress.percentage}%`;
-            }
-        }
-
-        // Update chef progress bars and cards
+    const chefProgresses = useMemo(() => {
+        const progresses = {};
         chefSummaries.forEach(chef => {
-            const chefName = chef.name;
-            const progress = getChefProgress(chefName);
-            const chefCard = containerRef.current.querySelector(`[data-chef="${chefName}"]`);
-            if (chefCard) {
-                const fillBar = chefCard.querySelector('[data-chef-progress-fill]');
-                if (fillBar) {
-                    fillBar.style.width = `${progress.percentage}%`;
-                }
-                const percentage = chefCard.querySelector('[data-chef-percentage]');
-                if (percentage) {
-                    percentage.textContent = `${progress.percentage}%`;
-                }
-                const details = chefCard.querySelector('[data-chef-details]');
-                if (details) {
-                    details.textContent = `${progress.completedSteps} of ${progress.totalSteps} steps`;
-                }
-
-                // Update recipe cards in this chef's section
-                const recipeCards = chefCard.querySelectorAll('[data-recipe-card]');
-                recipeCards.forEach(card => {
-                    const slug = card.getAttribute('data-slug');
-                    if (!slug) return;
-
-                    const recipe = Object.values(chefAssignments).flatMap(a => a.recipes || []).find(r => r.slug === slug)?.recipe;
-                    if (!recipe) return;
-
-                    // Calculate recipe completion
-                    let totalSteps = 0;
-                    let completedStepsCount = 0;
-                    if (recipe.instructions) {
-                        totalSteps = recipe.instructions.length;
-                        recipe.instructions.forEach((_, index) => {
-                            const generateStepKey = window.generateStepKey || (() => `${slug}-step-${index}`);
-                            const key = generateStepKey(slug, index);
-                            if (recipeData.completedSteps?.[key]) {
-                                completedStepsCount += 1;
-                            }
-                        });
-                    }
-                    const completion = totalSteps > 0 ? Math.round((completedStepsCount / totalSteps) * 100) : 0;
-
-                    // Update card progress display
-                    const progressText = card.querySelector('[data-progress-text]');
-                    if (progressText) {
-                        if (completion > 0) {
-                            progressText.textContent = `${completion}% done`;
-                            progressText.style.display = 'block';
-                        } else {
-                            progressText.style.display = 'none';
-                        }
-                    }
-                });
-            }
+            progresses[chef.name] = getChefProgress(chef.name);
         });
-    }, [recipeData.completedSteps, recipeData.recipeStatus, chefAssignments]);
+        return progresses;
+    }, [chefSummaries, chefAssignments, recipeData.completedSteps]);
 
     return React.createElement('section', {
-        className: 'chef-stations-v2',
-        ref: containerRef
+        className: 'chef-stations-v2'
     }, [
         // Kitchen Progress Bar
         React.createElement('div', {
@@ -216,7 +139,7 @@ const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}
             const chefName = chef.name;
             const assignment = chefAssignments?.[chefName];
             const assignedRecipes = assignment?.recipes || [];
-            const chefProgress = getChefProgress(chefName);
+            const chefProgress = chefProgresses[chefName] || { percentage: 0, completedSteps: 0, totalSteps: 0 };
             const borderColor = window.resolveChefColor?.(chef.color || '') || '#6c63ff';
 
             return React.createElement('article', {

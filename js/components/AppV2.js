@@ -3,6 +3,39 @@
  * Left: Recipe Grid + Filters
  * Right: Chef Stations + Kitchen Progress
  */
+
+// Helper to extract filter options from recipes
+const extractFilterOptions = (recipes, getIngredientName) => {
+    const categoryOrder = ['Entree', 'Side', 'Soup', 'Dessert'];
+    const categoriesSet = new Set();
+    const dishesSet = new Set();
+    const ingredientsSet = new Set();
+    const componentsSet = new Set();
+
+    Object.values(recipes).forEach(recipe => {
+        if (recipe.category) categoriesSet.add(recipe.category);
+        if (recipe.name) dishesSet.add(recipe.name);
+        if (recipe.components) {
+            Object.keys(recipe.components).forEach(comp => componentsSet.add(comp));
+            Object.values(recipe.components).flat().forEach(ingredient => {
+                const ingredientName = getIngredientName(ingredient);
+                if (ingredientName) ingredientsSet.add(ingredientName);
+            });
+        }
+    });
+
+    return {
+        categories: Array.from(categoriesSet).sort((a, b) => {
+            const indexA = categoryOrder.indexOf(a);
+            const indexB = categoryOrder.indexOf(b);
+            return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+        }),
+        dishes: Array.from(dishesSet).sort(),
+        ingredients: Array.from(ingredientsSet).sort(),
+        components: Array.from(componentsSet).sort()
+    };
+};
+
 const AppV2 = () => {
     const { useState, useEffect, useMemo } = React;
 
@@ -27,40 +60,11 @@ const AppV2 = () => {
     // Recipe data and operations
     const recipeData = window.useRecipeData(supabase, isSupabaseConnected, '');
 
-    // Define category order
-    const categoryOrder = ['Entree', 'Side', 'Soup', 'Dessert'];
-
-    // Extract unique values for dropdowns
-    const { categories, dishes, ingredients, components } = useMemo(() => {
-        const categoriesSet = new Set();
-        const dishesSet = new Set();
-        const ingredientsSet = new Set();
-        const componentsSet = new Set();
-
-        Object.values(recipes).forEach(recipe => {
-            if (recipe.category) categoriesSet.add(recipe.category);
-            if (recipe.name) dishesSet.add(recipe.name);
-
-            if (recipe.components) {
-                Object.keys(recipe.components).forEach(comp => componentsSet.add(comp));
-                Object.values(recipe.components).flat().forEach(ingredient => {
-                    const ingredientName = getIngredientName(ingredient);
-                    if (ingredientName) ingredientsSet.add(ingredientName);
-                });
-            }
-        });
-
-        return {
-            categories: Array.from(categoriesSet).sort((a, b) => {
-                const indexA = categoryOrder.indexOf(a);
-                const indexB = categoryOrder.indexOf(b);
-                return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
-            }),
-            dishes: Array.from(dishesSet).sort(),
-            ingredients: Array.from(ingredientsSet).sort(),
-            components: Array.from(componentsSet).sort()
-        };
-    }, [recipes]);
+    // Extract filter options (memoized)
+    const { categories, dishes, ingredients, components } = useMemo(() =>
+        extractFilterOptions(recipes, getIngredientName),
+        [recipes, getIngredientName]
+    );
 
     const handleResetFilters = () => {
         setFilterText('');
