@@ -132,6 +132,15 @@ textarea {
     transition: border-color var(--transition-standard), box-shadow var(--transition-standard);
 }
 
+/* Filter form elements - no margin bottom */
+form.grid input[type="text"],
+form.grid input[type="search"],
+form.grid select,
+form.grid button {
+    margin-bottom: 0;
+    height: 2.375rem;
+}
+
 input::placeholder,
 textarea::placeholder {
     color: var(--text-muted);
@@ -160,6 +169,42 @@ select {
 /* Semantic HTML */
 article, aside, details, dialog, figure, footer, header, main, nav, section {
     display: block;
+}
+
+/* Header Navigation - Remove list bullets */
+.page-header {
+    background: var(--surface-bg);
+    border-bottom: 1px solid var(--surface-border);
+    padding: 1rem 0;
+}
+
+.page-header .container-fluid {
+    padding: 0 1.5rem;
+}
+
+.page-header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.page-header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.page-header nav ul li {
+    margin: 0;
+    padding: 0;
+}
+
+.page-header strong {
+    font-size: 1.25rem;
 }
 
 dialog {
@@ -307,10 +352,11 @@ dialog::backdrop {
     overflow: hidden;
     border: 1px solid var(--surface-border);
     min-width: 0;
+    background: var(--surface-bg);
 }
 
 .split-panel--left {
-    border-right: none;
+    border-right: 1px solid var(--surface-border);
 }
 
 .split-panel--right {

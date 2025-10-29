@@ -14,11 +14,10 @@ const Header = ({
 
     return React.createElement('header', { className: 'page-header' },
         React.createElement('div', { className: 'container-fluid' }, [
-            // Top row: Brand + Status
+            // Top row: Brand + Status (right aligned)
             React.createElement('nav', {
                 key: 'nav',
-                'aria-label': 'Primary navigation',
-                style: { marginBottom: '0.5rem' }
+                'aria-label': 'Primary navigation'
             }, [
                 React.createElement('ul', { key: 'brand' }, [
                     React.createElement('li', { key: 'title' }, React.createElement('strong', null, 'CookMode V2'))

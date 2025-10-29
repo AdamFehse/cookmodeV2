@@ -49,7 +49,7 @@ const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent'
                     }
-                }, '🍳 Kitchen Progress'),
+                }, 'Kitchen Progress'),
                 React.createElement('span', {
                     key: 'percentage',
                     'data-kitchen-percentage': true,
@@ -103,7 +103,7 @@ const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}
                 fontSize: '1.25rem',
                 fontWeight: '700'
             }
-        }, `👨‍🍳 Chef Stations (${chefSummaries.length})`),
+        }, `Chef Stations (${chefSummaries.length})`),
 
         // Chef Cards
         React.createElement('div', {

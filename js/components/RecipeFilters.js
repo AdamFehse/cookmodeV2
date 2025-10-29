@@ -22,7 +22,7 @@ const RecipeFilters = ({
         className: 'grid',
         style: {
             gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-            alignItems: 'end',
+            alignItems: 'stretch',
             gap: '0.5rem',
             marginBottom: 0
         },
