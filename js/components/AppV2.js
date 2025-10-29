@@ -7,6 +7,7 @@ import { RecipeGridV2 } from './RecipeGridV2.js';
 import { RecipeModal } from './RecipeModal.js';
 import { ChefStationsV2 } from './chef/ChefStationsV2.js';
 import { Header } from './Header.js';
+import { CollapsibleSection } from './CollapsibleSection.js';
 import { getIngredientName as defaultGetIngredientName } from '../utils/scaling.js';
 
 // Helper to extract filter options from recipes
@@ -141,52 +142,66 @@ export const AppV2 = ({ recipes = {} }) => {
                 key: 'left-panel',
                 className: 'split-panel split-panel--left'
             }, [
-                React.createElement(RecipeFilters, {
-                    key: 'filters',
-                    filterText,
-                    setFilterText,
-                    selectedCategory,
-                    setSelectedCategory,
-                    selectedDish,
-                    setSelectedDish,
-                    selectedIngredient,
-                    setSelectedIngredient,
-                    selectedComponent,
-                    setSelectedComponent,
-                    categories,
-                    dishes,
-                    ingredients,
-                    components,
-                    handleResetFilters
-                }),
-                React.createElement('div', { key: 'grid-section', className: 'recipes-section' }, [
-                    React.createElement(RecipeGridV2, {
-                        key: 'grid',
-                        recipes,
-                        recipeStatus: recipeData.recipeStatus,
-                        recipeChefNames: recipeData.recipeChefNames,
-                        orderCounts: recipeData.orderCounts,
-                        completedSteps: recipeData.completedSteps,
-                        setSelectedRecipe,
+                React.createElement(CollapsibleSection, {
+                    key: 'recipes-section',
+                    title: 'Recipes',
+                    defaultOpen: true,
+                    className: 'recipes-collapsible'
+                }, [
+                    React.createElement(RecipeFilters, {
+                        key: 'filters',
                         filterText,
+                        setFilterText,
                         selectedCategory,
+                        setSelectedCategory,
                         selectedDish,
+                        setSelectedDish,
                         selectedIngredient,
-                        selectedComponent
-                    })
+                        setSelectedIngredient,
+                        selectedComponent,
+                        setSelectedComponent,
+                        categories,
+                        dishes,
+                        ingredients,
+                        components,
+                        handleResetFilters
+                    }),
+                    React.createElement('div', {
+                        key: 'grid-wrapper',
+                        className: 'recipes-section'
+                    }, [
+                        React.createElement(RecipeGridV2, {
+                            key: 'grid',
+                            recipes,
+                            recipeStatus: recipeData.recipeStatus,
+                            recipeChefNames: recipeData.recipeChefNames,
+                            orderCounts: recipeData.orderCounts,
+                            completedSteps: recipeData.completedSteps,
+                            setSelectedRecipe,
+                            filterText,
+                            selectedCategory,
+                            selectedDish,
+                            selectedIngredient,
+                            selectedComponent
+                        })
+                    ])
                 ])
             ]),
             React.createElement('div', {
                 key: 'right-panel',
                 className: 'split-panel split-panel--right'
             }, [
-                React.createElement(ChefStationsV2, {
-                    key: 'chef-stations',
+                React.createElement(CollapsibleSection, {
+                    key: 'chef-stations-section',
+                    title: 'Chef Stations',
+                    defaultOpen: true,
+                    className: 'chef-stations-collapsible'
+                }, React.createElement(ChefStationsV2, {
                     chefSummaries,
                     chefAssignments,
                     recipes,
                     recipeData: { ...recipeData, setSelectedRecipe }
-                })
+                }))
             ])
         ]),
         React.createElement(RecipeModal, {
