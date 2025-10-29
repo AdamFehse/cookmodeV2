@@ -132,6 +132,18 @@ textarea {
     transition: border-color var(--transition-standard), box-shadow var(--transition-standard);
 }
 
+/* Recipe Filters */
+.recipe-filters {
+    margin-bottom: 1rem;
+}
+
+.recipe-filters-form {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    align-items: stretch;
+    gap: 0.5rem;
+    margin-bottom: 0;
+}
+
 /* Filter form elements - no margin bottom */
 form.grid input[type="text"],
 form.grid input[type="search"],
@@ -187,6 +199,7 @@ article, aside, details, dialog, figure, footer, header, main, nav, section {
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
+    margin-bottom: 0;
 }
 
 .page-header nav ul {
@@ -550,16 +563,17 @@ dialog::backdrop {
 }
 
 @media (max-width: 900px) {
-    /* Layout */
+    /* Swap order: chef stations top, recipes bottom */
     .split-layout {
         grid-template-columns: 1fr;
-        max-height: 100%;
+        display: flex;
+        flex-direction: column-reverse;
     }
 
     .split-panel--left {
         border-right: none;
         border-bottom: 1px solid var(--surface-border);
-        flex: 1;
+        flex: 0 1 auto;
         min-height: 0;
     }
 
@@ -570,106 +584,13 @@ dialog::backdrop {
         min-height: 0;
     }
 
-    /* Shrink filters */
-    .container-fluid {
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-    }
-
-    form.grid {
-        gap: 0.25rem;
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    }
-
-    form.grid input[type="text"],
-    form.grid input[type="search"],
-    form.grid select,
-    form.grid button {
-        height: auto;
-        min-height: 2rem;
-        padding: 0.4rem 0.5rem;
-        font-size: 0.85rem;
-    }
-
-    form.grid button {
-        white-space: nowrap;
-    }
-
-    /* Recipe grid - smaller cards */
-    .recipes-section {
-        padding: 0.5rem;
-        gap: 0.5rem;
-    }
-
-    .recipe-grid-wrapper {
-        gap: 0.5rem;
-    }
-
-    .recipe-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 0.5rem;
-    }
-
-    /* Compact kitchen progress bar */
-    .chef-stations-v2 {
-        padding: 0.5rem;
-        gap: 0.5rem;
-    }
-
-    .kitchen-progress-container {
-        margin-bottom: 0.5rem !important;
-        padding: 0.5rem !important;
-        background: rgba(0, 217, 255, 0.05) !important;
-        border: 1px solid rgba(0, 217, 255, 0.2) !important;
-    }
-
-    .kitchen-progress-container h3 {
-        font-size: 0.85rem !important;
-        margin-bottom: 0.25rem !important;
-    }
-
-    .kitchen-progress-container span {
-        font-size: 0.95rem !important;
-    }
-
-    .kitchen-progress-container > div[style*="height: 10px"] {
-        height: 6px !important;
-        margin-bottom: 0.25rem !important;
-    }
-
-    .kitchen-progress-container small {
-        font-size: 0.7rem !important;
-    }
-
-    /* Chef cards */
-    .chefs-grid {
-        gap: 0.5rem;
-    }
-
-    .chef-card {
-        padding: 0.5rem;
-    }
-
-    .chef-card-name {
-        font-size: 0.95rem !important;
-    }
-
-    /* Recipe cards in chef stations */
-    .chef-recipes-grid {
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 90px), 1fr));
-        gap: 0.4rem;
-    }
-
-    /* Modal centering */
+    /* Modal */
     .modal-v5-controls {
         grid-template-columns: 1fr;
-        gap: 0.5rem;
     }
 
     .modal-v5-content {
         grid-template-columns: 1fr;
-        max-width: 90vw;
-        margin: 0 auto;
     }
 
     .modal-v5-panel:first-child {
@@ -692,6 +613,66 @@ dialog::backdrop {
     min-height: 0;
 }
 
+.kitchen-progress-container {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(0, 217, 255, 0.08), rgba(255, 0, 110, 0.05));
+    border: 1px solid rgba(0, 217, 255, 0.3);
+    border-radius: var(--radius-lg);
+}
+
+.kitchen-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.kitchen-progress-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.kitchen-progress-percentage {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+}
+
+.kitchen-progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+    border: 1px solid rgba(0, 217, 255, 0.2);
+}
+
+.kitchen-progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+    transition: width 0.3s ease;
+    border-radius: var(--radius-lg);
+}
+
+.kitchen-progress-details {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.chef-stations-title {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
 .chef-card-header {
     display: flex;
     align-items: center;
@@ -700,6 +681,7 @@ dialog::backdrop {
     user-select: none;
     transition: opacity 0.2s ease;
     margin-bottom: 0.75rem;
+    cursor: pointer;
 }
 
 .chef-card-header:hover {
@@ -826,4 +808,312 @@ dialog::backdrop {
 
 .lightbox-nav-next {
     right: 1rem;
+}
+
+/* ============================================
+   RECIPE CARD STYLES
+   ============================================ */
+.recipe-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: all var(--transition-fast);
+}
+
+.recipe-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-md);
+}
+
+.recipe-card--grid {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.recipe-card--grid img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+}
+
+.recipe-card--grid > div {
+    padding: 1rem;
+}
+
+.recipe-card--grid h4 {
+    margin: 0;
+    margin-bottom: 0.25rem;
+}
+
+.recipe-card--grid p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.recipe-card--grid .recipe-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.recipe-card--full img {
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+}
+
+.recipe-card--full > div {
+    margin-top: 1rem;
+}
+
+.recipe-card--full h3 {
+    margin: 0;
+    margin-bottom: 0.5rem;
+}
+
+.recipe-card--full p {
+    margin: 0;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.recipe-card--full .recipe-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.recipe-card--compact {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid rgba(0, 217, 255, 0.2);
+    transition: all var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+}
+
+.recipe-card--compact img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+}
+
+.recipe-card--compact > div {
+    padding: 0.75rem;
+    flex: 1;
+}
+
+.recipe-card--compact p {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+
+.recipe-card--compact .recipe-badges {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.recipe-card--compact .recipe-progress {
+    font-size: 0.65rem;
+    color: var(--status-complete);
+    font-weight: 600;
+    margin-top: 0.4rem;
+}
+
+.recipe-badge {
+    font-weight: 600;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+/* Utility class for clickable elements */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* ============================================
+   RECIPE GRID STYLES
+   ============================================ */
+.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--gap-lg);
+    width: 100%;
+}
+
+.recipe-grid p {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   RECIPE MODAL STYLES
+   ============================================ */
+.modal-v5-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-v5-header h2 {
+    margin: 0;
+    flex: 1;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.modal-v5-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    transition: color var(--transition-fast);
+}
+
+.modal-v5-close:hover {
+    color: var(--text-primary);
+}
+
+.modal-v5-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 100px;
+    gap: 0.75rem;
+    align-items: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.modal-v5-controls label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #00d9ff;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.control-v5 {
+    width: 100%;
+    padding: 0.5rem;
+    background: rgba(0, 217, 255, 0.05);
+    border: 1px solid rgba(0, 217, 255, 0.3);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.control-v5:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+}
+
+.control-v5-dish {
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+}
+
+.control-v5-scale {
+    font-size: 1rem;
+}
+
+.modal-v5-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    height: 100%;
+}
+
+.modal-v5-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-v5-title {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.btn-v5-check-all {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.ingredients-v5-list,
+.steps-v5-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.ingredients-v5-list li,
+.steps-v5-list li {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+}
+
+.ingredients-v5-list li input,
+.steps-v5-list li input {
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+.ingredients-v5-list li span,
+.steps-v5-list li span {
+    flex: 1;
+}
+
+.group-v5-title {
+    margin: 0.75rem 0 0.5rem 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+/* ============================================
+   CHEF STATIONS STYLES (Additional)
+   ============================================ */
+.chef-card {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.chef-card-name {
+    margin: 0;
+    flex: 1;
+}
+
+.chef-card-toggle {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
 }

@@ -80,13 +80,7 @@ const RecipeGridV2 = ({
     return React.createElement('div', { className: 'recipe-grid-wrapper' }, [
         React.createElement('div', {
             key: 'grid',
-            className: 'recipe-grid',
-            style: {
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-                gap: 'var(--gap-lg)',
-                width: '100%'
-            }
+            className: 'recipe-grid'
         }, sortedRecipes.length > 0 ? sortedRecipes.map(([slug, recipe]) => {
             const status = recipeStatus[slug];
             const chefData = recipeChefNames[slug];
@@ -123,8 +117,7 @@ const RecipeGridV2 = ({
             });
         }) : [
             React.createElement('p', {
-                key: 'no-results',
-                style: { gridColumn: '1 / -1', textAlign: 'center', color: 'var(--text-muted)' }
+                key: 'no-results'
             }, 'No recipes match your filters.')
         ])
     ]);

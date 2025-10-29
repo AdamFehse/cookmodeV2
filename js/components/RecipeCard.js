@@ -68,29 +68,26 @@ const RecipeCard = React.memo(({
     // Grid size (used in recipe list)
     if (size === 'grid') {
         return React.createElement('article', {
-            className: 'recipe-card recipe-card--grid',
+            className: 'recipe-card recipe-card--grid' + (clickable ? ' cursor-pointer' : ''),
             onClick: clickable ? onClick : undefined,
-            style: clickable ? { cursor: 'pointer' } : {},
             tabIndex: clickable ? 0 : -1
         }, [
             showImage && recipe.images?.[0] && React.createElement('img', {
                 key: 'image',
                 src: recipe.images[0],
                 alt: displayName,
-                loading: 'lazy',
-                style: { width: '100%', height: '180px', objectFit: 'cover', display: 'block' }
+                loading: 'lazy'
             }),
-            React.createElement('div', { key: 'body', style: { padding: '1rem' } }, [
+            React.createElement('div', { key: 'body' }, [
                 React.createElement('hgroup', { key: 'title' }, [
-                    React.createElement('h4', { key: 'name', style: { margin: 0, marginBottom: '0.25rem' } }, displayName),
+                    React.createElement('h4', { key: 'name' }, displayName),
                     recipe.category && React.createElement('p', {
-                        key: 'category',
-                        style: { margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }
+                        key: 'category'
                     }, recipe.category)
                 ]),
                 showBadges && (status || chefName || orderCount > 1) && React.createElement('div', {
                     key: 'badges',
-                    style: { display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.75rem' }
+                    className: 'recipe-badges'
                 }, renderBadges('grid', { status, chefName, chefColor, orderCount }))
             ])
         ]);
@@ -102,18 +99,16 @@ const RecipeCard = React.memo(({
             showImage && recipe.images?.[0] && React.createElement('img', {
                 key: 'image',
                 src: recipe.images[0],
-                alt: displayName,
-                style: { width: '100%', maxHeight: '250px', objectFit: 'cover', borderRadius: 'var(--radius-lg)' }
+                alt: displayName
             }),
-            React.createElement('div', { key: 'info', style: { marginTop: '1rem' } }, [
-                React.createElement('h3', { key: 'name', style: { margin: 0, marginBottom: '0.5rem' } }, displayName),
+            React.createElement('div', { key: 'info' }, [
+                React.createElement('h3', { key: 'name' }, displayName),
                 recipe.category && React.createElement('p', {
-                    key: 'category',
-                    style: { margin: 0, color: 'var(--text-secondary)', marginBottom: '0.75rem' }
+                    key: 'category'
                 }, recipe.category),
                 showBadges && (status || chefName || orderCount > 1) && React.createElement('div', {
                     key: 'badges',
-                    style: { display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }
+                    className: 'recipe-badges'
                 }, renderBadges('full', { status, chefName, chefColor, orderCount }))
             ])
         ]);
@@ -131,17 +126,10 @@ const RecipeCard = React.memo(({
         const backgroundColor = status ? `rgba(${rgb}, 0.1)` : (progress > 0 ? 'rgba(0, 255, 136, 0.08)' : 'rgba(255, 255, 255, 0.04)');
 
         return React.createElement('div', {
-            className: 'recipe-card recipe-card--compact',
+            className: 'recipe-card recipe-card--compact' + (clickable ? ' cursor-pointer' : ''),
             onClick: clickable ? onClick : undefined,
             style: {
-                cursor: clickable ? 'pointer' : 'default',
-                borderRadius: 'var(--radius-lg)',
-                overflow: 'hidden',
-                border: '1px solid rgba(0, 217, 255, 0.2)',
-                background: backgroundColor,
-                transition: 'all var(--transition-fast)',
-                display: 'flex',
-                flexDirection: 'column'
+                background: backgroundColor
             }
         }, [
             showImage && recipe.images?.[0] && React.createElement('img', {
@@ -149,35 +137,20 @@ const RecipeCard = React.memo(({
                 src: recipe.images[0],
                 alt: displayName,
                 style: {
-                    width: '100%',
-                    height: '100px',
-                    objectFit: 'cover',
                     opacity: status ? 0.7 : 1
                 }
             }),
-            React.createElement('div', { key: 'content', style: { padding: '0.75rem', flex: 1 } }, [
+            React.createElement('div', { key: 'content' }, [
                 React.createElement('p', {
-                    key: 'name',
-                    style: {
-                        margin: 0,
-                        fontSize: '0.85rem',
-                        fontWeight: '600',
-                        color: 'var(--text-primary)',
-                        lineHeight: '1.3'
-                    }
+                    key: 'name'
                 }, displayName),
                 showBadges && (status || orderCount > 1) && React.createElement('div', {
                     key: 'badges',
-                    style: { display: 'flex', gap: '0.25rem', marginTop: '0.5rem', flexWrap: 'wrap' }
+                    className: 'recipe-badges'
                 }, renderBadges('compact', { status, chefName, chefColor, orderCount })),
                 progress > 0 && React.createElement('div', {
                     key: 'progress',
-                    style: {
-                        fontSize: '0.65rem',
-                        color: 'var(--status-complete)',
-                        fontWeight: '600',
-                        marginTop: '0.4rem'
-                    }
+                    className: 'recipe-progress'
                 }, `${Math.round(progress)}% done`)
             ])
         ]);

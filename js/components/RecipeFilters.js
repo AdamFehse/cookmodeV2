@@ -16,16 +16,9 @@ const RecipeFilters = ({
     handleResetFilters
 }) => {
     return React.createElement('section', {
-        className: 'container-fluid',
-        style: { marginBottom: '1rem' }
+        className: 'container-fluid recipe-filters'
     }, React.createElement('form', {
-        className: 'grid',
-        style: {
-            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-            alignItems: 'stretch',
-            gap: '0.5rem',
-            marginBottom: 0
-        },
+        className: 'grid recipe-filters-form',
         onSubmit: (event) => event.preventDefault(),
         onReset: (event) => {
             event.preventDefault();

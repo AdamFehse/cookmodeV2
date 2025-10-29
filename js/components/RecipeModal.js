@@ -136,18 +136,18 @@ const RecipeModal = ({
     }, [
         // Header
         React.createElement('div', { key: 'header', className: 'modal-v5-header' }, [
-            React.createElement('h2', { key: 'title', style: { margin: 0, flex: 1, fontSize: '1.5rem', fontWeight: 700, background: 'linear-gradient(90deg, var(--color-primary), var(--color-accent))', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' } }, displayName),
+            React.createElement('h2', { key: 'title' }, displayName),
             React.createElement('button', { key: 'close', className: 'modal-v5-close', onClick: handleClose, type: 'button' }, '✕')
         ]),
 
         // Controls: Chef, Status, Dish, Scale
-        React.createElement('div', { key: 'controls', className: 'modal-v5-controls', style: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 100px', gap: '0.75rem', alignItems: 'flex-end' } }, [
+        React.createElement('div', { key: 'controls', className: 'modal-v5-controls' }, [
             React.createElement('div', { key: 'chef' }, [
-                React.createElement('label', { style: { fontSize: '0.85rem', fontWeight: 600, color: '#00d9ff', display: 'block', marginBottom: '0.5rem' } }, 'Chef'),
+                React.createElement('label', {}, 'Chef'),
                 React.createElement('input', { type: 'text', placeholder: 'Chef name', value: localChefName, onChange: (e) => handleChefNameChange(e.target.value), className: 'control-v5' })
             ]),
             React.createElement('div', { key: 'status' }, [
-                React.createElement('label', { style: { fontSize: '0.85rem', fontWeight: 600, color: '#00d9ff', display: 'block', marginBottom: '0.5rem' } }, 'Status'),
+                React.createElement('label', {}, 'Status'),
                 React.createElement('select', { value: currentStatus || '', onChange: (e) => updateRecipeStatus?.(selectedRecipe, e.target.value || null), className: 'control-v5' }, [
                     React.createElement('option', { key: 'empty', value: '' }, 'Status'),
                     React.createElement('option', { key: 'in-progress', value: 'in-progress' }, 'In Progress'),
@@ -157,11 +157,11 @@ const RecipeModal = ({
                 ])
             ]),
             React.createElement('div', { key: 'dish' }, [
-                React.createElement('label', { style: { fontSize: '0.85rem', fontWeight: 600, color: '#00d9ff', display: 'block', marginBottom: '0.5rem' } }, 'Dish'),
+                React.createElement('label', {}, 'Dish'),
                 React.createElement('div', { className: 'control-v5-dish' }, displayName)
             ]),
             React.createElement('div', { key: 'scale' }, [
-                React.createElement('label', { style: { fontSize: '0.85rem', fontWeight: 600, color: '#00d9ff', display: 'block', marginBottom: '0.5rem' } }, 'Scale'),
+                React.createElement('label', {}, 'Scale'),
                 React.createElement('input', { type: 'number', min: 1, max: 50, value: orderInput, onChange: (e) => handleOrderChange(e.target.value), className: 'control-v5 control-v5-scale' })
             ])
         ]),
@@ -171,7 +171,7 @@ const RecipeModal = ({
             // Ingredients
             React.createElement('div', { key: 'ing-panel', className: 'modal-v5-panel' }, [
                 React.createElement('h3', { key: 'ing-title', className: 'panel-v5-title' }, `Ingredients (${stats.ingredientCompleted}/${stats.ingredientTotal})`),
-                React.createElement('button', { key: 'ing-check-all', className: 'btn-v5-check-all', onClick: handleCheckAllIngredients, style: { width: '100%' } }, stats.ingredientCompleted === stats.ingredientTotal ? 'Uncheck All' : 'Check All'),
+                React.createElement('button', { key: 'ing-check-all', className: 'btn-v5-check-all', onClick: handleCheckAllIngredients }, stats.ingredientCompleted === stats.ingredientTotal ? 'Uncheck All' : 'Check All'),
                 React.createElement('ul', { key: 'ing-list', className: 'ingredients-v5-list' },
                     recipe.components ? Object.entries(recipe.components).flatMap(([comp, ings]) => [
                         React.createElement('li', { key: `group-${comp}` }, [
@@ -180,7 +180,7 @@ const RecipeModal = ({
                                 const key = `${selectedRecipe}-ing-${comp}-${idx}`;
                                 const done = completedIngredients[key];
                                 return React.createElement('li', { key }, [
-                                    React.createElement('input', { key: 'cb', type: 'checkbox', checked: done || false, onChange: () => toggleIngredient?.(selectedRecipe, key, comp, idx, ing), style: { marginRight: '0.5rem' } }),
+                                    React.createElement('input', { key: 'cb', type: 'checkbox', checked: done || false, onChange: () => toggleIngredient?.(selectedRecipe, key, comp, idx, ing) }),
                                     React.createElement('span', { key: 'text', style: { textDecoration: done ? 'line-through' : 'none', opacity: done ? 0.6 : 1 } }, scaleAmount(ing, orderInput))
                                 ]);
                             }))
@@ -192,13 +192,13 @@ const RecipeModal = ({
             // Steps
             React.createElement('div', { key: 'steps-panel', className: 'modal-v5-panel' }, [
                 React.createElement('h3', { key: 'steps-title', className: 'panel-v5-title' }, `Method (${stats.stepCompleted}/${stats.stepTotal})`),
-                React.createElement('button', { key: 'steps-check-all', className: 'btn-v5-check-all', onClick: handleCheckAllSteps, style: { width: '100%' } }, stats.stepCompleted === stats.stepTotal ? 'Uncheck All' : 'Check All'),
+                React.createElement('button', { key: 'steps-check-all', className: 'btn-v5-check-all', onClick: handleCheckAllSteps }, stats.stepCompleted === stats.stepTotal ? 'Uncheck All' : 'Check All'),
                 React.createElement('ol', { key: 'steps-list', className: 'steps-v5-list' },
                     (recipe.instructions || []).map((step, idx) => {
                         const key = `${selectedRecipe}-step-${idx}`;
                         const done = completedSteps[key];
                         return React.createElement('li', { key }, [
-                            React.createElement('input', { key: 'cb', type: 'checkbox', checked: done || false, onChange: () => toggleStep?.(selectedRecipe, key, idx, step), style: { marginRight: '0.5rem' } }),
+                            React.createElement('input', { key: 'cb', type: 'checkbox', checked: done || false, onChange: () => toggleStep?.(selectedRecipe, key, idx, step) }),
                             React.createElement('span', { key: 'text', style: { textDecoration: done ? 'line-through' : 'none', opacity: done ? 0.6 : 1 } }, step)
                         ]);
                     })
