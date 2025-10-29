@@ -595,13 +595,14 @@ dialog::backdrop {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    padding: 1rem;
+    gap: 1rem;
 }
 
 .chefs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
-    padding: 1rem;
     overflow-y: auto;
 }
 
