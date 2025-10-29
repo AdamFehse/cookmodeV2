@@ -214,6 +214,9 @@ dialog {
     border-radius: var(--radius-lg);
     padding: 0;
     box-shadow: 0 0 40px rgba(0, 217, 255, 0.2), 0 0 60px rgba(255, 0, 110, 0.1);
+    margin: auto;
+    max-width: 90vw;
+    max-height: 90vh;
 }
 
 dialog::backdrop {
@@ -262,70 +265,6 @@ dialog::backdrop {
     grid-template-columns: 1fr;
 }
 
-.center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.center-x {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.center-y {
-    margin-top: auto;
-    margin-bottom: auto;
-}
-
-.absolute { position: absolute; }
-.fixed { position: fixed; }
-.relative { position: relative; }
-.inset-0 { inset: 0; }
-
-.w-full { width: 100%; }
-.h-full { height: 100%; }
-.min-h-screen { min-height: 100vh; }
-
-.overflow-hidden { overflow: hidden; }
-.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.scroll-y { overflow-y: auto; -webkit-overflow-scrolling: touch; }
-
-.block { display: block; }
-.inline { display: inline; }
-.inline-block { display: inline-block; }
-.hidden { display: none; }
-
-.cursor-pointer { cursor: pointer; }
-.cursor-default { cursor: default; }
-.cursor-not-allowed { cursor: not-allowed; }
-
-/* Text utilities */
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
-
-.font-bold { font-weight: var(--font-weight-bold); }
-.font-semibold { font-weight: var(--font-weight-semibold); }
-.font-medium { font-weight: var(--font-weight-medium); }
-
-/* Color utilities */
-.text-primary { color: var(--text-primary); }
-.text-secondary { color: var(--text-secondary); }
-.text-muted { color: var(--text-muted); }
-.text-accent { color: var(--color-accent); }
-
-.bg-primary { background-color: var(--color-primary); }
-.bg-accent { background-color: var(--color-accent); }
-.bg-success { background-color: var(--color-success); }
-.bg-error { background-color: var(--color-error); }
-
-.border-primary { border-color: var(--color-primary); }
-.border-none { border: none; }
-
-.shadow-sm { box-shadow: var(--shadow-sm); }
-.shadow-md { box-shadow: var(--shadow-md); }
-.shadow-lg { box-shadow: var(--shadow-lg); }
 
 /* ============================================
    APP-V2 LAYOUT
@@ -611,21 +550,117 @@ dialog::backdrop {
 }
 
 @media (max-width: 900px) {
+    /* Layout */
     .split-layout {
         grid-template-columns: 1fr;
+        max-height: 100%;
     }
 
     .split-panel--left {
         border-right: none;
         border-bottom: 1px solid var(--surface-border);
+        flex: 1;
+        min-height: 0;
     }
 
     .split-panel--right {
         border-left: none;
         border-top: 1px solid var(--surface-border);
-        display: none;
+        flex: 1;
+        min-height: 0;
     }
 
+    /* Shrink filters */
+    .container-fluid {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    form.grid {
+        gap: 0.25rem;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
+
+    form.grid input[type="text"],
+    form.grid input[type="search"],
+    form.grid select,
+    form.grid button {
+        height: auto;
+        min-height: 2rem;
+        padding: 0.4rem 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    form.grid button {
+        white-space: nowrap;
+    }
+
+    /* Recipe grid - smaller cards */
+    .recipes-section {
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .recipe-grid-wrapper {
+        gap: 0.5rem;
+    }
+
+    .recipe-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 0.5rem;
+    }
+
+    /* Compact kitchen progress bar */
+    .chef-stations-v2 {
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .kitchen-progress-container {
+        margin-bottom: 0.5rem !important;
+        padding: 0.5rem !important;
+        background: rgba(0, 217, 255, 0.05) !important;
+        border: 1px solid rgba(0, 217, 255, 0.2) !important;
+    }
+
+    .kitchen-progress-container h3 {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+
+    .kitchen-progress-container span {
+        font-size: 0.95rem !important;
+    }
+
+    .kitchen-progress-container > div[style*="height: 10px"] {
+        height: 6px !important;
+        margin-bottom: 0.25rem !important;
+    }
+
+    .kitchen-progress-container small {
+        font-size: 0.7rem !important;
+    }
+
+    /* Chef cards */
+    .chefs-grid {
+        gap: 0.5rem;
+    }
+
+    .chef-card {
+        padding: 0.5rem;
+    }
+
+    .chef-card-name {
+        font-size: 0.95rem !important;
+    }
+
+    /* Recipe cards in chef stations */
+    .chef-recipes-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 90px), 1fr));
+        gap: 0.4rem;
+    }
+
+    /* Modal centering */
     .modal-v5-controls {
         grid-template-columns: 1fr;
         gap: 0.5rem;
@@ -633,6 +668,8 @@ dialog::backdrop {
 
     .modal-v5-content {
         grid-template-columns: 1fr;
+        max-width: 90vw;
+        margin: 0 auto;
     }
 
     .modal-v5-panel:first-child {
