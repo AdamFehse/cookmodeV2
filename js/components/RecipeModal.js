@@ -1,3 +1,7 @@
+/**
+ * RecipeModal - Clean React component for recipe details
+ * Side-by-side ingredients/methods, check all buttons, Supabase persistence
+ */
 const RecipeModal = ({
     selectedRecipe,
     setSelectedRecipe,
@@ -11,469 +15,195 @@ const RecipeModal = ({
     recipeStatus = {},
     updateRecipeStatus,
     recipeChefNames = {},
-    updateChefName,
-    openLightbox
-}) =>
-    {
-    const { useRef, useEffect, useState } = React;
+    updateChefName
+}) => {
+    const { useState, useMemo, useEffect, useRef } = React;
     const dialogRef = useRef(null);
     const chefNameTimeoutRef = useRef(null);
 
-    // ALL HOOKS MUST BE CALLED BEFORE ANY EARLY RETURNS
-    const scaleAmount = window.scaleAmount || ((ingredient) => ingredient);
+    // Global utilities
+    const scaleAmount = window.scaleAmount || ((ing) => ing);
     const slugToDisplayName = window.slugToDisplayName || ((slug) => slug);
-    const resolveChefColor = window.resolveChefColor || ((color) => color);
     const getAssignedChefColor = window.getAssignedChefColor || (() => null);
     const suggestChefColor = window.suggestChefColor || (() => 'var(--chef-purple)');
-    const getChefColorLabel = window.getChefColorLabel || (() => 'Custom');
-    const getChefColorOptions = window.getChefColorOptions || (() => []);
 
-    // Get current recipe data (with fallbacks for when selectedRecipe is null)
+    // Get recipe data
     const recipe = selectedRecipe ? recipes[selectedRecipe] : null;
     const currentChefData = selectedRecipe ? (recipeChefNames[selectedRecipe] || { name: '', color: '' }) : { name: '', color: '' };
 
-    // Local state for chef name and color (debounced) - MUST be before early returns
+    // Local state
     const [localChefName, setLocalChefName] = useState(currentChefData.name || '');
-    const [localChefColor, setLocalChefColor] = useState(currentChefData.color || '');
+    const [orderInput, setOrderInput] = useState(orderCounts[selectedRecipe] ?? 1);
 
-    // Use native dialog.showModal() API
+    // Sync dialog visibility
     useEffect(() => {
-        if (selectedRecipe && dialogRef.current) {
+        if (selectedRecipe && recipe && dialogRef.current) {
             dialogRef.current.showModal();
         }
+    }, [selectedRecipe, recipe]);
+
+    // Sync local state when recipe changes
+    useEffect(() => {
+        setLocalChefName(currentChefData.name || '');
+        setOrderInput(orderCounts[selectedRecipe] ?? 1);
     }, [selectedRecipe]);
 
-    // Update local state when recipe changes
-    useEffect(() => {
-        const nextName = currentChefData.name || '';
-        setLocalChefName(nextName);
-        if (nextName) {
-            const trimmed = nextName.trim();
-            const assignedColor = getAssignedChefColor(trimmed);
-            const nextColor = assignedColor || currentChefData.color || suggestChefColor(trimmed);
-            setLocalChefColor(nextColor);
-        } else {
-            setLocalChefColor('');
-        }
-    }, [selectedRecipe, currentChefData.name, currentChefData.color]);
-
-    // NOW we can do early returns
-    if (!selectedRecipe) return null;
-    if (!recipe) return null;
-
-    // Helper functions for status styling with vibrant colors
-    const getStatusBadgeStyle = (status) => {
-        const colors = {
-            'in-progress': { bg: 'var(--status-in-progress)', text: '#000000' },
-            complete: { bg: 'var(--status-complete)', text: '#ffffff' },
-            plated: { bg: 'var(--status-plated)', text: '#000000' },
-            packed: { bg: 'var(--status-packed)', text: '#ffffff' }
-        };
-
-        const color = colors[status] || { bg: '#6b7280', text: '#ffffff' };
-
-        return {
-            backgroundColor: color.bg,
-            color: color.text,
-            border: 'none',
-            padding: '0.25rem 0.5rem',
-            borderRadius: 'var(--pico-border-radius)'
-        };
-    };
+    if (!selectedRecipe || !recipe) return null;
 
     const displayName = recipe.name || slugToDisplayName(selectedRecipe);
-    const trimmedChefName = (localChefName || '').trim();
-    const colorOptions = getChefColorOptions(trimmedChefName, localChefColor || '');
-    const orderCount = orderCounts[selectedRecipe] ?? 1;
-    const sliderId = `${selectedRecipe}-orders-slider`;
+    const currentStatus = recipeStatus[selectedRecipe];
 
-    // Debounced chef name update
-    const handleChefNameChange = (newName) => {
-        const trimmedName = newName.trim();
-        const nextColor = trimmedName
-            ? (getAssignedChefColor(trimmedName) || suggestChefColor(trimmedName))
-            : '';
+    // Calculate stats
+    const stats = useMemo(() => {
+        let ingredientTotal = 0, ingredientCompleted = 0;
+        let stepTotal = recipe?.instructions?.length || 0, stepCompleted = 0;
 
-        setLocalChefName(newName);
-        setLocalChefColor(nextColor);
-
-        if (chefNameTimeoutRef.current) {
-            clearTimeout(chefNameTimeoutRef.current);
+        if (recipe?.components) {
+            Object.entries(recipe.components).forEach(([comp, ings]) => {
+                ings.forEach((_, idx) => {
+                    const key = `${selectedRecipe}-ing-${comp}-${idx}`;
+                    ingredientTotal++;
+                    if (completedIngredients[key]) ingredientCompleted++;
+                });
+            });
         }
 
+        (recipe?.instructions || []).forEach((_, idx) => {
+            const key = `${selectedRecipe}-step-${idx}`;
+            if (completedSteps[key]) stepCompleted++;
+        });
+
+        return { ingredientTotal, ingredientCompleted, stepTotal, stepCompleted };
+    }, [selectedRecipe, recipe, completedIngredients, completedSteps]);
+
+    // Handlers
+    const handleChefNameChange = (newName) => {
+        const trimmed = newName.trim();
+        const nextColor = trimmed ? (getAssignedChefColor(trimmed) || suggestChefColor(trimmed)) : '';
+        setLocalChefName(newName);
+
+        if (chefNameTimeoutRef.current) clearTimeout(chefNameTimeoutRef.current);
         chefNameTimeoutRef.current = setTimeout(() => {
-            if (!updateChefName) return;
-
-            if (!trimmedName) {
-                updateChefName(selectedRecipe, '', '');
-                return;
-            }
-
-            updateChefName(selectedRecipe, trimmedName, nextColor);
+            updateChefName?.(selectedRecipe, trimmed, nextColor);
         }, 500);
     };
 
-    const handleChefColorChange = (newColor) => {
-        const trimmedName = (localChefName || '').trim();
-        if (!trimmedName) return;
-
-        if (chefNameTimeoutRef.current) {
-            clearTimeout(chefNameTimeoutRef.current);
-            chefNameTimeoutRef.current = null;
-        }
-
-        if (!updateChefName) return;
-
-        if (!newColor) {
-            const nextColor = suggestChefColor(trimmedName);
-            setLocalChefColor(nextColor);
-            updateChefName(selectedRecipe, trimmedName, null);
-            return;
-        }
-
-        setLocalChefColor(newColor);
-        updateChefName(selectedRecipe, trimmedName, newColor);
+    const handleOrderChange = (val) => {
+        const safe = Math.min(Math.max(parseInt(val) || 1, 1), 50);
+        setOrderInput(safe);
+        updateOrderCount?.(selectedRecipe, safe);
     };
 
-    const handleOrderChange = (event) => {
-        const nextValue = parseInt(event.target.value, 10);
-        const safeValue = Number.isNaN(nextValue) ? 1 : Math.min(Math.max(nextValue, 1), 50);
-        if (updateOrderCount) {
-            updateOrderCount(selectedRecipe, safeValue);
-        }
+    const handleCheckAllIngredients = () => {
+        if (!recipe.components) return;
+        const allDone = stats.ingredientCompleted === stats.ingredientTotal;
+        Object.entries(recipe.components).forEach(([comp, ings]) => {
+            ings.forEach((ing, idx) => {
+                const key = `${selectedRecipe}-ing-${comp}-${idx}`;
+                const isDone = completedIngredients[key];
+                if ((allDone && isDone) || (!allDone && !isDone)) {
+                    toggleIngredient?.(selectedRecipe, key, comp, idx, ing);
+                }
+            });
+        });
+    };
+
+    const handleCheckAllSteps = () => {
+        const allDone = stats.stepCompleted === stats.stepTotal;
+        (recipe.instructions || []).forEach((step, idx) => {
+            const key = `${selectedRecipe}-step-${idx}`;
+            const isDone = completedSteps[key];
+            if ((allDone && isDone) || (!allDone && !isDone)) {
+                toggleStep?.(selectedRecipe, key, idx, step);
+            }
+        });
     };
 
     const handleClose = () => {
-        if (dialogRef.current) {
-            dialogRef.current.close();
-        }
+        if (chefNameTimeoutRef.current) clearTimeout(chefNameTimeoutRef.current);
+        if (dialogRef.current) dialogRef.current.close();
         setSelectedRecipe(null);
     };
 
-    // Handle ESC key and backdrop click (native dialog features)
-    const handleDialogClick = (e) => {
-        // Close on backdrop click
-        if (e.target === dialogRef.current) {
-            handleClose();
-        }
-    };
-
+    // Render
     return React.createElement('dialog', {
-            ref: dialogRef,
-            onClick: handleDialogClick,
-            onClose: handleClose
-        },
-            React.createElement('article', { className: 'recipe-modal' }, [
-                // Header
-                React.createElement('header', { key: 'header' }, [
-                    React.createElement('a', {
-                        key: 'close',
-                        href: '#close',
-                        className: 'close',
-                        'aria-label': 'Close recipe modal',
-                        onClick: (event) => {
-                            event.preventDefault();
-                            handleClose();
-                        }
-                    }),
-                    React.createElement('h2', { key: 'title' }, displayName)
-                ]),
+        ref: dialogRef,
+        className: 'recipe-modal-v5',
+        onClick: (e) => e.target === dialogRef.current && handleClose(),
+        onClose: handleClose
+    }, [
+        // Header
+        React.createElement('div', { key: 'header', className: 'modal-v5-header' }, [
+            React.createElement('h2', { key: 'title', style: { margin: 0, flex: 1, fontSize: '1.5rem', fontWeight: 700, background: 'linear-gradient(90deg, var(--color-primary), var(--color-accent))', backgroundClip: 'text', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' } }, displayName),
+            React.createElement('button', { key: 'close', className: 'modal-v5-close', onClick: handleClose, type: 'button' }, '✕')
+        ]),
 
-                // Control section - Chef name & Status buttons
-                React.createElement('section', { key: 'controls', className: 'modal-controls' }, [
-                    // Chef name input
-                    React.createElement('div', { key: 'chef', className: 'chef-control' }, [
-                        React.createElement('input', {
-                            key: 'name',
-                            type: 'text',
-                            placeholder: 'Chef name',
-                            value: localChefName,
-                            onChange: (event) => handleChefNameChange(event.target.value),
-                            style: { marginBottom: '0.5rem' }
-                        }),
-                        React.createElement('div', {
-                            key: 'color-display',
-                            style: {
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                minHeight: '2rem'
-                            }
-                        }, [
-                            React.createElement('span', {
-                                key: 'swatch',
-                                style: {
-                                    width: '1.25rem',
-                                    height: '1.25rem',
-                                    borderRadius: '999px',
-                                    border: '1px solid var(--pico-muted-border-color)',
-                                    backgroundColor: resolveChefColor(localChefColor || '')
-                                }
-                            }),
-                            React.createElement('span', {
-                                key: 'label',
-                                className: 'muted'
-                            }, trimmedChefName
-                                ? `${getChefColorLabel(localChefColor || '')} badge`
-                                : 'Enter a chef name to auto-assign color')
-                        ]),
-                        React.createElement('select', {
-                            key: 'color-select',
-                            value: (localChefColor || ''),
-                            onChange: (event) => handleChefColorChange(event.target.value),
-                            disabled: !trimmedChefName
-                        },
-                            colorOptions.map((option) =>
-                                React.createElement('option', {
-                                    key: option.value || '__auto__',
-                                    value: option.value,
-                                    disabled: option.disabled
-                                }, option.label)
-                            )
-                        )
-                    ]),
-
-                    // Status section
-                    React.createElement('div', { key: 'status', className: 'status-control' }, [
-                        React.createElement('div', { key: 'status-info', style: { marginBottom: '0.5rem' } }, [
-                            'Status: ',
-                            React.createElement('mark', {
-                                key: 'badge',
-                                style: getStatusBadgeStyle(recipeStatus[selectedRecipe])
-                            }, recipeStatus[selectedRecipe] ? recipeStatus[selectedRecipe].toUpperCase() : 'NONE')
-                        ]),
-                        React.createElement('div', {
-                            key: 'status-buttons',
-                            role: 'group',
-                            style: { display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }
-                        },
-                            ['in-progress', 'complete', 'plated', 'packed'].map((status) => {
-                                const isActive = recipeStatus[selectedRecipe] === status;
-                                const displayLabel = status === 'in-progress' ? 'In Progress' : status.charAt(0).toUpperCase() + status.slice(1);
-                                const colors = {
-                                    'in-progress': { bg: '#fbbf24', text: '#000000' },
-                                    complete: { bg: '#10b981', text: '#ffffff' },
-                                    plated: { bg: '#f59e0b', text: '#000000' },
-                                    packed: { bg: '#8b5cf6', text: '#ffffff' }
-                                };
-                                const color = colors[status];
-
-                                return React.createElement('button', {
-                                    key: status,
-                                    type: 'button',
-                                    className: 'status-button',
-                                    'data-active': isActive,
-                                    'data-status': status,
-                                    style: {
-                                        '--status-bg': color.bg,
-                                        '--status-text': color.text,
-                                        padding: '0.5rem 1rem',
-                                        borderWidth: '2px',
-                                        borderStyle: 'solid',
-                                        borderColor: color.bg,
-                                        borderRadius: 'var(--pico-border-radius)',
-                                        cursor: 'pointer',
-                                        fontWeight: 'var(--font-weight-semibold)',
-                                        transition: 'all var(--transition-standard)'
-                                    },
-                                    'aria-pressed': isActive,
-                                    onClick: () => updateRecipeStatus && updateRecipeStatus(selectedRecipe, isActive ? null : status)
-                                }, displayLabel);
-                            })
-                        )
-                    ])
-                ]),
-
-                // Main layout with photos sidebar
-                React.createElement('div', { key: 'layout', className: 'modal-layout' }, [
-                    // Photos sidebar (if available)
-                    recipe.images && recipe.images.length > 0 && React.createElement('aside', { key: 'photos', className: 'photos-sidebar' },
-                        recipe.images.map((img, index) =>
-                            React.createElement('button', {
-                                key: index,
-                                type: 'button',
-                                className: 'thumbnail-button',
-                                onClick: () => openLightbox && openLightbox(recipe.images, index)
-                            },
-                                React.createElement('img', {
-                                    src: img,
-                                    alt: `${displayName} photo ${index + 1}`
-                                })
-                            )
-                        )
-                    ),
-
-                // Main content area - responsive grid for ingredients & instructions
-                    React.createElement('div', { key: 'main-content', className: 'modal-main' }, [
-                        // Ingredients section
-                        React.createElement('section', { key: 'ingredients', className: 'ingredients-section' }, [
-                            (() => {
-                                // Check if all ingredients are completed
-                                let totalIngredients = 0;
-                                let completedCount = 0;
-                                if (recipe.components) {
-                                    Object.entries(recipe.components).forEach(([component, ingredients]) => {
-                                        ingredients.forEach((_, index) => {
-                                            const ingredientKey = `${selectedRecipe}-ing-${component}-${index}`;
-                                            totalIngredients++;
-                                            if (completedIngredients[ingredientKey]) {
-                                                completedCount++;
-                                            }
-                                        });
-                                    });
-                                }
-                                const allIngredientsCompleted = totalIngredients > 0 && completedCount === totalIngredients;
-
-                                return React.createElement('header', { key: 'header', className: 'section-header', style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' } }, [
-                                    React.createElement('h3', { key: 'title', style: { margin: 0 } }, 'Ingredients'),
-                                    React.createElement('div', { key: 'controls', style: { display: 'flex', gap: '0.5rem', alignItems: 'center' } }, [
-                                        React.createElement('button', {
-                                            key: 'toggle-all-ing',
-                                            type: 'button',
-                                            className: 'outline',
-                                            style: { padding: '0.4rem 0.8rem', fontSize: '0.85rem' },
-                                            onClick: () => {
-                                                if (recipe.components) {
-                                                    Object.entries(recipe.components).forEach(([component, ingredients]) => {
-                                                        ingredients.forEach((ingredient, index) => {
-                                                            const ingredientKey = `${selectedRecipe}-ing-${component}-${index}`;
-                                                            const isCompleted = completedIngredients[ingredientKey];
-                                                            // Only toggle items that don't match the target state
-                                                            if (allIngredientsCompleted && isCompleted) {
-                                                                // All completed - uncheck this one
-                                                                if (toggleIngredient) {
-                                                                    toggleIngredient(selectedRecipe, ingredientKey, component, index, ingredient);
-                                                                }
-                                                            } else if (!allIngredientsCompleted && !isCompleted) {
-                                                                // Not all completed - check this one
-                                                                if (toggleIngredient) {
-                                                                    toggleIngredient(selectedRecipe, ingredientKey, component, index, ingredient);
-                                                                }
-                                                            }
-                                                        });
-                                                    });
-                                                }
-                                            }
-                                        }, allIngredientsCompleted ? 'Uncheck All' : 'Check All'),
-                                        React.createElement('div', { key: 'order-control' }, [
-                                            React.createElement('label', { htmlFor: sliderId, className: 'order-label' }, [
-                                                `Orders: ${orderCount}x`,
-                                                React.createElement('input', {
-                                                    key: 'slider',
-                                                    id: sliderId,
-                                                    type: 'range',
-                                                    min: 1,
-                                                    max: 50,
-                                                    value: orderCount,
-                                                    onChange: handleOrderChange,
-                                                    className: 'order-slider'
-                                                })
-                                            ])
-                                        ])
-                                    ])
-                                ]);
-                            })(),
-                            React.createElement('div', { key: 'ingredients-content', className: 'ingredients-content' },
-                                recipe.components && Object.entries(recipe.components).map(([component, ingredients]) =>
-                                    React.createElement('div', { key: component, className: 'ingredient-group' }, [
-                                        React.createElement('h4', { key: 'component-title', className: 'component-title' }, component),
-                                        React.createElement('ul', { key: 'list', className: 'ingredient-list' },
-                                            ingredients.map((ingredient, index) => {
-                                                const ingredientKey = `${selectedRecipe}-ing-${component}-${index}`;
-                                                const isCompleted = completedIngredients[ingredientKey];
-
-                                                return React.createElement('li', {
-                                                    key: index
-                                                },
-                                                    window.ChecklistItem({
-                                                        id: ingredientKey,
-                                                        label: scaleAmount(ingredient, orderCount),
-                                                        checked: isCompleted || false,
-                                                        onChange: (checked) => toggleIngredient && toggleIngredient(selectedRecipe, ingredientKey, component, index, ingredient),
-                                                        variant: 'default',
-                                                        className: isCompleted ? 'checked' : ''
-                                                    })
-                                                );
-                                            })
-                                        )
-                                    ])
-                                )
-                            )
-                        ]),
-
-                        // Instructions section
-                        React.createElement('section', { key: 'instructions', className: 'instructions-section' }, [
-                            (() => {
-                                // Check if all steps are completed
-                                const allStepsCompleted = (recipe.instructions || []).every((_, index) => {
-                                    const stepKey = `${selectedRecipe}-step-${index}`;
-                                    return completedSteps[stepKey];
-                                });
-
-                                return React.createElement('header', { key: 'header', className: 'section-header', style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } }, [
-                                    React.createElement('h3', { key: 'title', style: { margin: 0 } }, 'Instructions'),
-                                    React.createElement('button', {
-                                        key: 'toggle-all-steps',
-                                        type: 'button',
-                                        className: 'outline',
-                                        style: { padding: '0.4rem 0.8rem', fontSize: '0.85rem' },
-                                        onClick: () => {
-                                            (recipe.instructions || []).forEach((step, index) => {
-                                                const stepKey = `${selectedRecipe}-step-${index}`;
-                                                const isCompleted = completedSteps[stepKey];
-                                                // Only toggle items that don't match the target state
-                                                if (allStepsCompleted && isCompleted) {
-                                                    // All completed - uncheck this one
-                                                    if (toggleStep) {
-                                                        toggleStep(selectedRecipe, stepKey, index, step);
-                                                    }
-                                                } else if (!allStepsCompleted && !isCompleted) {
-                                                    // Not all completed - check this one
-                                                    if (toggleStep) {
-                                                        toggleStep(selectedRecipe, stepKey, index, step);
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }, allStepsCompleted ? 'Uncheck All' : 'Check All')
-                                ]);
-                            })(),
-                            React.createElement('div', { key: 'instructions-content', className: 'instructions-content' }, [
-                                React.createElement('ol', { key: 'steps', className: 'instructions-list' },
-                                    (recipe.instructions || []).map((step, index) => {
-                                        const stepKey = `${selectedRecipe}-step-${index}`;
-                                        const isCompleted = completedSteps[stepKey];
-
-                                        return React.createElement('li', {
-                                            key: index
-                                        },
-                                            window.ChecklistItem({
-                                                id: stepKey,
-                                                label: step,
-                                                checked: isCompleted || false,
-                                                onChange: (checked) => toggleStep && toggleStep(selectedRecipe, stepKey, index, step),
-                                                variant: 'step',
-                                                className: isCompleted ? 'checked' : ''
-                                            })
-                                        );
-                                    })
-                                ),
-                                recipe.notes && React.createElement('div', { key: 'notes', className: 'recipe-notes' }, [
-                                    React.createElement('h4', { key: 'notes-title' }, 'Notes'),
-                                    typeof recipe.notes === 'string'
-                                        ? React.createElement('p', { key: 'notes-text' }, recipe.notes)
-                                        : Array.isArray(recipe.notes)
-                                            ? React.createElement('div', { key: 'notes-list' }, recipe.notes.map((note, idx) =>
-                                                React.createElement('p', { key: idx }, note)
-                                            ))
-                                            : null
-                                ])
-                            ])
-                        ])
-                    ])
-                ].filter(Boolean))
+        // Controls: Chef, Status, Dish, Scale
+        React.createElement('div', { key: 'controls', className: 'modal-v5-controls', style: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 100px', gap: '0.75rem', alignItems: 'flex-end' } }, [
+            React.createElement('div', { key: 'chef' }, [
+                React.createElement('label', { style: { fontSize: '0.85rem', fontWeight: 600, color: '#00d9ff', display: 'block', marginBottom: '0.5rem' } }, 'Chef'),
+                React.createElement('input', { type: 'text', placeholder: 'Chef name', value: localChefName, onChange: (e) => handleChefNameChange(e.target.value), className: 'control-v5' })
+            ]),
+            React.createElement('div', { key: 'status' }, [
+                React.createElement('label', { style: { fontSize: '0.85rem', fontWeight: 600, color: '#00d9ff', display: 'block', marginBottom: '0.5rem' } }, 'Status'),
+                React.createElement('select', { value: currentStatus || '', onChange: (e) => updateRecipeStatus?.(selectedRecipe, e.target.value || null), className: 'control-v5' }, [
+                    React.createElement('option', { key: 'empty', value: '' }, 'Status'),
+                    React.createElement('option', { key: 'in-progress', value: 'in-progress' }, 'In Progress'),
+                    React.createElement('option', { key: 'complete', value: 'complete' }, 'Complete'),
+                    React.createElement('option', { key: 'plated', value: 'plated' }, 'Plated'),
+                    React.createElement('option', { key: 'packed', value: 'packed' }, 'Packed')
+                ])
+            ]),
+            React.createElement('div', { key: 'dish' }, [
+                React.createElement('label', { style: { fontSize: '0.85rem', fontWeight: 600, color: '#00d9ff', display: 'block', marginBottom: '0.5rem' } }, 'Dish'),
+                React.createElement('div', { className: 'control-v5-dish' }, displayName)
+            ]),
+            React.createElement('div', { key: 'scale' }, [
+                React.createElement('label', { style: { fontSize: '0.85rem', fontWeight: 600, color: '#00d9ff', display: 'block', marginBottom: '0.5rem' } }, 'Scale'),
+                React.createElement('input', { type: 'number', min: 1, max: 50, value: orderInput, onChange: (e) => handleOrderChange(e.target.value), className: 'control-v5 control-v5-scale' })
             ])
-    );
+        ]),
+
+        // Two-column content: Ingredients and Steps
+        React.createElement('div', { key: 'content', className: 'modal-v5-content' }, [
+            // Ingredients
+            React.createElement('div', { key: 'ing-panel', className: 'modal-v5-panel' }, [
+                React.createElement('h3', { key: 'ing-title', className: 'panel-v5-title' }, `Ingredients (${stats.ingredientCompleted}/${stats.ingredientTotal})`),
+                React.createElement('button', { key: 'ing-check-all', className: 'btn-v5-check-all', onClick: handleCheckAllIngredients, style: { width: '100%' } }, stats.ingredientCompleted === stats.ingredientTotal ? 'Uncheck All' : 'Check All'),
+                React.createElement('ul', { key: 'ing-list', className: 'ingredients-v5-list' },
+                    recipe.components ? Object.entries(recipe.components).flatMap(([comp, ings]) => [
+                        React.createElement('li', { key: `group-${comp}` }, [
+                            React.createElement('h4', { key: 'title', className: 'group-v5-title' }, comp),
+                            React.createElement('ul', { key: 'items' }, ings.map((ing, idx) => {
+                                const key = `${selectedRecipe}-ing-${comp}-${idx}`;
+                                const done = completedIngredients[key];
+                                return React.createElement('li', { key }, [
+                                    React.createElement('input', { key: 'cb', type: 'checkbox', checked: done || false, onChange: () => toggleIngredient?.(selectedRecipe, key, comp, idx, ing), style: { marginRight: '0.5rem' } }),
+                                    React.createElement('span', { key: 'text', style: { textDecoration: done ? 'line-through' : 'none', opacity: done ? 0.6 : 1 } }, scaleAmount(ing, orderInput))
+                                ]);
+                            }))
+                        ])
+                    ]) : [React.createElement('li', { key: 'empty' }, 'No ingredients')]
+                )
+            ]),
+
+            // Steps
+            React.createElement('div', { key: 'steps-panel', className: 'modal-v5-panel' }, [
+                React.createElement('h3', { key: 'steps-title', className: 'panel-v5-title' }, `Method (${stats.stepCompleted}/${stats.stepTotal})`),
+                React.createElement('button', { key: 'steps-check-all', className: 'btn-v5-check-all', onClick: handleCheckAllSteps, style: { width: '100%' } }, stats.stepCompleted === stats.stepTotal ? 'Uncheck All' : 'Check All'),
+                React.createElement('ol', { key: 'steps-list', className: 'steps-v5-list' },
+                    (recipe.instructions || []).map((step, idx) => {
+                        const key = `${selectedRecipe}-step-${idx}`;
+                        const done = completedSteps[key];
+                        return React.createElement('li', { key }, [
+                            React.createElement('input', { key: 'cb', type: 'checkbox', checked: done || false, onChange: () => toggleStep?.(selectedRecipe, key, idx, step), style: { marginRight: '0.5rem' } }),
+                            React.createElement('span', { key: 'text', style: { textDecoration: done ? 'line-through' : 'none', opacity: done ? 0.6 : 1 } }, step)
+                        ]);
+                    })
+                )
+            ])
+        ])
+    ]);
 };
 
 window.RecipeModal = RecipeModal;

@@ -211,7 +211,7 @@ const AppV2 = () => {
         ]),
 
         // Recipe Modal
-        React.createElement(window.RecipeModalV2, {
+        React.createElement(window.RecipeModal, {
             key: 'modal',
             selectedRecipe,
             setSelectedRecipe,
@@ -225,8 +225,7 @@ const AppV2 = () => {
             recipeStatus: recipeData.recipeStatus,
             updateRecipeStatus: recipeData.updateRecipeStatus,
             recipeChefNames: recipeData.recipeChefNames,
-            updateChefName: recipeData.updateChefName,
-            openLightbox
+            updateChefName: recipeData.updateChefName
         }),
 
         // Lightbox

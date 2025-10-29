@@ -1,33 +1,24 @@
-/* ============================================
-   THEME.CSS - Design Tokens & CSS Variables
-   ============================================
-   Central definition of colors, spacing, typography,
-   and semantic design tokens. Supports light/dark modes
-   with fallbacks to Pico CSS variables.
-   ============================================ */
+/**
+ * THEME.CSS - Design Tokens & CSS Variables
+ * Central definition of colors, spacing, typography, and semantic design tokens
+ * SynthWave '84 Cyberpunk aesthetic
+ */
 
 :root {
-  /* ============================================
-     PRIMARY BRAND COLORS - SynthWave '84
-     ============================================ */
+  /* PRIMARY BRAND COLORS */
   --color-primary: #00d9ff;
   --color-primary-light: #00ffff;
   --color-primary-muted: rgba(0, 217, 255, 0.3);
   --color-primary-subtle: rgba(0, 217, 255, 0.1);
-  --color-primary-dark: #00a8cc;
-  
-  /* Secondary accent - hot pink */
+
+  /* Secondary accent */
   --color-accent: #ff006e;
   --color-accent-light: #ff3385;
-  --color-accent-muted: rgba(255, 0, 110, 0.3);
   --color-accent-subtle: rgba(255, 0, 110, 0.1);
 
-  /* ============================================
-     STATUS & SEMANTIC COLORS - SynthWave palette
-     ============================================ */
+  /* Semantic colors */
   --color-success: #00ff88;
   --color-success-bg: rgba(0, 255, 136, 0.1);
-  --color-success-border: #00ff88;
 
   --color-warning: #ffae00;
   --color-warning-bg: rgba(255, 174, 0, 0.1);
@@ -35,95 +26,66 @@
   --color-error: #ff5555;
   --color-error-bg: rgba(255, 85, 85, 0.1);
 
-  /* ============================================
-     RECIPE STATUS COLORS (Cyberpunk theme)
-     ============================================ */
-  /* In-Progress: Bright Cyan */
+  /* Recipe status colors */
   --status-in-progress: #00d9ff;
   --status-in-progress-bg: rgba(0, 217, 255, 0.15);
-  --status-in-progress-text: #000000;
 
-  /* Complete: Neon Green */
   --status-complete: #00ff88;
   --status-complete-bg: rgba(0, 255, 136, 0.15);
-  --status-complete-text: #000000;
 
-  /* Plated: Hot Pink */
   --status-plated: #ff006e;
   --status-plated-bg: rgba(255, 0, 110, 0.15);
-  --status-plated-text: #ffffff;
 
-  /* Packed: Purple/Magenta */
   --status-packed: #ff55ff;
   --status-packed-bg: rgba(255, 85, 255, 0.15);
-  --status-packed-text: #000000;
 
-  /* ============================================
-     SURFACE COLORS (Semantic - backgrounds & cards)
-     ============================================ */
-  --surface-bg: var(--pico-background-color, #0a0e27);
-  --surface-overlay: rgba(0, 0, 0, 0.6);
+  /* Surface & container colors */
+  --surface-bg: #0a0e27;
   --surface-card: rgba(255, 255, 255, 0.08);
   --surface-card-hover: rgba(255, 255, 255, 0.12);
-  --surface-elevated: rgba(255, 255, 255, 0.12);
   --surface-form: rgba(30, 30, 50, 0.8);
   --surface-form-focus: rgba(50, 50, 80, 0.95);
 
-  /* ============================================
-     BORDER COLORS - Cyan glows
-     ============================================ */
+  /* Border colors */
   --surface-border: rgba(0, 217, 255, 0.2);
   --surface-border-hover: rgba(0, 217, 255, 0.4);
   --surface-border-strong: rgba(0, 217, 255, 0.6);
-  --surface-border-muted: rgba(255, 0, 110, 0.1);
 
-  /* ============================================
-     TEXT COLORS
-     ============================================ */
+  /* Text colors */
   --text-primary: #e0e0e0;
   --text-secondary: #b0b0b0;
   --text-muted: #808080;
   --text-inverse: #0a0e12;
   --text-accent: #00d9ff;
 
-  /* ============================================
-     SPACING SCALE (8px base unit)
-     ============================================ */
-  --space-xs: 0.25rem;  /* 4px */
-  --space-sm: 0.5rem;   /* 8px */
-  --space-md: 1rem;     /* 16px */
-  --space-lg: 1.5rem;   /* 24px */
-  --space-xl: 2rem;     /* 32px */
-  --space-2xl: 3rem;    /* 48px */
+  /* Spacing (8px base) */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
 
-  /* ============================================
-     TYPOGRAPHY
-     ============================================ */
+  /* Typography */
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  --font-size-sm: 0.875rem;   /* 14px */
-  --font-size-base: 1rem;     /* 16px */
-  --font-size-lg: 1.125rem;   /* 18px */
-  --font-size-xl: 1.25rem;    /* 20px */
-  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
 
-  /* ============================================
-     SHADOWS
-     ============================================ */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  /* Shadows */
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
   --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.25);
   --shadow-2xl: 0 20px 48px rgba(0, 0, 0, 0.3);
-  --shadow-modal: 0 8px 32px rgba(0, 0, 0, 0.4);
 
-  /* ============================================
-     BORDER RADIUS
-     ============================================ */
+  /* Border radius */
   --radius-xs: 2px;
   --radius-sm: 4px;
   --radius-md: 6px;
@@ -131,114 +93,41 @@
   --radius-xl: 12px;
   --radius-full: 9999px;
 
-  /* ============================================
-     TRANSITIONS & ANIMATIONS
-     ============================================ */
+  /* Transitions */
   --transition-fast: 0.15s ease;
   --transition-standard: 0.2s ease;
   --transition-slow: 0.3s ease;
 
-  /* ============================================
-     BACKDROP & OVERLAY
-     ============================================ */
+  /* Backdrop filters */
   --backdrop-blur: blur(10px);
-  --backdrop-blur-sm: blur(4px);
 
-  /* ============================================
-     GAPS & GAPS (for grid/flexbox)
-     ============================================ */
-  --gap-xs: 0.25rem;
+  /* Grid/Flexbox gaps */
   --gap-sm: 0.5rem;
   --gap-md: 1rem;
   --gap-lg: 1.5rem;
-  --gap-xl: 2rem;
 
-  /* ============================================
-     MODAL SIZES
-     ============================================ */
-  --modal-sm-width: 400px;
-  --modal-md-width: 600px;
-  --modal-lg-width: 900px;
-  --modal-xl-width: 1200px;
-  --modal-max-width: 1400px;
-  --modal-max-height: 90vh;
-
-  /* ============================================
-     BREAKPOINTS (for responsive design)
-     ============================================ */
-  --breakpoint-sm: 640px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
-  --breakpoint-2xl: 1536px;
-
-  /* ============================================
-     Z-INDEX SCALE
-     ============================================ */
+  /* Z-index scale */
   --z-dropdown: 100;
   --z-modal: 1000;
   --z-tooltip: 1100;
   --z-notification: 1200;
 
-  /* ============================================
-     FORM ELEMENT SIZES
-     ============================================ */
-  --input-height: 2.5rem;
+  /* Form element sizing */
   --input-padding-x: 0.75rem;
   --input-padding-y: 0.5rem;
   --input-border-width: 1px;
-  --input-focus-ring: 3px;
 
-  /* ============================================
-     BUTTON SIZES
-     ============================================ */
+  /* Button sizing */
   --btn-height: 2.5rem;
   --btn-padding-x: 1rem;
   --btn-padding-y: 0.5rem;
   --btn-font-weight: var(--font-weight-semibold);
 
-  /* ============================================
-     COMPONENT SPECIFIC
-     ============================================ */
+  /* Component specific */
   --checkbox-size: 18px;
-  --progress-height: 8px;
-  --progress-radius: 4px;
 }
 
-/* ============================================
-   LIGHT MODE OVERRIDES (SynthWave variant)
-   ============================================ */
-@media (prefers-color-scheme: light) {
-  :root {
-    /* Surface colors for light mode */
-    --surface-bg: #1a1a2e;
-    --surface-overlay: rgba(0, 0, 0, 0.5);
-    --surface-card: rgba(0, 217, 255, 0.08);
-    --surface-card-hover: rgba(0, 217, 255, 0.12);
-    --surface-elevated: rgba(0, 217, 255, 0.1);
-    --surface-form: rgba(10, 14, 18, 0.95);
-    --surface-form-focus: rgba(15, 15, 26, 1);
-
-    /* Border colors for light mode */
-    --surface-border: rgba(0, 217, 255, 0.25);
-    --surface-border-hover: rgba(0, 217, 255, 0.4);
-    --surface-border-strong: rgba(0, 217, 255, 0.6);
-    --surface-border-muted: rgba(255, 0, 110, 0.15);
-
-    /* Text colors for light mode */
-    --text-primary: #e0e0e0;
-    --text-secondary: #b0b0b0;
-    --text-muted: #808080;
-    --text-inverse: #ffffff;
-
-    /* Card and interactive elements */
-    --surface-card: rgba(0, 217, 255, 0.08);
-  }
-}
-
-/* ============================================
-   HIGH CONTRAST MODE (accessibility)
-   ============================================ */
+/* High contrast mode */
 @media (prefers-contrast: more) {
   :root {
     --surface-border: var(--color-primary);
@@ -247,9 +136,7 @@
   }
 }
 
-/* ============================================
-   REDUCED MOTION (accessibility)
-   ============================================ */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   :root {
     --transition-fast: 0s;

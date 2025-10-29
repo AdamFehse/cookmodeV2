@@ -5,16 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CookMode V2</title>
 
-    <!-- Pico CSS - Orange theme (vibrant, energetic) -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.orange.min.css"
-    />
 
     <!-- Custom styles -->
     <link rel="stylesheet" href="./styles/background.css" />
-    <link rel="stylesheet" href="./styles/main.css" />
-    <link rel="stylesheet" href="./styles/app-v2.css" />
+    <link rel="stylesheet" href="./styles/main.css" /> <!-- Imports theme.css and app-v2.css -->
 
     <script
       crossorigin
@@ -61,26 +55,21 @@
 
     <!-- Main UI components -->
     <script type="text/babel" src="./js/components/Header.js"></script>
-    <script type="text/babel" src="./js/components/RecipeGrid.js"></script>
     <script type="text/babel" src="./js/components/RecipeModal.js"></script>
     <script type="text/babel" src="./js/components/Lightbox.js"></script>
     <script type="text/babel" src="./js/components/RecipeFilters.js"></script>
 
     <!-- Chef workflow components -->
     <script type="text/babel" src="./js/components/chef/useChefData.js"></script>
-    <script type="text/babel" src="./js/components/chef/ChefStations.js"></script>
 
-    <!-- NEW V2 COMPONENTS (Refactored) -->
+    <!-- V2 COMPONENTS (Refactored) -->
     <script type="text/babel" src="./js/components/AccessibleSlider.js"></script>
     <script type="text/babel" src="./js/components/RecipeCard.js"></script>
     <script type="text/babel" src="./js/components/RecipeGridV2.js"></script>
-    <script type="text/babel" src="./js/components/RecipeModalV2.js"></script>
     <script type="text/babel" src="./js/components/chef/ChefStationsV2.js"></script>
     <script type="text/babel" src="./js/components/AppV2.js"></script>
 
     <!-- App entry point -->
-    <script type="text/babel" src="./js/components/App.js"></script>
-
     <script type="text/babel">
       const root = ReactDOM.createRoot(document.getElementById("root"));
       root.render(React.createElement(AppV2));
