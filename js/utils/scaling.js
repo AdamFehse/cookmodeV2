@@ -5,7 +5,7 @@
  * @param {number|string} amount - Number (2, 0.5) or fraction string ('1/2', '1/4')
  * @returns {number} Parsed numeric amount
  */
-const parseAmount = (amount) => {
+export const parseAmount = (amount) => {
     if (typeof amount === 'number' && Number.isFinite(amount)) {
         return amount;
     }
@@ -31,7 +31,7 @@ const parseAmount = (amount) => {
  * @param {number} multiplier - Scale factor (orderCount)
  * @returns {string} Formatted ingredient string
  */
-const scaleAmount = (ingredientObj, multiplier) => {
+export const scaleAmount = (ingredientObj, multiplier) => {
     if (!ingredientObj) return '';
     if (typeof ingredientObj === 'string') return ingredientObj;
 
@@ -73,20 +73,14 @@ const scaleAmount = (ingredientObj, multiplier) => {
  * @param {object} ingredientObj - Ingredient object
  * @returns {string} Clean ingredient name
  */
-const getIngredientName = (ingredientObj) => {
+export const getIngredientName = (ingredientObj) => {
     return ingredientObj.ingredient || '';
 };
 
-const slugToDisplayName = (slug) => {
+export const slugToDisplayName = (slug) => {
     // Convert slug to display name
     return slug
         .split('-')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 };
-
-// Export to global scope for other files
-window.parseAmount = parseAmount;
-window.scaleAmount = scaleAmount;
-window.getIngredientName = getIngredientName;
-window.slugToDisplayName = slugToDisplayName;

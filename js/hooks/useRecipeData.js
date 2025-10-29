@@ -1,7 +1,15 @@
+import {
+    getAssignedChefColor,
+    suggestChefColor,
+    registerChefColor,
+    resolveChefColor
+} from '../constants/index.js';
+import { generateIngredientKeyFromItem, generateStepKeyFromItem } from '../utils/keys.js';
+import { scaleAmount, slugToDisplayName } from '../utils/scaling.js';
+
 // Custom hook for managing recipe-related data and operations
-const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
+export const useRecipeData = (supabase, isSupabaseConnected, recipes = {}, cookName = 'CookMode V2') => {
     const [orderCounts, setOrderCounts] = React.useState(() => {
-        const recipes = window.RECIPES || {};
         return Object.keys(recipes).reduce((acc, slug) => {
             acc[slug] = 1;
             return acc;
@@ -14,17 +22,20 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [loadError, setLoadError] = React.useState(null);
 
-    const recipes = window.RECIPES || {};
-    const DEFAULT_CHEF_COLOR = window.DEFAULT_CHEF_COLOR || '#9333ea';
-    const getAssignedChefColor = window.getAssignedChefColor || (() => null);
-    const suggestChefColor = window.suggestChefColor || (() => 'var(--chef-purple)');
-    const registerChefColor = window.registerChefColor || (() => null);
-    const generateIngredientKeyFromItem = window.generateIngredientKeyFromItem;
-    const generateStepKeyFromItem = window.generateStepKeyFromItem;
-    const generateIngredientKey = window.generateIngredientKey;
-    const generateStepKey = window.generateStepKey;
-    const slugToDisplayName = window.slugToDisplayName;
-    const resolveChefColor = window.resolveChefColor || ((color) => color);
+    // Ensure new recipes get a default order count
+    React.useEffect(() => {
+        setOrderCounts(prev => {
+            const next = { ...prev };
+            let changed = false;
+            Object.keys(recipes).forEach((slug) => {
+                if (next[slug] === undefined) {
+                    next[slug] = 1;
+                    changed = true;
+                }
+            });
+            return changed ? next : prev;
+        });
+    }, [recipes]);
 
     // Helper: Upsert data to Supabase
     const upsertToSupabase = async (table, data, conflictKey) => {
@@ -148,7 +159,7 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                     .select('*');
 
                 if (chefError && chefError.code !== 'PGRST116') {
-                    console.warn(' Error loading chef names (table may not exist yet):', chefError);
+                    console.warn('Error loading chef names (table may not exist yet):', chefError);
                 } else if (chefData) {
                     const chefMap = {};
                     chefData.forEach(item => {
@@ -172,7 +183,7 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                 setIsLoading(false);
                 console.log('Supabase connected! Real-time sync active.');
             } catch (error) {
-                console.error(' Error loading data from Supabase:', error);
+                console.error('Error loading data from Supabase:', error);
                 setLoadError(error.message);
                 setIsLoading(false);
             }
@@ -184,30 +195,14 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
     const serializeIngredient = (ingredient) => {
         if (!ingredient) return '';
         if (typeof ingredient === 'string') return ingredient;
-        if (typeof window.scaleAmount === 'function') {
-            return window.scaleAmount(ingredient, 1);
-        }
-        const { ingredient: name = '', unit = '', prep, amount } = ingredient;
-        const pieces = [];
-        if (amount !== null && amount !== undefined && amount !== '') {
-            pieces.push(String(amount));
-        }
-        if (unit) pieces.push(unit);
-        if (name) pieces.push(name);
-        let result = pieces.join(' ').trim();
-        if (prep) {
-            result = `${result}${result ? ', ' : ''}${prep}`;
-        }
-        return result;
+        return scaleAmount(ingredient, 1);
     };
 
     const updateOrderCount = async (slug, count) => {
-        console.log('🔢 Updating order count:', slug, count);
+        console.log('Updating order count:', slug, count);
 
-        // Optimistically update UI
         setOrderCounts(prev => ({ ...prev, [slug]: count }));
 
-        // Sync to Supabase
         await upsertToSupabase('order_counts', {
             recipe_slug: slug,
             count: count,
@@ -218,57 +213,43 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
 
     const toggleIngredient = async (recipeSlug, ingredientKey, componentName, ingredientIndex, ingredientText) => {
         const newCheckedState = !completedIngredients[ingredientKey];
+        setCompletedIngredients(prev => ({
+            ...prev,
+            [ingredientKey]: newCheckedState
+        }));
 
-        // Optimistically update UI
-        setCompletedIngredients(prev => ({ ...prev, [ingredientKey]: newCheckedState }));
-
-        // Sync to Supabase (simplified - no metadata)
-        if (supabase && isSupabaseConnected) {
-            try {
-                const { error } = await supabase
-                    .from('ingredient_checks')
-                    .upsert({
-                        recipe_slug: recipeSlug,
-                        ingredient_index: ingredientIndex,
-                        component_name: componentName,
-                        ingredient_text: serializeIngredient(ingredientText),
-                        is_checked: newCheckedState
-                    }, {
-                        onConflict: 'recipe_slug,ingredient_index,component_name'
-                    });
-
-                if (error) {
-                    console.error('Error saving ingredient:', error);
-                }
-            } catch (error) {
-                console.error('Error updating ingredient:', error);
-            }
-        }
+        await upsertToSupabase('ingredient_checks', {
+            recipe_slug: recipeSlug,
+            component_name: componentName,
+            ingredient_index: ingredientIndex,
+            ingredient_text: serializeIngredient(ingredientText),
+            is_checked: newCheckedState,
+            updated_at: new Date().toISOString()
+        }, 'recipe_slug,component_name,ingredient_index');
     };
 
     const toggleStep = async (recipeSlug, stepKey, stepIndex, stepText) => {
-        const newCompletedState = !completedSteps[stepKey];
+        const newCheckedState = !completedSteps[stepKey];
+        setCompletedSteps(prev => ({
+            ...prev,
+            [stepKey]: newCheckedState
+        }));
 
-        // Optimistically update UI
-        setCompletedSteps(prev => ({ ...prev, [stepKey]: newCompletedState }));
+        if (!recipeSlug) return;
 
-        // Sync to Supabase (simplified - no metadata)
-        if (supabase && isSupabaseConnected) {
+        const payload = {
+            recipe_slug: recipeSlug,
+            step_index: stepIndex,
+            step_text: stepText || '',
+            is_completed: newCheckedState,
+            updated_at: new Date().toISOString()
+        };
+
+        if (!newCheckedState) {
+            await deleteFromSupabase('step_completions', recipeSlug);
+        } else {
             try {
-                const { error } = await supabase
-                    .from('step_completions')
-                    .upsert({
-                        recipe_slug: recipeSlug,
-                        step_index: stepIndex,
-                        step_text: stepText,
-                        is_completed: newCompletedState
-                    }, {
-                        onConflict: 'recipe_slug,step_index'
-                    });
-
-                if (error) {
-                    console.error('Error updating step:', error);
-                }
+                await upsertToSupabase('step_completions', payload, 'recipe_slug,step_index');
             } catch (error) {
                 console.error('Error updating step:', error);
             }
@@ -276,12 +257,10 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
     };
 
     const updateRecipeStatus = async (slug, status) => {
-        console.log('🏷️ Updating recipe status:', slug, status);
+        console.log('Updating recipe status:', slug, status);
 
-        // Optimistically update UI
         setRecipeStatus(prev => ({ ...prev, [slug]: status }));
 
-        // Sync to Supabase
         if (status === null) {
             await deleteFromSupabase('recipe_status', slug);
         } else {
@@ -296,7 +275,7 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
 
     const updateChefName = async (slug, chefName, chefColor) => {
         const trimmedName = (chefName || '').trim();
-        console.log('👨‍🍳 Updating chef name:', slug, trimmedName, chefColor);
+        console.log('Updating chef name:', slug, trimmedName, chefColor);
 
         if (!trimmedName) {
             setRecipeChefNames(prev => {
@@ -314,7 +293,6 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                 : (typeof chefColor === 'string' && chefColor.trim() !== '' ? chefColor : null);
 
         const resolvedColor = registerChefColor(trimmedName, explicitColor);
-
         const colorForState = resolvedColor || '';
 
         setRecipeChefNames(prev => ({
@@ -348,7 +326,7 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
             const orderCount = orderCounts[slug] || 1;
             map[chefName].recipes.push({
                 slug,
-                name: recipe.name || slugToDisplayName?.(slug) || slug,
+                name: recipe.name || slugToDisplayName(slug) || slug,
                 orderCount,
                 status: recipeStatus[slug] || null
             });
@@ -374,7 +352,7 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
             const orderCount = orderCounts[slug] || 1;
             map[status].recipes.push({
                 slug,
-                name: recipe.name || slugToDisplayName?.(slug) || slug,
+                name: recipe.name || slugToDisplayName(slug) || slug,
                 orderCount,
                 chefName: recipeChefNames[slug]?.name || 'Unassigned'
             });
@@ -409,7 +387,6 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
                     return 'delivery';
                 case 'complete':
                     return 'cook';
-                case 'gathered':
                 default:
                     return 'prep';
             }
@@ -426,7 +403,7 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
             bucket.totalOrders += orderCount;
             bucket.recipes.push({
                 slug,
-                name: recipe.name || slugToDisplayName?.(slug) || slug,
+                name: recipe.name || slugToDisplayName(slug) || slug,
                 status,
                 orderCount,
                 chefName,
@@ -459,7 +436,6 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
     }, [recipes, recipeStatus, recipeChefNames, orderCounts]);
 
     return {
-        // State (read-only for components)
         orderCounts,
         completedIngredients,
         completedSteps,
@@ -470,15 +446,11 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
         recipesByChef,
         ordersByStatus,
         threeDayPrep,
-
-        // Setters (only for useRealtime hook)
         setOrderCounts,
         setCompletedIngredients,
         setCompletedSteps,
         setRecipeStatus,
         setRecipeChefNames,
-
-        // Operations (for components)
         updateOrderCount,
         toggleIngredient,
         toggleStep,
@@ -486,6 +458,3 @@ const useRecipeData = (supabase, isSupabaseConnected, cookName) => {
         updateChefName
     };
 };
-
-// Export to global scope
-window.useRecipeData = useRecipeData;

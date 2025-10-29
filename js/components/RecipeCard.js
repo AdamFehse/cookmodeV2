@@ -1,3 +1,6 @@
+import { resolveChefColor } from '../constants/index.js';
+import { slugToDisplayName as defaultSlugToDisplayName } from '../utils/scaling.js';
+
 /**
  * RecipeCard - Single source of truth recipe card
  * Size prop controls layout: "grid" (default), "full", "compact"
@@ -17,7 +20,6 @@ const getStatusBadgeStyle = (stat) => {
 
 // Render badges with size-specific styling
 const renderBadges = (size, { status, chefName, chefColor, orderCount = 1 }) => {
-    const resolveChefColor = window.resolveChefColor || ((color) => color);
     const sizeStyles = size === 'grid' ? {
         padding: '0.25rem 0.5rem',
         borderRadius: 'var(--radius-sm)',
@@ -43,12 +45,13 @@ const renderBadges = (size, { status, chefName, chefColor, orderCount = 1 }) => 
         }, chefName),
         orderCount > 1 && React.createElement('span', {
             key: 'orders',
-            style: { backgroundColor: 'var(--color-primary)', color: 'var(--text-inverse)', ...sizeStyles, fontWeight: '700' }
-        }, size === 'full' ? `${orderCount}× orders` : `×${orderCount}`)
+            style: { backgroundColor: 'var(--color-primary)', color: 'var(--text-inverse)', ...sizeStyles, fontWeight: '700' },
+            'aria-label': `${orderCount} active orders`
+        }, size === 'full' ? `${orderCount} orders` : `x${orderCount}`)
     ];
 };
 
-const RecipeCard = React.memo(({
+export const RecipeCard = React.memo(({
     slug,
     recipe = {},
     size = 'grid',
@@ -56,21 +59,31 @@ const RecipeCard = React.memo(({
     chefName,
     chefColor,
     orderCount = 1,
-    progress = 0, // 0-100 percentage
+    progress = 0,
     onClick,
     clickable = true,
     showBadges = true,
-    showImage = true
+    showImage = true,
+    slugToDisplayName = defaultSlugToDisplayName
 }) => {
-    const slugToDisplayName = window.slugToDisplayName || ((s) => s);
     const displayName = recipe.name || slugToDisplayName(slug);
+    const handleCardKeyDown = (event) => {
+        if (!clickable) return;
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            if (typeof onClick === 'function') {
+                onClick(event);
+            }
+        }
+    };
 
-    // Grid size (used in recipe list)
     if (size === 'grid') {
         return React.createElement('article', {
             className: 'recipe-card recipe-card--grid' + (clickable ? ' cursor-pointer' : ''),
             onClick: clickable ? onClick : undefined,
-            tabIndex: clickable ? 0 : -1
+            onKeyDown: handleCardKeyDown,
+            tabIndex: clickable ? 0 : -1,
+            role: clickable ? 'button' : undefined
         }, [
             showImage && recipe.images?.[0] && React.createElement('img', {
                 key: 'image',
@@ -93,7 +106,6 @@ const RecipeCard = React.memo(({
         ]);
     }
 
-    // Full size (used in modals)
     if (size === 'full') {
         return React.createElement('div', { className: 'recipe-card recipe-card--full' }, [
             showImage && recipe.images?.[0] && React.createElement('img', {
@@ -114,7 +126,6 @@ const RecipeCard = React.memo(({
         ]);
     }
 
-    // Compact size (used in chef prep areas)
     if (size === 'compact') {
         const rgbMap = {
             'in-progress': '0, 217, 255',
@@ -128,6 +139,9 @@ const RecipeCard = React.memo(({
         return React.createElement('div', {
             className: 'recipe-card recipe-card--compact' + (clickable ? ' cursor-pointer' : ''),
             onClick: clickable ? onClick : undefined,
+            onKeyDown: handleCardKeyDown,
+            tabIndex: clickable ? 0 : -1,
+            role: clickable ? 'button' : undefined,
             style: {
                 background: backgroundColor
             }
@@ -156,8 +170,7 @@ const RecipeCard = React.memo(({
         ]);
     }
 
-    return null; // Unknown size
+    return null;
 });
 
 RecipeCard.displayName = 'RecipeCard';
-window.RecipeCard = RecipeCard;

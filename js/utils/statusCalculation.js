@@ -1,3 +1,5 @@
+import { generateStepKey } from './keys.js';
+
 /**
  * Status Calculation Utilities
  *
@@ -13,15 +15,13 @@
  * @param {number} orderCount - Order count for this recipe
  * @returns {object} { status, percentage, label, color }
  */
-const calculateDishStatus = (slug, recipe, completedIngredients, completedSteps, orderCount = 1) => {
-    const generateStepKey = window.generateStepKey || (() => '');
-
+export const calculateDishStatus = (slug, recipe, completedIngredients, completedSteps, orderCount = 1) => {
     if (!recipe) {
         return {
             status: 'not-started',
             percentage: 0,
             label: 'Not Started',
-            color: '#ef4444' // red
+            color: '#ef4444'
         };
     }
 
@@ -29,7 +29,6 @@ const calculateDishStatus = (slug, recipe, completedIngredients, completedSteps,
     let totalItems = 0;
     let completedItems = 0;
 
-    // Count steps
     const instructions = recipe.instructions || [];
     instructions.forEach((_, idx) => {
         totalItems++;
@@ -39,22 +38,20 @@ const calculateDishStatus = (slug, recipe, completedIngredients, completedSteps,
         }
     });
 
-    // Calculate percentage
     const percentage = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
 
-    // Determine status
     let status = 'not-started';
     let label = 'Not Started';
-    let color = '#ef4444'; // red
+    let color = '#ef4444';
 
     if (percentage > 0 && percentage < 100) {
         status = 'in-progress';
         label = 'In Progress';
-        color = '#eab308'; // yellow
+        color = '#eab308';
     } else if (percentage === 100) {
         status = 'complete';
         label = 'Complete';
-        color = '#10b981'; // green
+        color = '#10b981';
     }
 
     return {
@@ -74,7 +71,7 @@ const calculateDishStatus = (slug, recipe, completedIngredients, completedSteps,
  * @param {object} completedSteps - Completed steps map
  * @returns {object} { percentage, completedItems, totalItems }
  */
-const calculateChefProgress = (recipes, completedIngredients, completedSteps) => {
+export const calculateChefProgress = (recipes, completedIngredients, completedSteps) => {
     let totalItems = 0;
     let completedItems = 0;
 
@@ -99,19 +96,15 @@ const calculateChefProgress = (recipes, completedIngredients, completedSteps) =>
  * @param {object} completedSteps - Completed steps map
  * @returns {object} { percentage, completedItems, totalItems }
  */
-const calculateKitchenProgress = (allRecipes, completedSteps) => {
+export const calculateKitchenProgress = (allRecipes, completedSteps) => {
     let totalDishes = 0;
     let completedDishes = 0;
 
-    // Count all recipes with instructions
     Object.entries(allRecipes || {}).forEach(([slug, recipe]) => {
         if (recipe?.instructions && recipe.instructions.length > 0) {
             totalDishes++;
 
-            // Check if dish is 100% complete (all steps done)
             const instructions = recipe.instructions || [];
-            const generateStepKey = window.generateStepKey || (() => '');
-
             let allStepsDone = true;
             instructions.forEach((_, idx) => {
                 const stepKey = generateStepKey(slug, idx);
@@ -134,8 +127,3 @@ const calculateKitchenProgress = (allRecipes, completedSteps) => {
         totalItems: totalDishes
     };
 };
-
-// Export to window
-window.calculateDishStatus = calculateDishStatus;
-window.calculateChefProgress = calculateChefProgress;
-window.calculateKitchenProgress = calculateKitchenProgress;

@@ -1,8 +1,13 @@
+import { RecipeCard } from './RecipeCard.js';
+import { getIngredientName as defaultGetIngredientName, slugToDisplayName } from '../utils/scaling.js';
+
 /**
  * RecipeGridV2 - Recipe grid using unified RecipeCard component
  * Uses single source of truth card design
  */
-const RecipeGridV2 = ({
+const fallbackGetIngredientName = defaultGetIngredientName;
+
+export const RecipeGridV2 = ({
     recipes,
     recipeStatus,
     recipeChefNames,
@@ -15,8 +20,33 @@ const RecipeGridV2 = ({
     selectedIngredient,
     selectedComponent,
 }) => {
-    const slugToDisplayName = window.slugToDisplayName;
-    const getIngredientName = window.getIngredientName || ((ing) => typeof ing === 'string' ? ing : ing.ingredient);
+    const getIngredientName = fallbackGetIngredientName;
+    const searchIndex = React.useMemo(() => {
+        const index = {};
+        Object.entries(recipes || {}).forEach(([slug, recipe = {}]) => {
+            const componentNames = Object.keys(recipe.components || {}).map((component) => (component || '').toLowerCase());
+            const ingredientNames = Object.values(recipe.components || {})
+                .flat()
+                .map((ingredient) => {
+                    const name = getIngredientName(ingredient);
+                    return (name || '').toLowerCase();
+                })
+                .filter(Boolean);
+
+            index[slug] = {
+                name: (recipe.name || '').toLowerCase(),
+                category: (recipe.category || '').toLowerCase(),
+                components: new Set(componentNames),
+                componentText: componentNames.join(' '),
+                ingredients: new Set(ingredientNames),
+                ingredientText: ingredientNames.join(' ')
+            };
+        });
+        return index;
+    }, [recipes]);
+    const filterTextLower = filterText ? filterText.trim().toLowerCase() : '';
+    const selectedIngredientLower = selectedIngredient !== 'all' ? selectedIngredient.toLowerCase() : '';
+    const selectedComponentLower = selectedComponent !== 'all' ? selectedComponent.toLowerCase() : '';
 
     if (Object.keys(recipes).length === 0) {
         return React.createElement('div', {
@@ -24,49 +54,39 @@ const RecipeGridV2 = ({
         }, 'No recipes loaded. Edit recipes.js to add recipes.');
     }
 
-    // Define category order
     const categoryOrder = ['Entree', 'Side', 'Soup', 'Dessert'];
 
-    // Filter recipes based on all filters
-    const filteredRecipes = Object.entries(recipes).filter(([, recipe]) => {
+    const filteredRecipes = Object.entries(recipes).filter(([slug, recipe]) => {
+        const searchData = searchIndex[slug] || {
+            name: '',
+            category: '',
+            components: new Set(),
+            componentText: '',
+            ingredients: new Set(),
+            ingredientText: ''
+        };
+
         if (selectedCategory !== 'all' && recipe.category !== selectedCategory) return false;
         if (selectedDish !== 'all' && recipe.name !== selectedDish) return false;
 
-        if (selectedComponent !== 'all') {
-            const recipeComponents = Object.keys(recipe.components || {});
-            if (!recipeComponents.includes(selectedComponent)) return false;
+        if (selectedComponentLower) {
+            if (!searchData.components.has(selectedComponentLower)) return false;
         }
 
-        if (selectedIngredient !== 'all') {
-            const recipeIngredients = Object.values(recipe.components || {})
-                .flat()
-                .map(ing => getIngredientName(ing))
-                .join(' ')
-                .toLowerCase();
-            if (!recipeIngredients.includes(selectedIngredient.toLowerCase())) return false;
+        if (selectedIngredientLower) {
+            if (!searchData.ingredients.has(selectedIngredientLower)) return false;
         }
 
-        if (filterText) {
-            const searchText = filterText.toLowerCase();
-            const name = (recipe.name || '').toLowerCase();
-            const category = (recipe.category || '').toLowerCase();
-            const recipeIngredients = Object.values(recipe.components || {})
-                .flat()
-                .map(ing => getIngredientName(ing))
-                .join(' ')
-                .toLowerCase();
-            const componentNames = Object.keys(recipe.components || {}).join(' ').toLowerCase();
-
-            return name.includes(searchText) ||
-                   category.includes(searchText) ||
-                   recipeIngredients.includes(searchText) ||
-                   componentNames.includes(searchText);
+        if (filterTextLower) {
+            return searchData.name.includes(filterTextLower) ||
+                searchData.category.includes(filterTextLower) ||
+                searchData.ingredientText.includes(filterTextLower) ||
+                searchData.componentText.includes(filterTextLower);
         }
 
         return true;
     });
 
-    // Sort recipes by category order
     const sortedRecipes = [...filteredRecipes].sort(([, recipeA], [, recipeB]) => {
         const categoryA = recipeA.category || '';
         const categoryB = recipeB.category || '';
@@ -86,7 +106,6 @@ const RecipeGridV2 = ({
             const chefData = recipeChefNames[slug];
             const orderCount = orderCounts[slug] || 1;
 
-            // Calculate recipe progress based on steps
             let totalSteps = 0;
             let completedStepsCount = 0;
             if (recipe.instructions) {
@@ -100,7 +119,7 @@ const RecipeGridV2 = ({
             }
             const progress = totalSteps > 0 ? Math.round((completedStepsCount / totalSteps) * 100) : 0;
 
-            return React.createElement(window.RecipeCard, {
+            return React.createElement(RecipeCard, {
                 key: slug,
                 slug,
                 recipe,
@@ -113,7 +132,8 @@ const RecipeGridV2 = ({
                 onClick: () => setSelectedRecipe(slug),
                 clickable: true,
                 showBadges: true,
-                showImage: true
+                showImage: true,
+                slugToDisplayName
             });
         }) : [
             React.createElement('p', {
@@ -122,5 +142,3 @@ const RecipeGridV2 = ({
         ])
     ]);
 };
-
-window.RecipeGridV2 = RecipeGridV2;

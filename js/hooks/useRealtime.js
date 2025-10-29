@@ -1,20 +1,23 @@
+import { DEFAULT_CHEF_COLOR, registerChefColor, suggestChefColor } from '../constants/index.js';
+import { generateIngredientKeyFromItem, generateStepKeyFromItem } from '../utils/keys.js';
+
 // Custom hook for real-time Supabase subscriptions
-const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, setCompletedSteps, setRecipeStatus, setOrderCounts, setRecipeChefNames) => {
+export const useRealtime = (
+    supabase,
+    isSupabaseConnected,
+    setCompletedIngredients,
+    setCompletedSteps,
+    setRecipeStatus,
+    setOrderCounts,
+    setRecipeChefNames
+) => {
     const channelRef = React.useRef(null);
 
     React.useEffect(() => {
         if (!supabase || !isSupabaseConnected) return;
 
-        const DEFAULT_CHEF_COLOR = window.DEFAULT_CHEF_COLOR || '#9333ea';
-        const registerChefColor = window.registerChefColor || (() => null);
-        const suggestChefColor = window.suggestChefColor || (() => 'var(--chef-purple)');
-        const generateIngredientKeyFromItem = window.generateIngredientKeyFromItem;
-        const generateStepKeyFromItem = window.generateStepKeyFromItem;
-
-        // Create a channel for all real-time updates
         const channel = supabase.channel('kitchen-updates');
 
-        // Listen to ingredient_checks changes
         channel.on(
             'postgres_changes',
             { event: '*', schema: 'public', table: 'ingredient_checks' },
@@ -38,7 +41,6 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
             }
         );
 
-        // Listen to step_completions changes
         channel.on(
             'postgres_changes',
             { event: '*', schema: 'public', table: 'step_completions' },
@@ -51,7 +53,6 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
             }
         );
 
-        // Listen to recipe_status changes
         channel.on(
             'postgres_changes',
             { event: '*', schema: 'public', table: 'recipe_status' },
@@ -70,7 +71,6 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
             }
         );
 
-        // Listen to order_counts changes
         channel.on(
             'postgres_changes',
             { event: '*', schema: 'public', table: 'order_counts' },
@@ -82,7 +82,6 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
             }
         );
 
-        // Listen to recipe_chef_names changes
         channel.on(
             'postgres_changes',
             { event: '*', schema: 'public', table: 'recipe_chef_names' },
@@ -123,15 +122,10 @@ const useRealtime = (supabase, isSupabaseConnected, setCompletedIngredients, set
         channel.subscribe();
         channelRef.current = channel;
 
-        // Cleanup on unmount
         return () => {
             if (channelRef.current) {
                 supabase.removeChannel(channelRef.current);
             }
         };
-    }, [isSupabaseConnected, supabase]);
-    // Note: React setters are stable and don't need to be in dependency array
+    }, [isSupabaseConnected, supabase, setCompletedIngredients, setCompletedSteps, setRecipeStatus, setOrderCounts, setRecipeChefNames]);
 };
-
-// Export to global scope
-window.useRealtime = useRealtime;

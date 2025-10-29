@@ -1,12 +1,14 @@
+import { calculateKitchenProgress } from '../../utils/statusCalculation.js';
+import { resolveChefColor } from '../../constants/index.js';
+import { RecipeCard } from '../RecipeCard.js';
+
 /**
  * ChefStationsV2 - Simple chef cards with assigned recipes (individually collapsible)
  */
-const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, recipeData = {} }) => {
+export const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}, recipeData = {} }) => {
     const { useState, useMemo } = React;
     const [collapsedChefs, setCollapsedChefs] = useState({});
-    const calculateKitchenProgress = window.calculateKitchenProgress || (() => ({ percentage: 0, completedItems: 0, totalItems: 0 }));
 
-    // Calculate kitchen progress
     const kitchenProgress = useMemo(() =>
         calculateKitchenProgress(recipes, recipeData.completedSteps || {}),
         [recipes, recipeData.completedSteps]
@@ -15,13 +17,11 @@ const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}
     return React.createElement('section', {
         className: 'chef-stations-v2'
     }, [
-        // Kitchen Progress Bar
         React.createElement('div', {
             key: 'kitchen-progress',
             'data-kitchen-progress': true,
             className: 'kitchen-progress-container'
         }, [
-            // Kitchen header
             React.createElement('div', {
                 key: 'header',
                 className: 'kitchen-progress-header'
@@ -36,7 +36,6 @@ const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}
                     className: 'kitchen-progress-percentage'
                 }, `${kitchenProgress.percentage}%`)
             ]),
-            // Progress bar
             React.createElement('div', {
                 key: 'bar-container',
                 className: 'kitchen-progress-bar-container'
@@ -48,20 +47,17 @@ const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}
                     width: `${kitchenProgress.percentage}%`
                 }
             })),
-            // Details
             React.createElement('small', {
                 key: 'details',
                 className: 'kitchen-progress-details'
             }, `${kitchenProgress.completedItems} of ${kitchenProgress.totalItems} recipes 100% complete`)
         ]),
 
-        // Title
         React.createElement('h2', {
             key: 'title',
             className: 'chef-stations-title'
         }, `Chef Stations (${chefSummaries.length})`),
 
-        // Chef Cards
         React.createElement('div', {
             key: 'chefs-grid',
             className: 'chefs-grid'
@@ -69,7 +65,9 @@ const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}
             const chefName = chef.name;
             const assignment = chefAssignments?.[chefName];
             const assignedRecipes = assignment?.recipes || [];
-            const borderColor = window.resolveChefColor?.(chef.color || '') || '#6c63ff';
+            const borderColor = resolveChefColor(chef.color || '');
+            const sanitizedChefId = (chefName || 'unassigned').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            const panelId = `chef-panel-${sanitizedChefId}`;
 
             const isChefCollapsed = collapsedChefs[chefName];
             const toggleChef = () => {
@@ -88,11 +86,13 @@ const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}
                     boxShadow: `0 0 20px ${borderColor}40`
                 }
             }, [
-                // Chef name header (clickable)
-                React.createElement('div', {
+                React.createElement('button', {
                     key: 'header',
+                    type: 'button',
                     className: 'chef-card-header',
-                    onClick: toggleChef
+                    onClick: toggleChef,
+                    'aria-expanded': String(!isChefCollapsed),
+                    'aria-controls': panelId
                 }, [
                     React.createElement('h3', {
                         key: 'name',
@@ -105,21 +105,18 @@ const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}
                     React.createElement('span', {
                         key: 'toggle',
                         className: 'chef-card-toggle',
-                        style: {
-                            transform: isChefCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)'
-                        }
-                    }, '▼')
+                        'aria-hidden': 'true'
+                    }, isChefCollapsed ? '>' : 'v')
                 ]),
 
-                // Recipe cards (hidden when collapsed)
                 !isChefCollapsed && assignedRecipes.length > 0 && React.createElement('div', {
                     key: 'recipes',
-                    className: 'chef-recipes-grid'
+                    className: 'chef-recipes-grid',
+                    id: panelId
                 }, assignedRecipes.map(({ slug, recipe }) => {
                     const status = recipeData.recipeStatus?.[slug];
                     const orderCount = recipeData.orderCounts?.[slug] || 1;
 
-                    // Calculate recipe progress
                     let totalSteps = 0;
                     let completedStepsCount = 0;
                     if (recipe?.instructions) {
@@ -139,7 +136,7 @@ const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}
                         'data-slug': slug,
                         className: 'chef-recipe-card-wrapper',
                         onClick: () => recipeData.setSelectedRecipe?.(slug)
-                    }, React.createElement(window.RecipeCard, {
+                    }, React.createElement(RecipeCard, {
                         key: 'card',
                         slug,
                         recipe,
@@ -158,5 +155,3 @@ const ChefStationsV2 = ({ chefSummaries = [], chefAssignments = {}, recipes = {}
         }))
     ]);
 };
-
-window.ChefStationsV2 = ChefStationsV2;

@@ -1,6 +1,10 @@
-const DEFAULT_CHEF_COLOR = window.DEFAULT_CHEF_COLOR || '#9333ea';
-const getAssignedChefColor = window.getAssignedChefColor || (() => null);
-const suggestChefColor = window.suggestChefColor || (() => 'var(--chef-purple)');
+import {
+    DEFAULT_CHEF_COLOR,
+    getAssignedChefColor,
+    suggestChefColor
+} from '../../constants/index.js';
+import { parseAmount, getIngredientName } from '../../utils/scaling.js';
+import { generateStepKey } from '../../utils/keys.js';
 
 const normalizeChefMeta = (meta = {}) => {
     const name = (meta.name || '').trim();
@@ -25,7 +29,6 @@ const buildIngredientKey = (ingredientName, unit) => {
 };
 
 const sumChefAssignments = (assignments, completedSteps) => {
-    const generateStepKey = window.generateStepKey || (() => '');
     return Object.values(assignments).map((assignment) => {
         let totalOrders = 0;
         let totalIngredients = 0;
@@ -63,10 +66,8 @@ const sumChefAssignments = (assignments, completedSteps) => {
     }).sort((a, b) => a.name.localeCompare(b.name));
 };
 
-const useChefData = (recipes, orderCounts, recipeChefNames, completedSteps) => {
+export const useChefData = (recipes, orderCounts, recipeChefNames, completedSteps) => {
     const { useMemo } = React;
-    const parseAmount = window.parseAmount || ((value) => parseFloat(value) || 0);
-    const getIngredientName = window.getIngredientName || ((ing) => typeof ing === 'string' ? ing : ing.ingredient);
 
     const assignments = useMemo(() => {
         const map = {};
@@ -130,7 +131,7 @@ const useChefData = (recipes, orderCounts, recipeChefNames, completedSteps) => {
     };
 };
 
-const useChefModalData = (chefAssignments, selectedChef) => {
+export const useChefModalData = (chefAssignments, selectedChef) => {
     const { useMemo } = React;
 
     return useMemo(() => {
@@ -168,7 +169,3 @@ const useChefModalData = (chefAssignments, selectedChef) => {
         };
     }, [chefAssignments, selectedChef]);
 };
-
-window.normalizeChefMeta = normalizeChefMeta;
-window.useChefData = useChefData;
-window.useChefModalData = useChefModalData;

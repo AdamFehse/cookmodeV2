@@ -1,8 +1,8 @@
 // Global constants for CookMode
-const DEFAULT_CHEF_COLOR = '#a855f7';
+export const DEFAULT_CHEF_COLOR = '#a855f7';
 
 // Chef color mappings - simplified
-const CHEF_COLORS = {
+export const CHEF_COLORS = {
     'var(--chef-purple)': '#a855f7',
     'var(--chef-blue)': '#3b82f6',
     'var(--chef-red)': '#ef4444',
@@ -12,7 +12,7 @@ const CHEF_COLORS = {
     'var(--chef-pink)': '#ec4899'
 };
 
-const CHEF_COLOR_SEQUENCE = [
+export const CHEF_COLOR_SEQUENCE = [
     'var(--chef-purple)',
     'var(--chef-blue)',
     'var(--chef-teal)',
@@ -23,7 +23,7 @@ const CHEF_COLOR_SEQUENCE = [
 ];
 
 // Resolve CSS variable to hex color
-const resolveChefColor = (color) => {
+export const resolveChefColor = (color) => {
     if (!color) return DEFAULT_CHEF_COLOR;
     if (color.startsWith('#')) return color;
     return CHEF_COLORS[color] || DEFAULT_CHEF_COLOR;
@@ -34,12 +34,12 @@ const normalizeChefName = (name) => (name || '').trim().toLowerCase();
 // Chef color tracking
 const chefColorAssignments = {};
 
-const getAssignedChefColor = (name) => {
+export const getAssignedChefColor = (name) => {
     const normalized = normalizeChefName(name);
     return normalized ? (chefColorAssignments[normalized] || null) : null;
 };
 
-const suggestChefColor = (name) => {
+export const suggestChefColor = (name) => {
     const assigned = getAssignedChefColor(name);
     if (assigned) return assigned;
     // Find first unassigned color from sequence
@@ -50,7 +50,7 @@ const suggestChefColor = (name) => {
     return DEFAULT_CHEF_COLOR;
 };
 
-const registerChefColor = (name, preferredColor) => {
+export const registerChefColor = (name, preferredColor) => {
     const normalized = normalizeChefName(name);
     if (!normalized) return null;
 
@@ -61,11 +61,3 @@ const registerChefColor = (name, preferredColor) => {
     chefColorAssignments[normalized] = color;
     return color;
 };
-
-// Export to window
-window.DEFAULT_CHEF_COLOR = DEFAULT_CHEF_COLOR;
-window.CHEF_COLORS = CHEF_COLORS;
-window.resolveChefColor = resolveChefColor;
-window.getAssignedChefColor = getAssignedChefColor;
-window.suggestChefColor = suggestChefColor;
-window.registerChefColor = registerChefColor;

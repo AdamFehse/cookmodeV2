@@ -7,7 +7,7 @@
  * @param {number} ingredientIndex - Index of ingredient in component
  * @returns {string} Formatted key
  */
-const generateIngredientKey = (recipeSlug, componentName, ingredientIndex) => {
+export const generateIngredientKey = (recipeSlug, componentName, ingredientIndex) => {
     return `${recipeSlug}-ing-${componentName}-${ingredientIndex}`;
 };
 
@@ -16,7 +16,7 @@ const generateIngredientKey = (recipeSlug, componentName, ingredientIndex) => {
  * @param {object} item - Database item with recipe_slug, component_name, ingredient_index
  * @returns {string} Formatted key
  */
-const generateIngredientKeyFromItem = (item) => {
+export const generateIngredientKeyFromItem = (item) => {
     return generateIngredientKey(item.recipe_slug, item.component_name, item.ingredient_index);
 };
 
@@ -26,7 +26,7 @@ const generateIngredientKeyFromItem = (item) => {
  * @param {number} stepIndex - Index of step
  * @returns {string} Formatted key
  */
-const generateStepKey = (recipeSlug, stepIndex) => {
+export const generateStepKey = (recipeSlug, stepIndex) => {
     return `${recipeSlug}-step-${stepIndex}`;
 };
 
@@ -35,12 +35,6 @@ const generateStepKey = (recipeSlug, stepIndex) => {
  * @param {object} item - Database item with recipe_slug, step_index
  * @returns {string} Formatted key
  */
-const generateStepKeyFromItem = (item) => {
+export const generateStepKeyFromItem = (item) => {
     return generateStepKey(item.recipe_slug, item.step_index);
 };
-
-// Export to global scope for other files
-window.generateIngredientKey = generateIngredientKey;
-window.generateIngredientKeyFromItem = generateIngredientKeyFromItem;
-window.generateStepKey = generateStepKey;
-window.generateStepKeyFromItem = generateStepKeyFromItem;

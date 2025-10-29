@@ -409,16 +409,14 @@ dialog::backdrop {
     background: rgba(255, 0, 110, 0.1);
     border: 1px solid rgba(255, 0, 110, 0.3);
     color: var(--text-primary);
-    width: 40px;
-    height: 40px;
     border-radius: var(--radius-md);
-    font-size: 1.3rem;
+    font-size: 0.95rem;
     cursor: pointer;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     transition: all var(--transition-fast);
-    padding: 0;
+    padding: 0.35rem 0.85rem;
     font-weight: 600;
 }
 
@@ -677,11 +675,22 @@ dialog::backdrop {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     padding: 0.25rem 0;
+    background: transparent;
+    border: none;
+    text-align: left;
+    color: inherit;
+    font: inherit;
     user-select: none;
     transition: opacity 0.2s ease;
     margin-bottom: 0.75rem;
     cursor: pointer;
+}
+
+.chef-card-header:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
 }
 
 .chef-card-header:hover {
@@ -759,55 +768,6 @@ dialog::backdrop {
     height: 100%;
     background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
     transition: width var(--transition-standard);
-}
-
-/* ============================================
-   LIGHTBOX
-   ============================================ */
-.modal.lightbox {
-    max-width: 90vw;
-    max-height: 90vh;
-}
-
-.lightbox-content {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.lightbox-image {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-
-.lightbox-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
-    background: rgba(0, 0, 0, 0.6);
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all var(--transition-fast);
-}
-
-.lightbox-nav:hover {
-    background: rgba(0, 0, 0, 0.8);
-}
-
-.lightbox-nav-prev {
-    left: 1rem;
-}
-
-.lightbox-nav-next {
-    right: 1rem;
 }
 
 /* ============================================
@@ -957,148 +917,6 @@ dialog::backdrop {
     grid-column: 1 / -1;
     text-align: center;
     color: var(--text-muted);
-}
-
-/* ============================================
-   RECIPE MODAL STYLES
-   ============================================ */
-.modal-v5-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.modal-v5-header h2 {
-    margin: 0;
-    flex: 1;
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.modal-v5-close {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0;
-    transition: color var(--transition-fast);
-}
-
-.modal-v5-close:hover {
-    color: var(--text-primary);
-}
-
-.modal-v5-controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 100px;
-    gap: 0.75rem;
-    align-items: flex-end;
-    margin-bottom: 1.5rem;
-}
-
-.modal-v5-controls label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #00d9ff;
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.control-v5 {
-    width: 100%;
-    padding: 0.5rem;
-    background: rgba(0, 217, 255, 0.05);
-    border: 1px solid rgba(0, 217, 255, 0.3);
-    border-radius: var(--radius-md);
-    color: var(--text-primary);
-    font-family: inherit;
-    font-size: inherit;
-}
-
-.control-v5:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
-}
-
-.control-v5-dish {
-    padding: 0.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-md);
-    color: var(--text-primary);
-}
-
-.control-v5-scale {
-    font-size: 1rem;
-}
-
-.modal-v5-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    height: 100%;
-}
-
-.modal-v5-panel {
-    display: flex;
-    flex-direction: column;
-}
-
-.panel-v5-title {
-    margin: 0 0 1rem 0;
-    font-size: 1.1rem;
-    font-weight: 700;
-}
-
-.btn-v5-check-all {
-    width: 100%;
-    margin-bottom: 1rem;
-}
-
-.ingredients-v5-list,
-.steps-v5-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    flex: 1;
-    overflow-y: auto;
-}
-
-.ingredients-v5-list li,
-.steps-v5-list li {
-    margin-bottom: 0.75rem;
-    padding: 0.5rem;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-}
-
-.ingredients-v5-list li input,
-.steps-v5-list li input {
-    margin-right: 0.5rem;
-    cursor: pointer;
-}
-
-.ingredients-v5-list li span,
-.steps-v5-list li span {
-    flex: 1;
-}
-
-.group-v5-title {
-    margin: 0.75rem 0 0.5rem 0;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--color-primary);
 }
 
 /* ============================================

@@ -1,4 +1,4 @@
-const Header = ({
+export const Header = ({
     supabase,
     isSupabaseConnected,
 }) => {
@@ -14,7 +14,6 @@ const Header = ({
 
     return React.createElement('header', { className: 'page-header' },
         React.createElement('div', { className: 'container-fluid' }, [
-            // Top row: Brand + Status (right aligned)
             React.createElement('nav', {
                 key: 'nav',
                 'aria-label': 'Primary navigation'
@@ -34,5 +33,3 @@ const Header = ({
         ])
     );
 };
-
-window.Header = Header;

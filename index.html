@@ -11,19 +11,21 @@
     <link rel="stylesheet" href="./styles/main.css" /> <!-- Imports theme.css and app-v2.css -->
 
     <script
+      defer
       crossorigin
-      src="https://unpkg.com/react@18/umd/react.development.js"
+      src="https://unpkg.com/react@18/umd/react.production.min.js"
     ></script>
     <script
+      defer
       crossorigin
-      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
     ></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <!-- Vanta.js dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script
+      defer
       src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.fog.min.js"
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
@@ -34,60 +36,25 @@
     <div id="vanta-background"></div>
 
     <div id="root"></div>
-
-    <script type="module">
-      import { RECIPES } from "./recipes.js";
-      import { SUPABASE_CONFIG } from "./supabase-config.js";
-      window.RECIPES = RECIPES;
-      window.SUPABASE_CONFIG = SUPABASE_CONFIG;
-    </script>
-
-    <script type="text/babel" src="./js/constants/index.js"></script>
-    <script type="text/babel" src="./js/utils/scaling.js"></script>
-    <script type="text/babel" src="./js/utils/keys.js"></script>
-    <script type="text/babel" src="./js/utils/statusCalculation.js"></script>
-    <script type="text/babel" src="./js/hooks/useSupabase.js"></script>
-    <script type="text/babel" src="./js/hooks/useRealtime.js"></script>
-    <script type="text/babel" src="./js/hooks/useRecipeData.js"></script>
-
-    <!-- Shared components -->
-    <script type="text/babel" src="./js/components/ChecklistItem.js"></script>
-
-    <!-- Main UI components -->
-    <script type="text/babel" src="./js/components/Header.js"></script>
-    <script type="text/babel" src="./js/components/RecipeModal.js"></script>
-    <script type="text/babel" src="./js/components/Lightbox.js"></script>
-    <script type="text/babel" src="./js/components/RecipeFilters.js"></script>
-
-    <!-- Chef workflow components -->
-    <script type="text/babel" src="./js/components/chef/useChefData.js"></script>
-
-    <!-- V2 COMPONENTS (Refactored) -->
-    <script type="text/babel" src="./js/components/RecipeCard.js"></script>
-    <script type="text/babel" src="./js/components/RecipeGridV2.js"></script>
-    <script type="text/babel" src="./js/components/chef/ChefStationsV2.js"></script>
-    <script type="text/babel" src="./js/components/AppV2.js"></script>
-
-    <!-- App entry point -->
-    <script type="text/babel">
-      const root = ReactDOM.createRoot(document.getElementById("root"));
-      root.render(React.createElement(AppV2));
-    </script>
-
+    <script type="module" src="./js/app-entry.js"></script>
     <script>
-      VANTA.FOG({
-        el: "#vanta-background",
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.0,
-        minWidth: 200.0,
-        highlightColor: 0x3a506b,
-        midtoneColor: 0x1c2541,
-        lowlightColor: 0x0b132b,
-        baseColor: 0x04040c,
-        speed: 0.6,
-        zoom: 0.85,
+      window.addEventListener("DOMContentLoaded", () => {
+        if (window.VANTA?.FOG) {
+          window.VANTA.FOG({
+            el: "#vanta-background",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.0,
+            minWidth: 200.0,
+            highlightColor: 0x3a506b,
+            midtoneColor: 0x1c2541,
+            lowlightColor: 0x0b132b,
+            baseColor: 0x04040c,
+            speed: 0.6,
+            zoom: 0.85,
+          });
+        }
       });
     </script>
   </body>

@@ -1,8 +1,13 @@
-/**
- * AppV2 - Refactored root component with 50/50 split layout
- * Left: Recipe Grid + Filters
- * Right: Chef Stations + Kitchen Progress
- */
+import { useSupabase } from '../hooks/useSupabase.js';
+import { useRealtime } from '../hooks/useRealtime.js';
+import { useRecipeData } from '../hooks/useRecipeData.js';
+import { useChefData } from './chef/useChefData.js';
+import { RecipeFilters } from './RecipeFilters.js';
+import { RecipeGridV2 } from './RecipeGridV2.js';
+import { RecipeModal } from './RecipeModal.js';
+import { ChefStationsV2 } from './chef/ChefStationsV2.js';
+import { Header } from './Header.js';
+import { getIngredientName as defaultGetIngredientName } from '../utils/scaling.js';
 
 // Helper to extract filter options from recipes
 const extractFilterOptions = (recipes, getIngredientName) => {
@@ -36,34 +41,24 @@ const extractFilterOptions = (recipes, getIngredientName) => {
     };
 };
 
-const AppV2 = () => {
+export const AppV2 = ({ recipes = {} }) => {
     const { useState, useEffect, useMemo } = React;
+    const getIngredientName = defaultGetIngredientName;
 
-    const recipes = window.RECIPES || {};
-    const getIngredientName = window.getIngredientName || ((ing) => typeof ing === 'string' ? ing : ing.ingredient);
+    const { supabase, isSupabaseConnected, setIsSupabaseConnected } = useSupabase();
 
-    // Supabase setup
-    const { supabase, isSupabaseConnected, setIsSupabaseConnected } = window.useSupabase();
-
-    // UI state
     const [selectedRecipe, setSelectedRecipe] = useState(null);
-    const [lightboxImage, setLightboxImage] = useState(null);
-    const [lightboxIndex, setLightboxIndex] = useState(0);
-
-    // Filter state
     const [filterText, setFilterText] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [selectedDish, setSelectedDish] = useState('all');
     const [selectedIngredient, setSelectedIngredient] = useState('all');
     const [selectedComponent, setSelectedComponent] = useState('all');
 
-    // Recipe data and operations
-    const recipeData = window.useRecipeData(supabase, isSupabaseConnected, '');
+    const recipeData = useRecipeData(supabase, isSupabaseConnected, recipes);
 
-    // Extract filter options (memoized)
     const { categories, dishes, ingredients, components } = useMemo(() =>
         extractFilterOptions(recipes, getIngredientName),
-        [recipes, getIngredientName]
+        [recipes]
     );
 
     const handleResetFilters = () => {
@@ -74,15 +69,13 @@ const AppV2 = () => {
         setSelectedComponent('all');
     };
 
-    // Initialize Supabase connection
     useEffect(() => {
         if (supabase) {
             setIsSupabaseConnected(true);
         }
-    }, [supabase]);
+    }, [supabase, setIsSupabaseConnected]);
 
-    // Setup real-time subscriptions
-    window.useRealtime(
+    useRealtime(
         supabase,
         isSupabaseConnected,
         recipeData.setCompletedIngredients,
@@ -92,23 +85,16 @@ const AppV2 = () => {
         recipeData.setRecipeChefNames
     );
 
-    // Lightbox functions
-    const openLightbox = (images, index) => {
-        setLightboxImage(images);
-        setLightboxIndex(index);
-    };
-
-    const { chefAssignments, chefSummaries } = window.useChefData(
+    const { chefAssignments, chefSummaries } = useChefData(
         recipes,
         recipeData.orderCounts,
         recipeData.recipeChefNames,
         recipeData.completedSteps
     );
 
-    // Show loading state
     if (recipeData.isLoading) {
         return React.createElement('main', { className: 'container-fluid' }, [
-            React.createElement(window.Header, {
+            React.createElement(Header, {
                 key: 'header',
                 supabase,
                 isSupabaseConnected
@@ -121,10 +107,9 @@ const AppV2 = () => {
         ]);
     }
 
-    // Show error state
     if (recipeData.loadError) {
         return React.createElement('main', { className: 'container-fluid' }, [
-            React.createElement(window.Header, {
+            React.createElement(Header, {
                 key: 'header',
                 supabase,
                 isSupabaseConnected
@@ -143,25 +128,20 @@ const AppV2 = () => {
     }
 
     return React.createElement('main', { className: 'app-v2' }, [
-        // Header
-        React.createElement(window.Header, {
+        React.createElement(Header, {
             key: 'header',
             supabase,
             isSupabaseConnected
         }),
-
-        // Split Layout: Left (Recipes) + Right (Details)
         React.createElement('div', {
             key: 'split-layout',
             className: 'split-layout'
         }, [
-            // LEFT SIDE: Recipe Grid + Filters
             React.createElement('div', {
                 key: 'left-panel',
                 className: 'split-panel split-panel--left'
             }, [
-                // Filters
-                React.createElement(window.RecipeFilters, {
+                React.createElement(RecipeFilters, {
                     key: 'filters',
                     filterText,
                     setFilterText,
@@ -179,10 +159,8 @@ const AppV2 = () => {
                     components,
                     handleResetFilters
                 }),
-
-                // Recipe Grid
                 React.createElement('div', { key: 'grid-section', className: 'recipes-section' }, [
-                    React.createElement(window.RecipeGridV2, {
+                    React.createElement(RecipeGridV2, {
                         key: 'grid',
                         recipes,
                         recipeStatus: recipeData.recipeStatus,
@@ -198,13 +176,11 @@ const AppV2 = () => {
                     })
                 ])
             ]),
-
-            // RIGHT SIDE: Chef Stations
             React.createElement('div', {
                 key: 'right-panel',
                 className: 'split-panel split-panel--right'
             }, [
-                React.createElement(window.ChefStationsV2, {
+                React.createElement(ChefStationsV2, {
                     key: 'chef-stations',
                     chefSummaries,
                     chefAssignments,
@@ -213,9 +189,7 @@ const AppV2 = () => {
                 })
             ])
         ]),
-
-        // Recipe Modal
-        React.createElement(window.RecipeModal, {
+        React.createElement(RecipeModal, {
             key: 'modal',
             selectedRecipe,
             setSelectedRecipe,
@@ -230,17 +204,6 @@ const AppV2 = () => {
             updateRecipeStatus: recipeData.updateRecipeStatus,
             recipeChefNames: recipeData.recipeChefNames,
             updateChefName: recipeData.updateChefName
-        }),
-
-        // Lightbox
-        React.createElement(window.Lightbox, {
-            key: 'lightbox',
-            lightboxImage,
-            lightboxIndex,
-            setLightboxImage,
-            setLightboxIndex
         })
     ]);
 };
-
-window.AppV2 = AppV2;

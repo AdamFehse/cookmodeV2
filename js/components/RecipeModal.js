@@ -1,8 +1,14 @@
+import {
+    getAssignedChefColor,
+    suggestChefColor
+} from '../constants/index.js';
+import { scaleAmount, slugToDisplayName } from '../utils/scaling.js';
+
 /**
  * RecipeModal - Clean React component for recipe details
  * Side-by-side ingredients/methods, check all buttons, Supabase persistence
  */
-const RecipeModal = ({
+export const RecipeModal = ({
     selectedRecipe,
     setSelectedRecipe,
     recipes = {},
@@ -21,56 +27,50 @@ const RecipeModal = ({
     const dialogRef = useRef(null);
     const chefNameTimeoutRef = useRef(null);
 
-    // Global utilities
-    const scaleAmount = window.scaleAmount || ((ing) => ing);
-    const slugToDisplayName = window.slugToDisplayName || ((slug) => slug);
-    const getAssignedChefColor = window.getAssignedChefColor || (() => null);
-    const suggestChefColor = window.suggestChefColor || (() => 'var(--chef-purple)');
-
-    // Get recipe data
     const recipe = selectedRecipe ? recipes[selectedRecipe] : null;
     const currentChefData = selectedRecipe ? (recipeChefNames[selectedRecipe] || { name: '', color: '' }) : { name: '', color: '' };
 
-    // Local state
     const [localChefName, setLocalChefName] = useState(currentChefData.name || '');
     const [orderInput, setOrderInput] = useState(orderCounts[selectedRecipe] ?? 1);
 
-    // Sync dialog visibility
     useEffect(() => {
         if (selectedRecipe && recipe && dialogRef.current) {
             dialogRef.current.showModal();
         }
     }, [selectedRecipe, recipe]);
 
-    // Sync local state when recipe changes
     useEffect(() => {
         setLocalChefName(currentChefData.name || '');
         setOrderInput(orderCounts[selectedRecipe] ?? 1);
-    }, [selectedRecipe]);
+    }, [selectedRecipe, currentChefData.name, orderCounts, recipe]);
 
-    // Calculate stats (must be before early return)
     const stats = useMemo(() => {
         if (!selectedRecipe || !recipe) return { ingredientTotal: 0, ingredientCompleted: 0, stepTotal: 0, stepCompleted: 0 };
 
-        let ingredientTotal = 0, ingredientCompleted = 0;
-        let stepTotal = recipe?.instructions?.length || 0, stepCompleted = 0;
+        let ingredientTotal = 0, ingredientCompletedCount = 0;
+        let stepTotal = recipe?.instructions?.length || 0, stepCompletedCount = 0;
 
         if (recipe?.components) {
             Object.entries(recipe.components).forEach(([comp, ings]) => {
                 ings.forEach((_, idx) => {
                     const key = `${selectedRecipe}-ing-${comp}-${idx}`;
                     ingredientTotal++;
-                    if (completedIngredients[key]) ingredientCompleted++;
+                    if (completedIngredients[key]) ingredientCompletedCount++;
                 });
             });
         }
 
         (recipe?.instructions || []).forEach((_, idx) => {
             const key = `${selectedRecipe}-step-${idx}`;
-            if (completedSteps[key]) stepCompleted++;
+            if (completedSteps[key]) stepCompletedCount++;
         });
 
-        return { ingredientTotal, ingredientCompleted, stepTotal, stepCompleted };
+        return {
+            ingredientTotal,
+            ingredientCompleted: ingredientCompletedCount,
+            stepTotal,
+            stepCompleted: stepCompletedCount
+        };
     }, [selectedRecipe, recipe, completedIngredients, completedSteps]);
 
     if (!selectedRecipe || !recipe) return null;
@@ -78,7 +78,6 @@ const RecipeModal = ({
     const displayName = recipe.name || slugToDisplayName(selectedRecipe);
     const currentStatus = recipeStatus[selectedRecipe];
 
-    // Handlers
     const handleChefNameChange = (newName) => {
         const trimmed = newName.trim();
         const nextColor = trimmed ? (getAssignedChefColor(trimmed) || suggestChefColor(trimmed)) : '';
@@ -91,7 +90,7 @@ const RecipeModal = ({
     };
 
     const handleOrderChange = (val) => {
-        const safe = Math.min(Math.max(parseInt(val) || 1, 1), 50);
+        const safe = Math.min(Math.max(parseInt(val, 10) || 1, 1), 50);
         setOrderInput(safe);
         updateOrderCount?.(selectedRecipe, safe);
     };
@@ -127,20 +126,23 @@ const RecipeModal = ({
         setSelectedRecipe(null);
     };
 
-    // Render
     return React.createElement('dialog', {
         ref: dialogRef,
         className: 'recipe-modal-v5',
         onClick: (e) => e.target === dialogRef.current && handleClose(),
         onClose: handleClose
     }, [
-        // Header
         React.createElement('div', { key: 'header', className: 'modal-v5-header' }, [
             React.createElement('h2', { key: 'title' }, displayName),
-            React.createElement('button', { key: 'close', className: 'modal-v5-close', onClick: handleClose, type: 'button' }, '✕')
+            React.createElement('button', {
+                key: 'close',
+                className: 'modal-v5-close',
+                onClick: handleClose,
+                type: 'button',
+                'aria-label': 'Close recipe'
+            }, 'Close')
         ]),
 
-        // Controls: Chef, Status, Dish, Scale
         React.createElement('div', { key: 'controls', className: 'modal-v5-controls' }, [
             React.createElement('div', { key: 'chef' }, [
                 React.createElement('label', {}, 'Chef'),
@@ -166,9 +168,7 @@ const RecipeModal = ({
             ])
         ]),
 
-        // Two-column content: Ingredients and Steps
         React.createElement('div', { key: 'content', className: 'modal-v5-content' }, [
-            // Ingredients
             React.createElement('div', { key: 'ing-panel', className: 'modal-v5-panel' }, [
                 React.createElement('h3', { key: 'ing-title', className: 'panel-v5-title' }, `Ingredients (${stats.ingredientCompleted}/${stats.ingredientTotal})`),
                 React.createElement('button', { key: 'ing-check-all', className: 'btn-v5-check-all', onClick: handleCheckAllIngredients }, stats.ingredientCompleted === stats.ingredientTotal ? 'Uncheck All' : 'Check All'),
@@ -189,7 +189,6 @@ const RecipeModal = ({
                 )
             ]),
 
-            // Steps
             React.createElement('div', { key: 'steps-panel', className: 'modal-v5-panel' }, [
                 React.createElement('h3', { key: 'steps-title', className: 'panel-v5-title' }, `Method (${stats.stepCompleted}/${stats.stepTotal})`),
                 React.createElement('button', { key: 'steps-check-all', className: 'btn-v5-check-all', onClick: handleCheckAllSteps }, stats.stepCompleted === stats.stepTotal ? 'Uncheck All' : 'Check All'),
@@ -207,5 +206,3 @@ const RecipeModal = ({
         ])
     ]);
 };
-
-window.RecipeModal = RecipeModal;

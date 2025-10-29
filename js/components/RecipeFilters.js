@@ -1,4 +1,4 @@
-const RecipeFilters = ({
+export const RecipeFilters = ({
     filterText,
     setFilterText,
     selectedCategory,
@@ -89,5 +89,3 @@ const RecipeFilters = ({
         }, 'Clear')
     ]));
 };
-
-window.RecipeFilters = RecipeFilters;
