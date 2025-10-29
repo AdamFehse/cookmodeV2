@@ -150,7 +150,7 @@ const AppV2 = () => {
             isSupabaseConnected
         }),
 
-        // 50/50 Split Layout Container
+        // Split Layout: Left (Recipes) + Right (Details)
         React.createElement('div', {
             key: 'split-layout',
             className: 'split-layout'
@@ -199,7 +199,7 @@ const AppV2 = () => {
                 ])
             ]),
 
-            // RIGHT SIDE: Chef Stations + Kitchen Progress
+            // RIGHT SIDE: Chef Stations
             React.createElement('div', {
                 key: 'right-panel',
                 className: 'split-panel split-panel--right'
