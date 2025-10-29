@@ -295,7 +295,7 @@ dialog::backdrop {
 
 .split-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1.2fr;
     gap: 0;
     flex: 1;
     overflow: hidden;
@@ -306,6 +306,7 @@ dialog::backdrop {
     flex-direction: column;
     overflow: hidden;
     border: 1px solid var(--surface-border);
+    min-width: 0;
 }
 
 .split-panel--left {
@@ -614,6 +615,7 @@ dialog::backdrop {
     border: 1px solid var(--surface-border);
     border-radius: var(--radius-lg);
     transition: all var(--transition-standard);
+    min-width: 0;
 }
 
 .chef-card:hover {
